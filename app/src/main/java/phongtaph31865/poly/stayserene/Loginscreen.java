@@ -19,6 +19,13 @@ public class Loginscreen extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_loginscreen);
         TextView btnregisterlogin =findViewById(R.id.btnregisterlogin);
+        TextView btnsingup = findViewById(R.id.btnsingup);
+        btnsingup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Loginscreen.this,MainActivity.class));
+            }
+        });
         btnregisterlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
