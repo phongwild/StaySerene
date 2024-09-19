@@ -21,12 +21,7 @@
         <activity
             android:name=".Loginscreen"
             android:exported="false" />
-        <activity
-            android:name=".LoginScreen"
-            android:exported="false" />
-        <activity
-            android:name=".Screen.LoginScreen"
-            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="false" />
