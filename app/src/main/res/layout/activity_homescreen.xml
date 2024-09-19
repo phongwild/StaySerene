@@ -90,6 +90,8 @@
 
                     android:paddingTop="4dp" />
             </LinearLayout>
+
+
             <LinearLayout
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
@@ -161,6 +163,7 @@
             android:padding="8dp">
 
             <ImageView
+                android:id="@+id/imghome1"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:scaleType="centerCrop"
