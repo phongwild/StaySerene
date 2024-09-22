@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/item_user_homebooking"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/iconhome"
+        android:title="Ongoing"/>
+    <item
+        android:id="@+id/item_user_calendarbooking"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/iconcalenda"
+        android:title="Complete"/>
+    <item
+        android:id="@+id/item_user_bookingbooking"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/iconsave"
+        android:title="Cancel"/>
+
+</menu>

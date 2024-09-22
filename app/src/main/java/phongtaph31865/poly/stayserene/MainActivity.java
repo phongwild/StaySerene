@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         list.add(new Fragment_home());
         list.add(new Fragment_calendar());
         list.add(new Fragment_booking());
+
         list.add(new Fragment_user());
         adapter = new Menu_User_Adapter(this, list);
         pager2.setAdapter(adapter);
