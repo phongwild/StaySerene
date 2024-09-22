@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1082178476167",
+    "firebase_url": "https://stayserene-f36b5-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "stayserene-f36b5",
+    "storage_bucket": "stayserene-f36b5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1082178476167:android:5adab77a24ad29c6f90022",
+        "android_client_info": {
+          "package_name": "phongtaph31865.poly.stayserene"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1082178476167-dl76ga1d7tt53vbp0tmdknv5c38l7jeg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "phongtaph31865.poly.stayserene",
+            "certificate_hash": "01168e364d8b7c2329476daa8ae47733becfcc33"
+          }
+        },
+        {
+          "client_id": "1082178476167-ep2734splp7hf0hkk18igcmuoferiu25.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSWEsfUiQoIK2Lwz1bhx9xJ5bnDnaHEuA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1082178476167-ep2734splp7hf0hkk18igcmuoferiu25.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

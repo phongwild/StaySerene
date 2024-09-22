@@ -4,20 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="#ffffff">
 
     <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pagerMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/pagerMain"
-        android:background="#FFF6F6"/>
+        android:background="#FFF6F6" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="5dp"
-        android:translationZ="10dp"
-        android:background="#ffffff"
+        app:cardElevation="50dp"
+        app:cardBackgroundColor="@color/white"
         android:layout_alignParentBottom="true">
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:layout_width="match_parent"
@@ -25,7 +25,9 @@
             android:background="#ffffff"
             android:id="@+id/bottom_nav"
             app:menu="@menu/menu_user"
-            app:itemTextColor="#4C4DDC" />
+            app:itemIconSize="25dp"
+            app:itemTextColor="#4C4DDC"
+            app:labelVisibilityMode="selected"/>
     </androidx.cardview.widget.CardView>
 
 </RelativeLayout>
