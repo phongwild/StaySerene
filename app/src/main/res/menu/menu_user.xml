@@ -10,16 +10,16 @@
     <item
         android:id="@+id/item_user_calendar"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/iconcalenda"
+        android:icon="@drawable/ic_calendar"
         android:title="Calendar"/>
     <item
         android:id="@+id/item_user_booking"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/iconsave"
+        android:icon="@drawable/ic_booking"
         android:title="Booking"/>
     <item
         android:id="@+id/item_user_person"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/iconuser"
+        android:icon="@drawable/ic_user"
         android:title="User"/>
 </menu>

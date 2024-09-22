@@ -11,12 +11,15 @@
         android:id="@+id/pagerMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFF6F6" />
+        android:layout_marginBottom="90dp"
+        android:background="#ffffff" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="50dp"
+        app:cardUseCompatPadding="true"
+        app:cardElevation="5dp"
+        app:cardCornerRadius="10dp"
         app:cardBackgroundColor="@color/white"
         android:layout_alignParentBottom="true">
         <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -25,9 +28,10 @@
             android:background="#ffffff"
             android:id="@+id/bottom_nav"
             app:menu="@menu/menu_user"
-            app:itemIconSize="25dp"
+            app:itemIconSize="30dp"
+            app:itemIconTint="@color/color_item_nav_user"
             app:itemTextColor="#4C4DDC"
-            app:labelVisibilityMode="selected"/>
+            app:labelVisibilityMode="unlabeled"/>
     </androidx.cardview.widget.CardView>
 
 </RelativeLayout>

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:layout_marginTop="30dp">
+    android:paddingHorizontal="20dp"
+    android:layout_marginTop="40dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,23 +21,33 @@
             android:gravity="center_vertical"
             android:paddingBottom="16dp">
 
-            <ImageButton
-                android:id="@+id/btn_back_detail"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="back_button"
-                android:src="@drawable/iconten" />
+                android:layout_weight="1">
+                <ImageButton
+                    android:id="@+id/btn_back_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="back_button"
+                    android:src="@drawable/iconten"/>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/headerText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="policy_privacy"
+                android:text="Detail"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
         </LinearLayout>
 
         <RelativeLayout

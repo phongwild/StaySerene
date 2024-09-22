@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:paddingHorizontal="20dp"
+    android:background="#ffffff"
     tools:context=".Screen_user.Fragment_booking">
 
     <TextView
-        android:layout_marginTop="15dp"
         android:id="@+id/textBooking"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,33 +18,31 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="#101010" />
-
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayoutBooking"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:background="@color/white"
-        app:tabSelectedTextColor="@color/purple_500"
-        app:tabIndicatorColor="@color/purple_500"
+        app:tabSelectedTextColor="#ffffff"
+        app:tabBackground="@drawable/custom_tab_booking_selecter"
+        app:tabIndicator="@drawable/custom_tab_booking"
+        app:tabTextColor="#4C4DDC"
         android:layout_marginTop="10dp">
-
         <com.google.android.material.tabs.TabItem
-
             android:id="@+id/tabOngoing"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-
             android:text="Ongoing" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabComplete"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="Complete" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabCancel"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="Cancel" />
     </com.google.android.material.tabs.TabLayout>
@@ -52,8 +50,6 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pagerMain2"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#FFF6F6" />
+        android:layout_height="match_parent"/>
 
 </LinearLayout>
