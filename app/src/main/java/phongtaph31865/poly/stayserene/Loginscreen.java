@@ -9,9 +9,10 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import phongtaph31865.poly.stayserene.Screen_admin.Activity_admin.MainActivity_admin;
+import phongtaph31865.poly.stayserene.Screen_user.Activity.MainActivity_user;
+
 @SuppressLint("MissingInflatedId")
 public class Loginscreen extends AppCompatActivity {
     private LinearLayout btn_Login;
@@ -33,7 +34,7 @@ public class Loginscreen extends AppCompatActivity {
         btn_Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Loginscreen.this, MainActivity.class));
+                startActivity(new Intent(Loginscreen.this, MainActivity_admin.class));
             }
         });
     }
