@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.StaySerene" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.StaySerene" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
-
+    <style name="themeuser" parent="Theme.Material3.DayNight.NoActionBar"/>
     <style name="Theme.StaySerene" parent="Base.Theme.StaySerene" />
 </resources>
