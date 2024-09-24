@@ -40,4 +40,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")
+    implementation ("com.google.android.material:material:1.8.0")  // Kiểm tra phiên bản mới nhất
+
+
 }
