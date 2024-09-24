@@ -4,11 +4,130 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Screen_admin.Fragment_admin.Fragment_statical_admin">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Tiêu đề chính -->
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Statical"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:padding="16dp"/>
+
+        <!-- Chọn thống kê -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:padding="8dp"
+            android:background="@drawable/border_box">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thống kê theo ngày"
+                android:textSize="18sp"
+                android:padding="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="thống kê theo tháng"
+                android:textColor="#0000FF"
+                android:textSize="18sp"
+                android:padding="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="thống kê theo năm"
+                android:textSize="18sp"
+                android:padding="8dp"/>
+
+            <!-- Ngày hiện tại -->
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="13/09/2024"
+                android:textSize="18sp"
+                android:padding="8dp"/>
+        </LinearLayout>
+
+        <!-- Nút thống kê -->
+        <Button
+            android:id="@+id/btnThongKe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thống kê"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#6200EE"
+            android:textColor="#FFFFFF"/>
+
+        <!-- Bảng thống kê thu nhập -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thống kê thu nhập"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"/>
+
+        <TableLayout
+            android:id="@+id/tableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*"
+            android:layout_marginTop="16dp">
+
+            <!-- Hàng tiêu đề -->
+            <TableRow>
+                <TextView
+                    android:text="Mã phòng"
+                    android:padding="2dp"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:text="Tên phòng"
+                    android:padding="2dp"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:text="Thời gian"
+                    android:padding="2dp"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:text="Tổng tiền"
+                    android:padding="2dp"
+                    android:textStyle="bold"/>
+            </TableRow>
+
+            <!-- Dòng dữ liệu đầu tiên -->
+            <!--        <TableRow>-->
+            <!--            <TextView-->
+            <!--                android:text="P001"-->
+            <!--                android:padding="8dp"/>-->
+            <!--            <TextView-->
+            <!--                android:text="Phòng 1"-->
+            <!--                android:padding="8dp"/>-->
+            <!--            <TextView-->
+            <!--                android:text="09:00 - 10:00"-->
+            <!--                android:padding="8dp"/>-->
+            <!--            <TextView-->
+            <!--                android:text="200.000 VNĐ"-->
+            <!--                android:padding="8dp"/>-->
+            <!--        </TableRow>-->
+        </TableLayout>
+
+    </LinearLayout>
+
 
 </FrameLayout>
