@@ -89,6 +89,8 @@ public class Register extends AppCompatActivity {
                 boolean check = s.toString().matches(emailPattern);
                 if (s.length() == 0) {
                     layout_email.setError("Please enter your email");
+                } else if (!check) {
+                    layout_email.setError("Email invalid");
                 } else {
                     layout_email.setErrorEnabled(false);
                 }
