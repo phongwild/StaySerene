@@ -234,7 +234,7 @@
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:src="@drawable/img_6"
+                        android:src="@drawable/ic_add01"
                         android:layout_marginStart="15dp"
                         />
                 </LinearLayout>
@@ -388,22 +388,19 @@
                 android:layout_width="45dp"
                 android:layout_height="25dp"
                 android:backgroundTint="#00000000"
-                android:src="@drawable/img" />
+                android:src="@drawable/ic_back01" />
 
             <TextView
                 android:layout_width="260dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="45dp"
                 android:gravity="center"
                 android:text="Điền thông tin"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <ImageButton
-                android:layout_width="45dp"
-                android:layout_height="20dp"
-                android:backgroundTint="#00000000"
-                android:src="@drawable/img_1" />
+            />
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
