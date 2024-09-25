@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="home"
+        android:icon="@drawable/iconhome"
+        android:id="@+id/item_admin_home"/>
+
+    <item
+        android:title="statistical"
+        android:icon="@drawable/ic_statical"
+        android:id="@+id/item_admin_chart"/>
+
+    <item
+        android:title=""
+        android:enabled="false"
+        android:id="@+id/item_admin_add"/>
+
+    <item
+        android:title="notification"
+        android:icon="@drawable/ic_notification"
+        android:id="@+id/item_admin_notification"/>
+
+    <item
+        android:title="me"
+        android:icon="@drawable/ic_user"
+        android:id="@+id/item_admin_person"/>
+</menu>
