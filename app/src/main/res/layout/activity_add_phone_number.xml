@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Login_Register.Add_phoneNumber"
+    android:paddingHorizontal="20dp"
+    android:paddingTop="15dp">
+    <RelativeLayout
+        android:layout_width="60dp"
+        android:layout_height="60dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_back"/>
+    </RelativeLayout>
+    <TextView
+        android:layout_width="259dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Fill in your bio to get started"
+        android:textColor="#000000"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_phoneNumber"
+        android:layout_gravity="center">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/custom_input"
+            android:id="@+id/ed_phoneNumber"
+            android:inputType="phone|number"
+            android:hint="Phone number" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_address"
+        android:layout_gravity="center">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/custom_input"
+            android:id="@+id/ed_address"
+            android:inputType="text"
+            android:hint="Address" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/layout_date_time"
+            android:layout_gravity="start">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/custom_input"
+                android:id="@+id/ed_date_time"
+                android:inputType="textPersonName"
+                android:hint="Birthday" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <Button
+            android:id="@+id/btn_choose_date"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:background="@drawable/custom_btn"
+            android:layout_gravity="center"
+            android:text="Choose"
+            android:textColor="#ffffff"
+            android:textAllCaps="false"
+            app:backgroundTint="#4C4DDC"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/custom_btn"
+        android:layout_marginHorizontal="15dp"
+        android:id="@+id/btn_next_addPhoneNumber"
+        android:backgroundTint="#4C4DDC"
+        android:gravity="center"
+        android:layout_marginTop="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+</LinearLayout>

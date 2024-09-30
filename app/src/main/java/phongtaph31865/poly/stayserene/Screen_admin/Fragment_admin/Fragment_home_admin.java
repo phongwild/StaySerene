@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import phongtaph31865.poly.stayserene.CardAdapter;
-import phongtaph31865.poly.stayserene.CardModel;
+import phongtaph31865.poly.stayserene.adapter.CardAdapter;
+import phongtaph31865.poly.stayserene.Model.CardModel;
 import phongtaph31865.poly.stayserene.R;
 
 

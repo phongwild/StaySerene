@@ -1,4 +1,4 @@
-package phongtaph31865.poly.stayserene;
+package phongtaph31865.poly.stayserene.Login_Register;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -10,13 +10,14 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import androidx.fragment.app.Fragment;
+
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import phongtaph31865.poly.stayserene.Model.Account;
+import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Screen_admin.Activity_admin.MainActivity_admin;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.MainActivity_user;
 
@@ -34,6 +36,7 @@ public class Loginscreen extends AppCompatActivity {
     private TextInputLayout layout_email, layout_pass;
     private TextInputEditText edt_email, edt_pass;
     float v = 0;
+    private FirebaseAuth mAuth;
     String email, password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +97,7 @@ public class Loginscreen extends AppCompatActivity {
             }
         });
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference().child("Account");
+        mAuth = FirebaseAuth.getInstance();
         btn_Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,7 +122,7 @@ public class Loginscreen extends AppCompatActivity {
                                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                     Account account = dataSnapshot.getValue(Account.class);
                                     if (account != null && account.getPassword().equals(password)) {
-                                        saveLoginStatus(true, email, password, account.getRole());
+                                        //saveLoginStatus(true, email, password, account.getRole());
                                         if (account.getRole() == 0) {
                                             Intent intent = new Intent(Loginscreen.this, MainActivity_admin.class);
                                             intent.putExtra("Email", account.getEmail());

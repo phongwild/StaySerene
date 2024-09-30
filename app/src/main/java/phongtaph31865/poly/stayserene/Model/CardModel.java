@@ -1,4 +1,4 @@
-package phongtaph31865.poly.stayserene;
+package phongtaph31865.poly.stayserene.Model;
 
 public class CardModel {
 
