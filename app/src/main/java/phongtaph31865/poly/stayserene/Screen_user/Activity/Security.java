@@ -1,4 +1,4 @@
-package phongtaph31865.poly.stayserene;
+package phongtaph31865.poly.stayserene.Screen_user.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,9 +7,8 @@ import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import phongtaph31865.poly.stayserene.R;
 
 public class Security extends AppCompatActivity {
 
@@ -23,7 +22,7 @@ public class Security extends AppCompatActivity {
         backSecurity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Security.this,Setting.class));
+                startActivity(new Intent(Security.this, Setting.class));
             }
         });
     }

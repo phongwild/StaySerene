@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Information">
+    tools:context=".Screen_user.Activity.Information">
 
     <ImageButton
         android:id="@+id/imgBackAccount"
