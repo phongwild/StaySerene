@@ -19,6 +19,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import java.util.ArrayList;
 
 import phongtaph31865.poly.stayserene.R;
+import phongtaph31865.poly.stayserene.Screen_admin.Fragment_admin.Fragment_customer_admin;
 import phongtaph31865.poly.stayserene.Screen_admin.Fragment_admin.Fragment_home_admin;
 import phongtaph31865.poly.stayserene.Screen_admin.Fragment_admin.Fragment_notification_admin;
 import phongtaph31865.poly.stayserene.Screen_admin.Fragment_admin.Fragment_personal_admin;
@@ -110,6 +111,9 @@ public class MainActivity_admin extends AppCompatActivity {
         list.add(new Fragment_statical_admin());
         list.add(new Fragment_notification_admin());
         list.add(new Fragment_personal_admin());
+
+
+
         adapter = new Menu_admin_adapter(this, list);
         pager2.setAdapter(adapter);
         pager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -128,6 +132,8 @@ public class MainActivity_admin extends AppCompatActivity {
                     case 3:
                         view.setSelectedItemId(R.id.item_admin_person);
                         break;
+
+
                 }
                 super.onPageSelected(position);
             }
@@ -147,6 +153,7 @@ public class MainActivity_admin extends AppCompatActivity {
                 if (item.getItemId() == R.id.item_admin_person) {
                     pager2.setCurrentItem(3);
                 }
+
                 return true;
             }
         });

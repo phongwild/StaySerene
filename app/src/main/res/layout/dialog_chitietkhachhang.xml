@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/custom_input"
+    android:gravity="center">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thông tin khách hàng"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:layout_marginBottom="20dp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="7dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/custom_input"
+            android:drawableStart="@drawable/ic_user"
+            android:drawablePadding="8dp"
+            android:hint="Khách hàng"
+
+            android:padding="12dp"
+            android:textSize="16sp" />
+
+        <Spinner
+            android:id="@+id/spinerloaikhachhang"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_input" />
+    </LinearLayout>
+
+
+    <EditText
+        android:id="@+id/edit_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên khách hàng"
+        android:drawableStart="@drawable/ic_user"
+        android:drawablePadding="8dp"
+        android:layout_marginBottom="12dp"
+        android:padding="10dp"
+
+        android:background="@drawable/custom_input"/>
+
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <RadioButton
+            android:id="@+id/radio_male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nam"
+            android:textColor="@color/black"
+            android:padding="8dp"/>
+
+        <RadioButton
+            android:id="@+id/radio_female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nữ"
+            android:textColor="@color/black"
+            android:padding="8dp"/>
+    </RadioGroup>
+
+
+    <EditText
+        android:id="@+id/edit_room"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Phòng"
+        android:drawableStart="@drawable/bed"
+        android:drawablePadding="8dp"
+        android:layout_marginBottom="12dp"
+        android:padding="10dp"
+        android:background="@drawable/custom_input" />
+
+
+    <EditText
+        android:id="@+id/edit_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Số ĐT"
+        android:drawableStart="@drawable/telephone"
+        android:drawablePadding="8dp"
+        android:layout_marginBottom="12dp"
+        android:padding="10dp"
+        android:background="@drawable/custom_input" />
+
+
+    <EditText
+        android:id="@+id/edit_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Địa Chỉ"
+        android:drawableStart="@drawable/address"
+        android:drawablePadding="8dp"
+        android:layout_marginBottom="12dp"
+        android:padding="10dp"
+        android:background="@drawable/custom_input" />
+
+
+    <EditText
+        android:id="@+id/edit_cccd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="CCCD / CMT"
+        android:drawableStart="@drawable/resume"
+        android:drawablePadding="8dp"
+        android:padding="10dp"
+        android:background="@drawable/custom_input" />
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lưu"
+        android:layout_gravity="center"
+        android:backgroundTint="@color/purple_500"
+        android:textColor="@android:color/white"
+        android:padding="12dp"
+        android:layout_marginTop="20dp" />
+</LinearLayout>
