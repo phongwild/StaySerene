@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home">
+    >
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,6 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Name"
+                android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="16dp"
                 android:layout_marginTop="10dp"/>
@@ -53,6 +54,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Edit Profile"
+                    android:textColor="@color/black"
                     android:textSize="17dp"
                     android:layout_marginStart="15dp"/>
             </LinearLayout>
@@ -72,6 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Payment"
+                    android:textColor="@color/black"
                     android:textSize="17dp"
                     android:layout_marginStart="15dp"/>
             </LinearLayout>
@@ -91,6 +94,7 @@
                     android:layout_height="wrap_content"
                     android:text="Favorite"
                     android:textSize="17dp"
+                    android:textColor="@color/black"
                     android:layout_marginStart="6dp"/>
             </LinearLayout>
             <LinearLayout
@@ -107,6 +111,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Rate"
+                    android:textColor="@color/black"
                     android:textSize="17dp"
                     android:layout_marginStart="4dp"/>
             </LinearLayout>
@@ -143,7 +148,28 @@
                         android:layout_height="wrap_content"
                         android:text="Contact customer service"
                         android:textSize="17dp"
+                        android:textColor="@color/black"
                         android:layout_marginStart="15dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginHorizontal="35dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/ic_support01"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:text="Support"
+                        android:textColor="@color/black"
+                        android:textSize="17dp" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -161,6 +187,7 @@
                         android:layout_height="wrap_content"
                         android:text="Security Information Center"
                         android:textSize="17dp"
+                        android:textColor="@color/black"
                         android:layout_marginStart="15dp"/>
                 </LinearLayout>
                 <TextView
@@ -177,6 +204,7 @@
                     android:orientation="horizontal"
                     android:layout_marginHorizontal="35dp"
                     android:layout_marginTop="10dp"
+                    android:textColor="@color/black"
                     android:gravity="center_vertical">
                     <ImageView
                         android:layout_width="35dp"
@@ -204,6 +232,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Setting"
+                        android:textColor="@color/black"
                         android:textSize="17dp"
                         android:layout_marginStart="15dp"/>
                 </LinearLayout>
@@ -223,6 +252,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Logout"
+                        android:textColor="@color/black"
                         android:textSize="17dp"
                         android:layout_marginStart="15dp"/>
                 </LinearLayout>
