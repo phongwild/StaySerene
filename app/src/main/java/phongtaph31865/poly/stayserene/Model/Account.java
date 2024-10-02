@@ -4,6 +4,7 @@ public class Account {
     private String Uid, Username, avt, email, gioiTinh, ngaySinh, password, quocTich, sdt, diaChi;
     private int role;
 
+
     public Account(String uid, String username, String avt, String email, String gioiTinh, String ngaySinh, String password, String quocTich, String sdt, String diaChi, int role) {
         Uid = uid;
         Username = username;
