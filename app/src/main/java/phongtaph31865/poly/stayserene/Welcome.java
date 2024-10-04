@@ -6,9 +6,8 @@ import android.os.Handler;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import phongtaph31865.poly.stayserene.Login_Register.Loginscreen;
 
 
 public class Welcome extends AppCompatActivity {

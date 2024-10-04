@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context=".Screen_admin.Activity_admin.MainActivity_admin">
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_marginBottom="80dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/back" />
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Account management"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+
+            <ImageButton
+                android:id="@+id/btnMenu"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/three"
+                android:background="?android:attr/selectableItemBackgroundBorderless" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@android:color/white"
+            android:padding="16dp"
+            android:layout_marginTop="16dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tên đăng nhập: Nguyễn Văn A"
+                android:textSize="16sp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mật khẩu: 123"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loại tài khoản"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Danh Sách Account"
+            android:padding="8dp"
+            android:textStyle="bold"
+            android:textColor="#DF1818"
+            android:gravity="center" />
+
+
+        <TableLayout
+            android:id="@+id/tblDanhAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*"
+            android:background="@android:color/darker_gray"
+            android:padding="8dp"
+            android:layout_marginTop="16dp"
+            android:divider="@android:color/darker_gray"
+            android:showDividers="middle">
+
+
+            <TableRow
+                android:background="@android:color/white"
+                android:padding="8dp">
+
+
+                <TextView
+                    android:text="Mã tài khoản"
+                    android:padding="8dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+
+
+                <TextView
+                    android:text="Tên tài khoản"
+                    android:padding="8dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+
+
+                <TextView
+                    android:text="Mật khẩu"
+                    android:padding="8dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+
+
+                <TextView
+                    android:text="Loại tài khoản"
+                    android:padding="8dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+            </TableRow>
+
+
+            <TableRow
+                android:background="@android:color/white"
+                android:padding="8dp">
+
+
+                <TextView
+                    android:text="001"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+
+
+                <TextView
+                    android:text="Admin"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+
+
+                <TextView
+                    android:text="123456"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+
+
+                <TextView
+                    android:text="1"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+
+
+    <!-- BottomAppBar và các nút ở dưới cùng -->
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:id="@+id/bottomAppBar"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:backgroundTint="#ffffff"
+        app:fabCradleMargin="10dp"
+        app:fabCradleRoundedCornerRadius="50dp">
+
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:id="@+id/bottomNavigationView_admin"
+            android:layout_marginEnd="20dp"
+            android:background="@android:color/transparent"
+            android:theme="@style/themeuser"
+            app:itemTextColor="@color/white"
+            app:labelVisibilityMode="unlabeled"
+            app:itemIconSize="30dp"
+            app:itemIconTint="@color/color_item_nav_user"
+            app:menu="@menu/menu_admin"/>
+    </com.google.android.material.bottomappbar.BottomAppBar>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/ic_plus"
+        app:layout_anchor="@id/bottomAppBar"
+        app:maxImageSize="40dp"
+        app:tint="#4C4DDC"
+        android:id="@+id/manage"
+        app:borderWidth="0dp" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/ic_user"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="90dp"
+        android:layout_marginLeft="110dp"
+        app:maxImageSize="30dp"
+        app:tint="#4C4DDC"
+        android:id="@+id/employee_manager"
+        android:visibility="invisible"
+        app:borderWidth="0dp" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/iconhome"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="130dp"
+        app:maxImageSize="30dp"
+        app:tint="#4C4DDC"
+        android:id="@+id/rooms_manager"
+        android:visibility="invisible"
+        app:borderWidth="0dp" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/ic_group"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="90dp"
+        android:layout_marginRight="110dp"
+        app:maxImageSize="30dp"
+        app:tint="#4C4DDC"
+        android:id="@+id/customer_manager"
+        android:visibility="invisible"
+        app:borderWidth="0dp" />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

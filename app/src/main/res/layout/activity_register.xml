@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingHorizontal="20dp"
-    tools:context=".Register">
+    android:background="#ffffff"
+    tools:context=".Login_Register.Register">
 
     <ImageView
         android:layout_width="150dp"
@@ -28,6 +29,7 @@
             android:layout_margin="10dp"
             android:background="@drawable/custom_input"
             android:id="@+id/ed_fullname_register"
+            android:inputType="textPersonName"
             android:hint="Full Name" />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
@@ -183,7 +185,6 @@
             android:text="Already have an account?"
             android:textColor="#000000"
             android:textSize="15dp"/>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
