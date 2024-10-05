@@ -1,6 +1,7 @@
 package phongtaph31865.poly.stayserene.Screen_admin.Activity_admin;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +20,6 @@ import com.google.android.material.navigation.NavigationBarView;
 import java.util.ArrayList;
 
 import phongtaph31865.poly.stayserene.R;
-import phongtaph31865.poly.stayserene.Screen_admin.Fragment_admin.Fragment_customer_admin;
 import phongtaph31865.poly.stayserene.Screen_admin.Fragment_admin.Fragment_home_admin;
 import phongtaph31865.poly.stayserene.Screen_admin.Fragment_admin.Fragment_notification_admin;
 import phongtaph31865.poly.stayserene.Screen_admin.Fragment_admin.Fragment_personal_admin;
@@ -63,21 +63,21 @@ public class MainActivity_admin extends AppCompatActivity {
         employee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(MainActivity_admin.this, Activity_account_management.class));
             }
         });
 
         room.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(MainActivity_admin.this, Activity_room_management.class));
             }
         });
 
         customer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(MainActivity_admin.this, Activity_customer_management.class));
             }
         });
         view.setBackground(null);

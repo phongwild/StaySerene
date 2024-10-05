@@ -25,13 +25,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
-                <ImageButton
+                <ImageView
                     android:id="@+id/btn_back_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="back_button"
-                    android:src="@drawable/iconten"/>
+                    android:src="@drawable/ic_back"/>
             </LinearLayout>
 
             <TextView
@@ -42,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:text="Detail"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
             <LinearLayout
                 android:layout_width="0dp"
@@ -50,144 +48,251 @@
                 android:layout_weight="1" />
         </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="200dp">
-
-            <ImageView
-                android:id="@+id/hotel_image"
-                android:layout_width="600dp"
-                android:layout_height="500dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/hotel_popular_image" />
-
-            <ImageView
-                android:id="@+id/heart_icon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="8dp" />
-        </RelativeLayout>
+        <androidx.cardview.widget.CardView
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal"
+            app:cardCornerRadius="15dp">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/img_hotel_detail"
+                    android:layout_width="300dp"
+                    android:layout_height="200dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/hotel_popular_image" />
+                <ImageView
+                    android:id="@+id/heart_icon"
+                    android:layout_width="40dp"
+                    android:src="@drawable/ic_heart"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="8dp" />
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
             android:orientation="horizontal"
-            android:paddingVertical="8dp">
+            android:gravity="center">
+            <androidx.cardview.widget.CardView
+                android:layout_width="120dp"
+                android:layout_height="51dp"
+                android:background="#C8C8F4"
+                app:cardUseCompatPadding="true"
+                app:cardCornerRadius="8dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/free_wifi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:drawableLeft="@drawable/ic_wifi"
+                        android:drawablePadding="8dp"
+                        android:text="Free Wifi"
+                        android:textColor="#101010"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="155dp"
+                android:layout_height="51dp"
+                android:background="#C8C8F4"
+                app:cardUseCompatPadding="true"
+                app:cardCornerRadius="8dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/free_breakfast"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_wifi"
+                        android:drawablePadding="8dp"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="16dp"
+                        android:text="Free Breakfast"
+                        android:textColor="#101010"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/free_wifi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_wifi"
-                android:drawablePadding="8dp"
-                android:text="Free Wifi"
-                android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/free_breakfast"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_wifi"
-                android:drawablePadding="8dp"
-                android:layout_marginStart="16dp"
-                android:text="Free Breakfast"
-                android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="5.0"
-                android:textSize="14sp"
-                android:drawableLeft="@drawable/ic_star"
-                android:drawablePadding="8dp" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="85dp"
+                android:layout_height="51dp"
+                android:background="#C8C8F4"
+                app:cardUseCompatPadding="true"
+                app:cardCornerRadius="8dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/tv_rating_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="5.0"
+                        android:gravity="center"
+                        android:layout_centerInParent="true"
+                        android:textColor="#101010"
+                        android:textSize="12sp"
+                        android:drawableLeft="@drawable/ic_star"
+                        android:drawablePadding="8dp" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/hotel_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="The Aston Vill Hotel"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingTop="8dp" />
-
-        <TextView
-            android:id="@+id/hotel_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Alice Springs NT 0870, Australia"
-            android:textSize="14sp"
-            android:textColor="#808080"
-            android:paddingBottom="8dp" />
-
-        <TextView
-            android:id="@+id/hotel_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="$200.7 / night"
-            android:textSize="18sp"
-            android:textColor="#FF5722"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/hotel_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Aston Hotel, Alice Springs NT 0870, Australia is a modern hotel, elegant 5 star hotel overlooking the sea. Perfect for a romantic, charming experience."
-            android:textSize="14sp"
-            android:paddingTop="8dp"
-            android:paddingBottom="16dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Preview"
-            android:textColor="@color/black"
-            android:paddingBottom="8dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
             android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_hotel_name_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#101010"
+                    android:text="The Aston Vill Hotel"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
 
-            <ImageView
-                android:id="@+id/preview_image_1"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/room_image1"
-                android:layout_marginEnd="8dp" />
+                <TextView
+                    android:id="@+id/tv_location_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Australia"
+                    android:drawableLeft="@drawable/ic_location"
+                    android:drawablePadding="6dp"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:textColor="#939393"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tv_hotel_price_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$200.7"
+                    android:textSize="16sp"
+                    android:textColor="#4c4ddc"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/night"
+                    android:layout_marginLeft="2dp"
+                    android:textSize="12sp"
+                    android:textColor="#939393"
+                    android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/preview_image_2"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/room_image1"
-                android:layout_marginEnd="8dp" />
-
-            <ImageView
-                android:id="@+id/preview_image_3"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/room_image1" />
+            </LinearLayout>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/booking_button"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Booking Now"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:backgroundTint="#3F51B5"
-            android:textColor="#FFFFFF"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp" />
+            android:orientation="vertical"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:textColor="#101010"
+                android:textStyle="bold"
+                android:textSize="14sp"/>
+            <TextView
+                android:id="@+id/tv_hotel_description_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:scrollbars="vertical"
+                android:scrollbarStyle="insideOverlay"
+                android:text="Aston Hotel, Alice Springs NT 0870, Australia is a modern hotel, elegant 5 star hotel overlooking the sea. Perfect for a romantic, charming experience."
+                android:textSize="12sp"
+                android:paddingTop="8dp"
+                android:paddingBottom="16dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Preview"
+                android:textSize="14sp"
+                android:textColor="#101010"
+                android:textStyle="bold"
+                android:paddingBottom="8dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/preview_image_1"
+                    android:layout_width="100dp"
+                    android:layout_height="64dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/room_image1"
+                    android:layout_marginEnd="8dp" />
+
+                <ImageView
+                    android:id="@+id/preview_image_2"
+                    android:layout_width="100dp"
+                    android:layout_height="64dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/room_image1"
+                    android:layout_marginEnd="8dp" />
+
+                <ImageView
+                    android:id="@+id/preview_image_3"
+                    android:layout_width="100dp"
+                    android:layout_height="64dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/room_image1" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_booking_detail"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/custom_btn"
+            android:layout_marginHorizontal="15dp"
+            android:backgroundTint="#4c4ddc"
+            android:layout_marginTop="25dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Booking Now"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
 

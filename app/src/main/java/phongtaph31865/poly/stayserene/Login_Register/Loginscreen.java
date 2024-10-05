@@ -7,14 +7,24 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.auth.api.identity.BeginSignInRequest;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,6 +47,9 @@ public class Loginscreen extends AppCompatActivity {
     private TextInputEditText edt_email, edt_pass;
     float v = 0;
     private FirebaseAuth mAuth;
+    private LinearLayout btn_login_google, btn_login_fb;
+    private GoogleSignInOptions gso;
+    private GoogleSignInClient gsc;
     String email, password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +63,8 @@ public class Loginscreen extends AppCompatActivity {
         layout_pass = findViewById(R.id.layout_password_login);
         edt_email = findViewById(R.id.ed_email_login);
         edt_pass = findViewById(R.id.ed_password_login);
+        btn_login_google = findViewById(R.id.btn_login_with_google);
+        btn_login_fb = findViewById(R.id.btn_login_with_facebook);
         edt_email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -98,6 +113,23 @@ public class Loginscreen extends AppCompatActivity {
         });
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference().child("Account");
         mAuth = FirebaseAuth.getInstance();
+        //Đăng nhập bằng google
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        gsc = GoogleSignIn.getClient(this, gso);
+        btn_login_google.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent signInIntent = gsc.getSignInIntent();
+                startActivityForResult(signInIntent, 1000);
+            }
+        });
+        //Đăng nhập bằng facebook
+        btn_login_fb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         btn_Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,15 +153,19 @@ public class Loginscreen extends AppCompatActivity {
                             if (snapshot.exists()) {
                                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                     Account account = dataSnapshot.getValue(Account.class);
+                                    SharedPreferences sharedPreferences = getSharedPreferences("user_data", Activity.MODE_PRIVATE);
+                                    sharedPreferences.edit().putString("uid", account.getUid()).apply();
                                     if (account != null && account.getPassword().equals(password)) {
-                                        //saveLoginStatus(true, email, password, account.getRole());
+                                        saveLoginStatus(true, email, password, account.getRole());
                                         if (account.getRole() == 0) {
                                             Intent intent = new Intent(Loginscreen.this, MainActivity_admin.class);
-                                            intent.putExtra("Email", account.getEmail());
+                                            Toast.makeText(Loginscreen.this, "Login success", Toast.LENGTH_SHORT).show();
+                                            intent.putExtra("Username", account.getUid());
                                             startActivity(intent);
                                         } else if (account.getRole() == 1) {
                                             Intent intent = new Intent(Loginscreen.this, MainActivity_user.class);
-                                            intent.putExtra("Email", account.getEmail());
+                                            Toast.makeText(Loginscreen.this, "Login success", Toast.LENGTH_SHORT).show();
+                                            intent.putExtra("Username", account.getUid());
                                             startActivity(intent);
                                         }
                                     }else {
@@ -150,6 +186,27 @@ public class Loginscreen extends AppCompatActivity {
             }
         });
     }
+    //Google
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1000){
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                task.getResult(ApiException.class);
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                String email = account.getEmail();
+                String name = account.getDisplayName();
+                String avt = String.valueOf(account.getPhotoUrl());
+                finish();
+                startActivity(new Intent(Loginscreen.this, MainActivity_user.class));
+                Toast.makeText(Loginscreen.this, "Login success", Toast.LENGTH_SHORT).show();
+            }catch (Exception e){
+                Toast.makeText(Loginscreen.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private void saveLoginStatus(boolean isLoggedIN, String email, String password, int role){
         SharedPreferences sharedPreferences = getSharedPreferences("loginStatus", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -177,18 +234,19 @@ public class Loginscreen extends AppCompatActivity {
 
         if (isLoggedIn) {
             switch (userRole) {
-                case 0: // Người dùng thông thường
+                case 0:
                     startActivity(new Intent(Loginscreen.this, MainActivity_admin.class));
+                    Toast.makeText(Loginscreen.this, "Welcome Admin", Toast.LENGTH_SHORT).show();
                     break;
-                case 1: // Quản trị viên
+                case 1:
                     startActivity(new Intent(Loginscreen.this, MainActivity_user.class));
+                    Toast.makeText(Loginscreen.this, "Welcome back", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
             }
         }
     }
-
     @Override
     protected void onStart() {
         super.onStart();

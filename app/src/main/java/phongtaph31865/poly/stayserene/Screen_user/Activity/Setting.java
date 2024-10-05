@@ -23,7 +23,7 @@ public class Setting extends AppCompatActivity {
         policy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Setting.this, Security.class));
+
             }
         });
         account.setOnClickListener(new View.OnClickListener() {
