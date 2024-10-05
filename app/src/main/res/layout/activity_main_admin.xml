@@ -21,14 +21,13 @@
         android:background="@color/white"
         android:backgroundTint="#ffffff"
         app:fabCradleMargin="10dp"
-
         app:fabCradleRoundedCornerRadius="50dp">
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:id="@+id/bottomNavigationView_admin"
             android:layout_marginEnd="20dp"
-            android:background="@android:color/transparent"
+            android:background="#ffffff"
             android:theme="@style/themeuser"
             app:itemTextColor="@color/white"
             app:labelVisibilityMode="unlabeled"

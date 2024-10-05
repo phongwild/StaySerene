@@ -14,12 +14,14 @@
             android:orientation="vertical"
             android:gravity="center_horizontal"
             android:background="#02000000">
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_avt_user"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/icon_user02"
                 android:layout_marginTop="20dp"/>
             <TextView
+                android:id="@+id/tv_name_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Name"
@@ -28,6 +30,7 @@
                 android:textSize="16dp"
                 android:layout_marginTop="10dp"/>
             <TextView
+                android:id="@+id/tv_email_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="name1@gmail.com"
@@ -237,6 +240,7 @@
                         android:layout_marginStart="15dp"/>
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/btn_logout_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"

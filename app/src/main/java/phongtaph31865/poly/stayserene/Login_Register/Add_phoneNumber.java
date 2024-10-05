@@ -154,7 +154,7 @@ public class Add_phoneNumber extends AppCompatActivity {
         String quocTich = "";
         int role = 1;
         String Uid = UUID.randomUUID().toString();
-        String fullname = intent.getStringExtra("fullname");
+        String fullname = intent.getStringExtra("fullName");
         String email = intent.getStringExtra("email");
         String password = intent.getStringExtra("password");
 
