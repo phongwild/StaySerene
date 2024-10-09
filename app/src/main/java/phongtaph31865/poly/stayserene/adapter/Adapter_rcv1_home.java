@@ -27,18 +27,20 @@ public class Adapter_rcv1_home extends FirebaseRecyclerAdapter<Hotel, Adapter_rc
 
     @Override
     protected void onBindViewHolder(@NonNull ViewHolder viewHolder, int i, @NonNull Hotel hotel) {
-        viewHolder.tv_name.setText(hotel.getTenKhachSan());
-        viewHolder.tv_rate.setText(String.valueOf(hotel.getDanhGia()));
-        viewHolder.tv_address.setText(hotel.getDiaChi());
-        if(hotel.getAnhKhachSan() != null){
-            Picasso.get().load(hotel.getAnhKhachSan()).into(viewHolder.img);
-        }
-        viewHolder.img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+        if (hotel != null){
+            viewHolder.tv_name.setText(hotel.getTenKhachSan());
+            viewHolder.tv_rate.setText(String.valueOf(hotel.getDanhGia()));
+            viewHolder.tv_address.setText(hotel.getDiaChi());
+            if(hotel.getAnhKhachSan() != null){
+                Picasso.get().load(hotel.getAnhKhachSan()).into(viewHolder.img);
             }
-        });
+            viewHolder.img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
     }
 
     @NonNull

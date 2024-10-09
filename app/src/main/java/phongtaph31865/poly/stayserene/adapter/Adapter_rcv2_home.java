@@ -14,6 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
@@ -33,6 +38,10 @@ public class Adapter_rcv2_home extends FirebaseRecyclerAdapter<Room, Adapter_rcv
         this.context = context;
     }
 
+    public String getUid() {
+        return Uid;
+    }
+
     public void setUid(String uid) {
         Uid = uid;
     }
@@ -47,22 +56,44 @@ public class Adapter_rcv2_home extends FirebaseRecyclerAdapter<Room, Adapter_rcv
 
     @Override
     protected void onBindViewHolder(@NonNull ViewHolder viewHolder, int i, @NonNull Room room) {
-        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-        int status = room.getTinhTrangPhong();
-        if (status == 0) {
-            viewHolder.tv_name.setText("Open");
-        } else if (status == 1) {
-            viewHolder.tv_name.setText("Close");
-        }
-        viewHolder.tv_address.setText(room.getMoTaPhong());
-        viewHolder.tv_price.setText(formatter.format(room.getGiaPhong()));
-        Picasso.get().load(room.getAnhPhong()).into(viewHolder.img);
-        viewHolder.btn_detail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDetail(room);
+        if(room != null){
+            NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            int status = room.getTinhTrangPhong();
+            if (status == 0) {
+                viewHolder.tv_name.setText("Open");
+            } else if (status == 1) {
+                viewHolder.tv_name.setText("Close");
             }
-        });
+            String idType = room.getIdLoaiPhong();
+            try {
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("LoaiPhong");
+                ref.orderByChild("IdLoaiPhong").equalTo(idType).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                                viewHolder.tv_address.setText(dataSnapshot.child("tenLoaiPhong").getValue(String.class));
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            viewHolder.tv_price.setText(formatter.format(room.getGiaPhong()));
+            Picasso.get().load(room.getAnhPhong()).into(viewHolder.img);
+            viewHolder.btn_detail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showDetail(room);
+                }
+            });
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -56,7 +56,7 @@ public class Add_phoneNumber extends AppCompatActivity {
     private TextInputEditText edt_phoneNumber, edt_address, edt_date;
     private Button btn_choose_date;
     private LinearLayout btn_create;
-    private RelativeLayout btn_add_avt;
+    private RelativeLayout btn_add_avt, btn_back;
     private ProgressBar progressBar;
     private CircleImageView img_avt;
     private Uri ImgUri;
@@ -82,6 +82,13 @@ public class Add_phoneNumber extends AppCompatActivity {
         btn_create = findViewById(R.id.btn_next_addPhoneNumber);
         btn_add_avt = findViewById(R.id.btn_add_avt);
         img_avt = findViewById(R.id.iv_add_avt);
+        btn_back = findViewById(R.id.btn_back_add_number);
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         progressBar = findViewById(R.id.progressBar_add_avt);
         edt_phoneNumber.addTextChangedListener(new TextWatcher() {
             @Override
