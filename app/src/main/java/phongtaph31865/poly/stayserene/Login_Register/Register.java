@@ -154,10 +154,10 @@ public class Register extends AppCompatActivity {
             btnsingup.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    fullName = ed_fullName.getText().toString();
-                    email = ed_email.getText().toString();
-                    password = ed_password.getText().toString();
-                    confirmPassword = ed_confirmPassword.getText().toString();
+                    fullName = ed_fullName.getText().toString().trim();
+                    email = ed_email.getText().toString().trim();
+                    password = ed_password.getText().toString().trim();
+                    confirmPassword = ed_confirmPassword.getText().toString().trim();
                     if (!email.isEmpty()) {
                         Query emailQuery = userRef.orderByChild("email").equalTo(email);
                         emailQuery.addListenerForSingleValueEvent(new ValueEventListener() {

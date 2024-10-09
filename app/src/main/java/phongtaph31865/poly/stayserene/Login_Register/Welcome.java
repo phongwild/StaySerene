@@ -1,4 +1,4 @@
-package phongtaph31865.poly.stayserene;
+package phongtaph31865.poly.stayserene.Login_Register;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.os.Handler;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import phongtaph31865.poly.stayserene.Login_Register.Loginscreen;
+import phongtaph31865.poly.stayserene.R;
 
 
 public class Welcome extends AppCompatActivity {

@@ -56,4 +56,6 @@ dependencies {
     implementation ("com.firebaseui:firebase-ui-auth:8.0.2")
     implementation ("com.firebaseui:firebase-ui-storage:8.0.2")
     implementation ("com.google.android.gms:play-services-location:21.3.0")
+    //Facebook
+    //implementation ("com.facebook.android:facebook-android-sdk:[4,5)")
 }

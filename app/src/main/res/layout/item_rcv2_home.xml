@@ -4,8 +4,10 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="10dp"
+    android:background="#ffffff"
     app:cardUseCompatPadding="true">
     <LinearLayout
+        android:id="@+id/item_btn_showDetail_rcv2"
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:orientation="horizontal"
@@ -60,32 +62,11 @@
                             android:textStyle="bold" />
 
                     </LinearLayout>
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_star" />
-                        <TextView
-                            android:id="@+id/item_tv_rating_rcv2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="#101010"
-                            android:textStyle="bold"
-                            android:layout_alignParentRight="true"
-                            android:text="5.0"/>
-                    </RelativeLayout>
                 </LinearLayout>
                 <TextView
                     android:id="@+id/item_tv_address_rcv2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
                     android:paddingTop="4dp"
                     android:text="Alice Springs NT 0870, Australia"
                     android:textColor="#939393"

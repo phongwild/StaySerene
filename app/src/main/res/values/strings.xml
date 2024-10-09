@@ -2,4 +2,7 @@
     <string name="app_name">StaySerene</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="facebook_app_id">556843803521307</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">4914bf62d4b4a2ff4d73649e533629c8</string>
 </resources>

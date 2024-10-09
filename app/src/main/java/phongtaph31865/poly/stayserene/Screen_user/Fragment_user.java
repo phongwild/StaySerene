@@ -30,6 +30,7 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import phongtaph31865.poly.stayserene.Login_Register.Loginscreen;
 import phongtaph31865.poly.stayserene.R;
+import phongtaph31865.poly.stayserene.adapter.Adapter_rcv1_home;
 
 public class Fragment_user extends Fragment {
     private LinearLayout btn_logout;
@@ -62,7 +63,7 @@ public class Fragment_user extends Fragment {
                             String name = snapshot1.child("username").getValue(String.class);
                             String email = snapshot1.child("email").getValue(String.class);
                             String avt = snapshot1.child("avt").getValue(String.class);
-                            Log.d("UserData", uid + name + email + avt);
+                            Log.d("UserData", uid + " " +name + " " + email + " " + avt);
                             tv_username.setText(name);
                             tv_email.setText(email);
                             if (avt != null) {
@@ -86,6 +87,7 @@ public class Fragment_user extends Fragment {
             if (avt != null) {
                 Picasso.get().load(avt).into(iv_avt);
             }
+            Log.d("UserData", name + " " + email + " " + avt);
         }
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override

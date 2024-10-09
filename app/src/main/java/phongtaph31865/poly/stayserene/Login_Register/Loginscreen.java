@@ -133,8 +133,8 @@ public class Loginscreen extends AppCompatActivity {
         btn_Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                email = edt_email.getText().toString();
-                password = edt_pass.getText().toString();
+                email = edt_email.getText().toString().trim();
+                password = edt_pass.getText().toString().trim();
                 if (email.isEmpty() || password.isEmpty()) {
                     if (email.isEmpty()) {
                         layout_email.setError("Please enter your email");
@@ -195,9 +195,9 @@ public class Loginscreen extends AppCompatActivity {
             try {
                 task.getResult(ApiException.class);
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                String email = account.getEmail();
-                String name = account.getDisplayName();
-                String avt = String.valueOf(account.getPhotoUrl());
+                String Uid = account.getId();
+                SharedPreferences preferences = getSharedPreferences("user_google", Activity.MODE_PRIVATE);
+                preferences.edit().putString("uid", Uid).apply();
                 finish();
                 startActivity(new Intent(Loginscreen.this, MainActivity_user.class));
                 Toast.makeText(Loginscreen.this, "Login success", Toast.LENGTH_SHORT).show();
