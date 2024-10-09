@@ -4,12 +4,13 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:cardUseCompatPadding="true"
+    android:background="#ffffff"
     app:cardElevation="5dp"
     app:cardCornerRadius="20dp">
 
     <LinearLayout
         android:layout_width="257dp"
-        android:layout_height="280dp"
+        android:layout_height="250dp"
         android:orientation="vertical">
 
         <ImageView
@@ -19,7 +20,6 @@
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             android:src="@drawable/hotel_card_background" />
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -84,32 +84,6 @@
                     android:text="Alice Springs NT 0870, Australia"
                     android:textColor="#939393"
                     android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/item_tv_price_rcv1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="4dp"
-                    android:text="$200.7"
-                    android:textColor="#4C4DDC"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="4dp"
-                    android:text="/night"
-                    android:textColor="#939393"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

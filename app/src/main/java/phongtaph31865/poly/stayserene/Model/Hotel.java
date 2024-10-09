@@ -2,10 +2,10 @@ package phongtaph31865.poly.stayserene.Model;
 
 public class Hotel {
     private String IdHotel, anhKhachSan, diaChi, emailKhachSan, moTaKhachSan, sdtKhachSan, tenKhachSan;
-    private int status, ht_price;
+    private int status;
     private float danhGia;
 
-    public Hotel(String idHotel, String anhKhachSan, String diaChi, String emailKhachSan, String moTaKhachSan, String sdtKhachSan, String tenKhachSan, int status, int ht_price, float danhGia) {
+    public Hotel(String idHotel, String anhKhachSan, String diaChi, String emailKhachSan, String moTaKhachSan, String sdtKhachSan, String tenKhachSan, int status, float danhGia) {
         IdHotel = idHotel;
         this.anhKhachSan = anhKhachSan;
         this.diaChi = diaChi;
@@ -14,16 +14,7 @@ public class Hotel {
         this.sdtKhachSan = sdtKhachSan;
         this.tenKhachSan = tenKhachSan;
         this.status = status;
-        this.ht_price = ht_price;
         this.danhGia = danhGia;
-    }
-
-    public int getHt_price() {
-        return ht_price;
-    }
-
-    public void setHt_price(int ht_price) {
-        this.ht_price = ht_price;
     }
 
     public Hotel() {

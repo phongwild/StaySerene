@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="phongtaph31865.poly.stayserene"
     xmlns:tools="http://schemas.android.com/tools" >
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION "/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -36,7 +37,7 @@
             android:name=".Login_Register.Add_phoneNumber"
             android:exported="false" />
         <activity
-            android:name=".Screen_user.Activity.Detail_screen"
+            android:name=".Screen_user.Activity.Detail_room_screen"
             android:exported="false" />
         <activity
             android:name=".Login_Register.Register"
@@ -51,7 +52,7 @@
             android:name=".Screen_user.Activity.MainActivity_user"
             android:exported="false" />
         <activity
-            android:name=".Welcome"
+            android:name=".Login_Register.Welcome"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

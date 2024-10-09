@@ -1,4 +1,4 @@
-package phongtaph31865.poly.stayserene;
+package phongtaph31865.poly.stayserene.Screen_user.Activity;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import phongtaph31865.poly.stayserene.R;
 
 public class Pay extends AppCompatActivity {
 
