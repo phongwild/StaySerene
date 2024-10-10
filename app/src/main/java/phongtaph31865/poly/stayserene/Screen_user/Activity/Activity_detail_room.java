@@ -1,21 +1,22 @@
-package phongtaph31865.poly.stayserene.Screen_user;
+package phongtaph31865.poly.stayserene.Screen_user.Activity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -28,66 +29,37 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.Room;
 import phongtaph31865.poly.stayserene.R;
-import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_detail_room;
-import phongtaph31865.poly.stayserene.adapter.Adapter_rcv1_home;
-import phongtaph31865.poly.stayserene.adapter.Adapter_rcv2_home;
+import phongtaph31865.poly.stayserene.adapter.Adapter_detail_room;
 
-
-public class Fragment_home extends Fragment {
-    private RecyclerView rcv1, rcv2;
-    private TextView tv_more_ht, tv_more_room;
-    private Adapter_rcv1_home adapter_1;
-    private Adapter_rcv2_home adapter_2;
+public class Activity_detail_room extends AppCompatActivity {
+    private ImageView btn_back;
+    private RecyclerView rcv;
+    Adapter_detail_room adapter;
     private GoogleSignInOptions gso;
     private GoogleSignInClient gsc;
-    public Fragment_home() {}
-    @SuppressLint("MissingInflatedId")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_home, container, false);
-        //lấy vị trí người dùng
-
-        rcv1 = v.findViewById(R.id.rcv_home_1);
-        rcv2 = v.findViewById(R.id.rcv_home_2);
-        tv_more_ht = v.findViewById(R.id.tv_show_more_ht);
-        tv_more_room = v.findViewById(R.id.tv_show_more_room);
-        tv_more_ht.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        tv_more_room.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), Activity_detail_room.class));
-            }
-        });
-        LinearLayoutManager llm1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        LinearLayoutManager llm2 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        rcv1.setLayoutManager(llm1);
-        rcv2.setLayoutManager(llm2);
-        FirebaseRecyclerOptions<Hotel> options_1 =
-                new FirebaseRecyclerOptions.Builder<Hotel>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("KhachSan"), Hotel.class)
-                        .build();
-        FirebaseRecyclerOptions<Room> options_2 =
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_detail_room);
+        btn_back = findViewById(R.id.btn_back_detail_room);
+        rcv = findViewById(R.id.rcv_detail_room);
+        GridLayoutManager manager = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
+        rcv.setLayoutManager(manager);
+        FirebaseRecyclerOptions<Room> options =
                 new FirebaseRecyclerOptions.Builder<Room>()
                         .setQuery(FirebaseDatabase.getInstance().getReference().child("Phong"), Room.class)
                         .build();
-        adapter_1 = new Adapter_rcv1_home(options_1, getActivity());
-        adapter_2 = new Adapter_rcv2_home(options_2, getActivity());
-        rcv1.setAdapter(adapter_1);
-        rcv2.setAdapter(adapter_2);
-        adapter_1.notifyDataSetChanged();
-        adapter_2.notifyDataSetChanged();
+        adapter = new Adapter_detail_room(options, this);
+        if(adapter != null){
+            rcv.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        gsc = GoogleSignIn.getClient(getActivity(), gso);
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
+        gsc = GoogleSignIn.getClient(this, gso);
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         String getUsername = getUsernameFromSharedPreferences();
         String getUid_google = getUser_google();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Account");
@@ -103,7 +75,8 @@ public class Fragment_home extends Fragment {
                             String sdt = snapshot1.child("sdt").getValue(String.class);
                             String address = snapshot1.child("diaChi").getValue(String.class);
                             saveUserIdToSharedPreferences(uid, name, sdt, address, email);
-                            adapter_2.setUid(getUsername);
+                            adapter.setUid(getUsername);
+                            Log.d("save", "user: " + adapter.getUid());
                             Log.d("save", "user Realtime: " + getUsername);
                         }
                     }else {
@@ -123,38 +96,45 @@ public class Fragment_home extends Fragment {
             String sdt = "";
             String address = "";
             saveUserIdToSharedPreferences(getUid_google, name, sdt, address, email);
-            Log.d("save", "User google: " + getUid_google);
-            if(adapter_2 != null){
-                adapter_2.setUid(getUid_google);
+            if(adapter != null){
+                adapter.setUid(getUid_google);
             }
+            Log.d("save", "User google: " + adapter.getUid());
         }else{
             //Facebook
         }
-        return v;
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Activity_detail_room.this, MainActivity_user.class));
+                finish();
+            }
+        });
+
     }
 
     @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
-        adapter_1.startListening();
-        adapter_2.startListening();
+        adapter.startListening();
     }
+
     @Override
-    public void onStop() {
+    protected void onStop() {
         super.onStop();
-        adapter_1.stopListening();
-        adapter_2.stopListening();
+        adapter.stopListening();
     }
+
     private String getUser_google(){
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_google", Activity.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = this.getSharedPreferences("user_google", Activity.MODE_PRIVATE);
         return sharedPreferences.getString("uid", null);
     }
     private String getUsernameFromSharedPreferences() {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_data", Activity.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = this.getSharedPreferences("user_data", Activity.MODE_PRIVATE);
         return sharedPreferences.getString("uid", null);
     }
     private void saveUserIdToSharedPreferences(String Uid, String username, String sdt, String address, String email){
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("userdata", Activity.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = this.getSharedPreferences("userdata", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("uid", Uid);
         editor.putString("username", username);

@@ -100,7 +100,7 @@
                 android:id="@+id/rcv_home_1"
                 android:layout_width="match_parent"
                 android:layout_height="280dp"
-                android:layout_marginHorizontal="20dp" />
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -133,9 +133,8 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_home_2"
-                android:layout_marginHorizontal="20dp"
+                android:layout_marginHorizontal="10dp"
                 android:layout_width="match_parent"
-
                 android:layout_height="match_parent">
 
             </androidx.recyclerview.widget.RecyclerView>
