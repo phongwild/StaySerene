@@ -169,14 +169,16 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/btn_forgot_pass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:text="Forgot Password?"
-        android:textColor="@color/black"
-        android:textSize="15dp"
-        android:textStyle="bold" />
+  <LinearLayout
+      android:id="@+id/btn_forgotPass_login"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center">
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textStyle="bold"
+          android:text="Forgot password?"
+          android:textColor="@color/black"/>
+  </LinearLayout>
 </LinearLayout>

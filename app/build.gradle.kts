@@ -51,4 +51,5 @@ dependencies {
     implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.android.gms:play-services-auth:21.2.0")
+    implementation ("com.hbb20:ccp:2.5.0")
 }

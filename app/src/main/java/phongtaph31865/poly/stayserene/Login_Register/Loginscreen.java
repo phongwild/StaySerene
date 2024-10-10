@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import phongtaph31865.poly.stayserene.LoginPhoneNumberActivity;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Screen_admin.Activity_admin.MainActivity_admin;
@@ -31,8 +32,8 @@ import phongtaph31865.poly.stayserene.Screen_user.Activity.MainActivity_user;
 
 @SuppressLint("MissingInflatedId")
 public class Loginscreen extends AppCompatActivity {
-    private LinearLayout btn_Login;
-    private TextView btn_SignUp, btn_forgotPass;
+    private LinearLayout btn_Login, btn_forgotPass ;
+    private TextView btn_SignUp;
     private TextInputLayout layout_email, layout_pass;
     private TextInputEditText edt_email, edt_pass;
     float v = 0;
@@ -45,11 +46,17 @@ public class Loginscreen extends AppCompatActivity {
         setContentView(R.layout.activity_loginscreen);
         btn_Login = findViewById(R.id.btn_Login);
         btn_SignUp = findViewById(R.id.btn_register_login);
-        btn_forgotPass = findViewById(R.id.btn_forgot_pass);
+        btn_forgotPass = findViewById(R.id.btn_forgotPass_login);
         layout_email = findViewById(R.id.layout_email_login);
         layout_pass = findViewById(R.id.layout_password_login);
         edt_email = findViewById(R.id.ed_email_login);
         edt_pass = findViewById(R.id.ed_password_login);
+        btn_forgotPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Loginscreen.this, LoginPhoneNumberActivity.class));
+            }
+        });
         edt_email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
