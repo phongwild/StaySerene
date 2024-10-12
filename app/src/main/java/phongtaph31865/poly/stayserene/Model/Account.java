@@ -1,7 +1,7 @@
 package phongtaph31865.poly.stayserene.Model;
 
 public class Account {
-    private String Uid, username, avt, email, gioiTinh, ngaySinh, password, quocTich, sdt, diaChi;
+    private String Uid, username, avt, email, gioiTinh, ngaySinh, password, quocTich, sdt, diaChi, _id;
     private int role, cccd;
 
 
@@ -22,6 +22,14 @@ public class Account {
 
     public int getCccd() {
         return cccd;
+    }
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public void setCccd(int cccd) {

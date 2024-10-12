@@ -29,9 +29,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
+
+import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Room;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.adapter.Adapter_detail_room;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Activity_detail_room extends AppCompatActivity {
     private ImageView btn_back;
@@ -39,6 +45,7 @@ public class Activity_detail_room extends AppCompatActivity {
     Adapter_detail_room adapter;
     private GoogleSignInOptions gso;
     private GoogleSignInClient gsc;
+    private List<Room> rooms;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,15 +55,6 @@ public class Activity_detail_room extends AppCompatActivity {
         rcv = findViewById(R.id.rcv_detail_room);
         GridLayoutManager manager = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
         rcv.setLayoutManager(manager);
-        FirebaseRecyclerOptions<Room> options =
-                new FirebaseRecyclerOptions.Builder<Room>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("Phong"), Room.class)
-                        .build();
-        adapter = new Adapter_detail_room(options, this);
-        if(adapter != null){
-            rcv.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
-        }
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
@@ -76,7 +74,6 @@ public class Activity_detail_room extends AppCompatActivity {
                             String address = snapshot1.child("diaChi").getValue(String.class);
                             saveUserIdToSharedPreferences(uid, name, sdt, address, email);
                             adapter.setUid(getUsername);
-                            Log.d("save", "user: " + adapter.getUid());
                             Log.d("save", "user Realtime: " + getUsername);
                         }
                     }else {
@@ -99,7 +96,6 @@ public class Activity_detail_room extends AppCompatActivity {
             if(adapter != null){
                 adapter.setUid(getUid_google);
             }
-            Log.d("save", "User google: " + adapter.getUid());
         }else{
             //Facebook
         }
@@ -110,21 +106,30 @@ public class Activity_detail_room extends AppCompatActivity {
                 finish();
             }
         });
-
+        get_room();
     }
+    public void get_room(){
+        Api_service.service.get_rooms().enqueue(new Callback<List<Room>>() {
+            @Override
+            public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                if(response.isSuccessful()){
+                    if(response.body() != null){
+                        //rooms.clear();
+                        rooms = response.body();
+                        adapter = new Adapter_detail_room(rooms);
+                        rcv.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+                    }
+                }else Log.e("Detail_room", "Lỗi");
+            }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        adapter.startListening();
+            @Override
+            public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                Log.e("Detail_room", "Lỗi: " + throwable.getMessage());
+                throwable.printStackTrace();
+            }
+        });
     }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        adapter.stopListening();
-    }
-
     private String getUser_google(){
         SharedPreferences sharedPreferences = this.getSharedPreferences("user_google", Activity.MODE_PRIVATE);
         return sharedPreferences.getString("uid", null);

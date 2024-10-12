@@ -2,6 +2,7 @@ package phongtaph31865.poly.stayserene.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,20 +23,24 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
 
+import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.Room;
+import phongtaph31865.poly.stayserene.Model.TypeRoom;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.Detail_room_screen;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class Adapter_rcv2_home extends FirebaseRecyclerAdapter<Room, Adapter_rcv2_home.ViewHolder> {
+public class Adapter_rcv2_home extends RecyclerView.Adapter<Adapter_rcv2_home.ViewHolder> {
     private String Uid;
-    private Context context;
-
-    public Adapter_rcv2_home(@NonNull FirebaseRecyclerOptions<Room> options, Context context) {
-        super(options);
-        this.context = context;
+    private List<Room> rooms;
+    public Adapter_rcv2_home(List<Room> rooms) {
+        this.rooms = rooms;
     }
 
     public String getUid() {
@@ -55,45 +60,72 @@ public class Adapter_rcv2_home extends FirebaseRecyclerAdapter<Room, Adapter_rcv
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull ViewHolder viewHolder, int i, @NonNull Room room) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Room room = rooms.get(position);
         if(room != null){
             NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
             int status = room.getTinhTrangPhong();
             if (status == 0) {
-                viewHolder.tv_name.setText("Open");
+                holder.tv_name.setText("Open");
             } else if (status == 1) {
-                viewHolder.tv_name.setText("Close");
+                holder.tv_name.setText("Close");
             }
             String idType = room.getIdLoaiPhong();
             try {
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("LoaiPhong");
-                ref.orderByChild("IdLoaiPhong").equalTo(idType).addListenerForSingleValueEvent(new ValueEventListener() {
+                Api_service.service.get_typeroom().enqueue(new Callback<List<TypeRoom>>() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                                viewHolder.tv_address.setText(dataSnapshot.child("tenLoaiPhong").getValue(String.class));
+                    public void onResponse(Call<List<TypeRoom>> call, Response<List<TypeRoom>> response) {
+                        if (response.isSuccessful()){
+                            for (TypeRoom typeRoom : response.body()){
+                                if (typeRoom.get_id().equals(idType)){
+                                    holder.tv_address.setText(typeRoom.getTenLoaiPhong());
+                                }
                             }
-                        }
+                        }else Log.e("rcv2", "False: Khong lay duoc id loai phong");
                     }
-
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
+                    public void onFailure(Call<List<TypeRoom>> call, Throwable throwable) {
+                        Log.e("rcv2", "False: " + throwable.getMessage());
+                        throwable.printStackTrace();
                     }
                 });
+//                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("LoaiPhong");
+//                ref.orderByChild("IdLoaiPhong").equalTo(idType).addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        if (snapshot.exists()) {
+//                            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+//                                viewHolder.tv_address.setText(dataSnapshot.child("tenLoaiPhong").getValue(String.class));
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+
             }catch (Exception e){
                 e.printStackTrace();
             }
-            viewHolder.tv_price.setText(formatter.format(room.getGiaPhong()));
-            Picasso.get().load(room.getAnhPhong()).into(viewHolder.img);
-            viewHolder.btn_detail.setOnClickListener(new View.OnClickListener() {
+            holder.tv_price.setText(formatter.format(room.getGiaPhong()));
+            Picasso.get().load(room.getAnhPhong()).into(holder.img);
+            holder.btn_detail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showDetail(room);
+                    showDetail(room, v);
                 }
             });
         }
+    }
+
+    @Override
+    public int getItemCount() {
+        if (rooms != null){
+            return rooms.size();
+        }
+        return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -109,16 +141,16 @@ public class Adapter_rcv2_home extends FirebaseRecyclerAdapter<Room, Adapter_rcv
             btn_detail = itemView.findViewById(R.id.item_btn_showDetail_rcv2);
         }
     }
-    public void showDetail(Room room){
-        Intent intent = new Intent(context, Detail_room_screen.class);
+    public void showDetail(Room room, View v){
+        Intent intent = new Intent(v.getContext(), Detail_room_screen.class);
         intent.putExtra("uid", Uid);
-        intent.putExtra("IdRoom", room.getIdPhong());
+        intent.putExtra("IdRoom", room.get_id());
         intent.putExtra("IdTypeRoom", room.getIdLoaiPhong());
         intent.putExtra("img", room.getAnhPhong());
         intent.putExtra("price", room.getGiaPhong());
         intent.putExtra("status", room.getTinhTrangPhong());
         intent.putExtra("floor", room.getSoTang());
         intent.putExtra("desc", room.getMoTaPhong());
-        context.startActivity(intent);
+        v.getContext().startActivity(intent);
     }
 }
