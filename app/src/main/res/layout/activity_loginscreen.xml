@@ -11,8 +11,8 @@
     tools:context=".Login_Register.Loginscreen">
 
     <ImageView
-        android:layout_width="350dp"
-        android:layout_height="170dp"
+        android:layout_width="351dp"
+        android:layout_height="171dp"
         android:layout_gravity="center"
         android:layout_marginTop="90dp"
         android:src="@drawable/logo02" />
