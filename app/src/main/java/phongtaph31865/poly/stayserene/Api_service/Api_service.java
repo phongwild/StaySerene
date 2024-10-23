@@ -36,6 +36,10 @@ public interface Api_service {
     //Account
     @POST("register")
     Call<List<Account>> create_account(@Body Account ObjAccount);
+    @POST("login")
+    Call<List<Account>> login(@Body Account ObjAccount);
+    @GET("account")
+    Call<List<Account>> get_account();
     @GET("rooms")
     Call<List<Room>> get_rooms();
     @GET("typeroom")

@@ -20,8 +20,15 @@ public class Account {
         this.cccd = cccd;
     }
 
+    public Account() {
+    }
+
     public int getCccd() {
         return cccd;
+    }
+
+    public void setCccd(int cccd) {
+        this.cccd = cccd;
     }
 
     public String get_id() {
@@ -30,13 +37,6 @@ public class Account {
 
     public void set_id(String _id) {
         this._id = _id;
-    }
-
-    public void setCccd(int cccd) {
-        this.cccd = cccd;
-    }
-
-    public Account() {
     }
 
     public String getUid() {
