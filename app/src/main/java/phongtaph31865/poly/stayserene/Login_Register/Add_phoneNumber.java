@@ -224,7 +224,7 @@ public class Add_phoneNumber extends AppCompatActivity {
                             layout_date.setErrorEnabled(false);
                         }
                     }else {
-                        mAuth.createUserWithEmailAndPassword(email, password);
+                        //mAuth.createUserWithEmailAndPassword(email, password);
                         StorageReference imageRef = storageRef.child(System.currentTimeMillis() + "." + getFileExtension(ImgUri));
                         imageRef.putFile(ImgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
