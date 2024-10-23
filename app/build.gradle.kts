@@ -58,4 +58,9 @@ dependencies {
     implementation ("com.google.android.gms:play-services-location:21.3.0")
     //Facebook
     //implementation ("com.facebook.android:facebook-android-sdk:[4,5)")
+    //Retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.11.0")
+    //Gson
+    implementation ("com.google.code.gson:gson:2.11.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.10.0")
 }

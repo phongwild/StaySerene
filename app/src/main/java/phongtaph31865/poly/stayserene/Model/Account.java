@@ -1,13 +1,13 @@
 package phongtaph31865.poly.stayserene.Model;
 
 public class Account {
-    private String Uid, Username, avt, email, gioiTinh, ngaySinh, password, quocTich, sdt, diaChi;
-    private int role;
+    private String Uid, username, avt, email, gioiTinh, ngaySinh, password, quocTich, sdt, diaChi, _id;
+    private int role, cccd;
 
 
-    public Account(String uid, String username, String avt, String email, String gioiTinh, String ngaySinh, String password, String quocTich, String sdt, String diaChi, int role) {
+    public Account(String uid, String username, String avt, String email, String gioiTinh, String ngaySinh, String password, String quocTich, String sdt, String diaChi, int role, int cccd) {
         Uid = uid;
-        Username = username;
+        this.username = username;
         this.avt = avt;
         this.email = email;
         this.gioiTinh = gioiTinh;
@@ -17,6 +17,23 @@ public class Account {
         this.sdt = sdt;
         this.diaChi = diaChi;
         this.role = role;
+        this.cccd = cccd;
+    }
+
+    public int getCccd() {
+        return cccd;
+    }
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
+    }
+
+    public void setCccd(int cccd) {
+        this.cccd = cccd;
     }
 
     public Account() {
@@ -31,11 +48,11 @@ public class Account {
     }
 
     public String getUsername() {
-        return Username;
+        return username;
     }
 
     public void setUsername(String username) {
-        Username = username;
+        this.username = username;
     }
 
     public String getAvt() {

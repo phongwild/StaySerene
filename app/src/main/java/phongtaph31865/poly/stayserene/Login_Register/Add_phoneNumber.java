@@ -1,5 +1,7 @@
 package phongtaph31865.poly.stayserene.Login_Register;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -9,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -45,11 +48,16 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Add_phoneNumber extends AppCompatActivity {
     private TextInputLayout layout_phoneNumber, layout_address, layout_date;
@@ -159,6 +167,7 @@ public class Add_phoneNumber extends AppCompatActivity {
         Intent intent = getIntent();
         String gioiTinh = "";
         String quocTich = "";
+        int cccd = 987654321;
         int role = 1;
         String Uid = UUID.randomUUID().toString();
         String fullname = intent.getStringExtra("fullName");
@@ -215,7 +224,7 @@ public class Add_phoneNumber extends AppCompatActivity {
                             layout_date.setErrorEnabled(false);
                         }
                     }else {
-                        mAuth.createUserWithEmailAndPassword(email, password);
+                        //mAuth.createUserWithEmailAndPassword(email, password);
                         StorageReference imageRef = storageRef.child(System.currentTimeMillis() + "." + getFileExtension(ImgUri));
                         imageRef.putFile(ImgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
@@ -223,12 +232,37 @@ public class Add_phoneNumber extends AppCompatActivity {
                                 imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
-                                        Account newAccount = new Account(Uid, fullname, uri.toString(), email, gioiTinh, date, password, quocTich, phoneNumber, address, role);
+                                        Account newAccount = new Account(Uid, fullname, uri.toString(), email, gioiTinh, date, password, quocTich, phoneNumber, address, role, cccd);
                                         userRef.child(Uid).setValue(newAccount).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void unused) {
+                                                Account account = new Account();
+                                                account.setUsername(fullname);
+                                                account.setSdt(phoneNumber);
+                                                account.setEmail(email);
+                                                account.setPassword(password);
+                                                account.setDiaChi(address);
+                                                account.setNgaySinh(date);
+                                                account.setGioiTinh(gioiTinh);
+                                                account.setQuocTich(quocTich);
+                                                account.setRole(role);
+                                                account.setAvt(uri.toString());
+                                                account.setCccd(cccd);
+                                                Api_service.service.create_account(account).enqueue(new Callback<List<Account>>() {
+                                                    @Override
+                                                    public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                                                        if (response.isSuccessful()){
+                                                            Toast.makeText(Add_phoneNumber.this, "Create " + fullname + " success", Toast.LENGTH_SHORT).show();
+                                                        }else Toast.makeText(Add_phoneNumber.this, "Create " + fullname + " failed", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    @Override
+                                                    public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                                                        Log.e(TAG, "Lỗi: " + throwable.getMessage());
+                                                        throwable.printStackTrace();
+                                                    }
+                                                });
                                                 startActivity(new Intent(Add_phoneNumber.this, Activity_success.class));
-                                                progressBar.setVisibility(View.INVISIBLE);
+                                                progressBar.setVisibility(View.VISIBLE);
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
                                             @Override

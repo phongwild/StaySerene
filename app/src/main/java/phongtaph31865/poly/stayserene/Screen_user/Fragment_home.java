@@ -28,12 +28,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.Room;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_detail_room;
 import phongtaph31865.poly.stayserene.adapter.Adapter_rcv1_home;
 import phongtaph31865.poly.stayserene.adapter.Adapter_rcv2_home;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class Fragment_home extends Fragment {
@@ -43,6 +50,7 @@ public class Fragment_home extends Fragment {
     private Adapter_rcv2_home adapter_2;
     private GoogleSignInOptions gso;
     private GoogleSignInClient gsc;
+    private List<Room> rooms = new ArrayList<Room>();
     public Fragment_home() {}
     @SuppressLint("MissingInflatedId")
     @Override
@@ -75,16 +83,13 @@ public class Fragment_home extends Fragment {
                 new FirebaseRecyclerOptions.Builder<Hotel>()
                         .setQuery(FirebaseDatabase.getInstance().getReference().child("KhachSan"), Hotel.class)
                         .build();
-        FirebaseRecyclerOptions<Room> options_2 =
-                new FirebaseRecyclerOptions.Builder<Room>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("Phong"), Room.class)
-                        .build();
+//        FirebaseRecyclerOptions<Room> options_2 =
+//                new FirebaseRecyclerOptions.Builder<Room>()
+//                        .setQuery(FirebaseDatabase.getInstance().getReference().child("Phong"), Room.class)
+//                        .build();
         adapter_1 = new Adapter_rcv1_home(options_1, getActivity());
-        adapter_2 = new Adapter_rcv2_home(options_2, getActivity());
         rcv1.setAdapter(adapter_1);
-        rcv2.setAdapter(adapter_2);
         adapter_1.notifyDataSetChanged();
-        adapter_2.notifyDataSetChanged();
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(getActivity(), gso);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
@@ -130,20 +135,41 @@ public class Fragment_home extends Fragment {
         }else{
             //Facebook
         }
+        get_ds_phong();
         return v;
     }
+    public void get_ds_phong(){
+        Api_service.service.get_rooms().enqueue(new Callback<List<Room>>() {
+            @Override
+            public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                if(response.isSuccessful()){
+                    if(response.body() != null){
+                        rooms.clear();
+                        rooms = response.body();
+                        adapter_2 = new Adapter_rcv2_home(rooms);
+                        rcv2.setAdapter(adapter_2);
+                        adapter_2.notifyDataSetChanged();
+                    }
+                }else Log.e("rcv2", "False: khong lay duoc du lieu");
+            }
 
+            @Override
+            public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                Log.e("rcv2", "False: " + throwable.getMessage());
+                throwable.printStackTrace();
+            }
+        });
+    }
     @Override
     public void onStart() {
         super.onStart();
         adapter_1.startListening();
-        adapter_2.startListening();
+
     }
     @Override
     public void onStop() {
         super.onStop();
         adapter_1.stopListening();
-        adapter_2.stopListening();
     }
     private String getUser_google(){
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_google", Activity.MODE_PRIVATE);
