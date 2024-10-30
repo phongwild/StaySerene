@@ -109,7 +109,7 @@ public class Fragment_home extends Fragment {
                             String address = snapshot1.child("diaChi").getValue(String.class);
                             saveUserIdToSharedPreferences(uid, name, sdt, address, email);
                             adapter_2.setUid(getUsername);
-                            Log.d("save", "user Realtime: " + getUsername);
+//                            Log.d("save", "user Realtime: " + getUsername);
                         }
                     }else {
                         Log.d("save_1", "user null");

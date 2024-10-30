@@ -3,6 +3,7 @@ package phongtaph31865.poly.stayserene.Login_Register;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ public class Welcome extends AppCompatActivity {
             public void run() {
                 Intent intent = new Intent(Welcome.this, Loginscreen.class);
                 startActivity(intent);
+//                Toast.makeText(Welcome.this, "fgfdghggf", Toast.LENGTH_SHORT).show();
             }
         },3000);
     }
