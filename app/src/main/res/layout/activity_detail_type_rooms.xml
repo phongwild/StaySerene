@@ -5,6 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context=".Screen_user.Activity.Activity_list_type_room"
+
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -133,30 +135,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#101010"
-                        android:text="ID room: "
-                        android:textSize="16sp"
-                        android:textStyle="bold"/>
-                    <TextView
-                        android:id="@+id/tv_room_name_detail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#101010"
-                        android:text="1"
-                        android:textSize="16sp"
-                        android:textStyle="bold"/>
-                </LinearLayout>
 
 
                 <TextView
-                    android:id="@+id/tv_room_location_detail"
+                    android:id="@+id/tv_location_detail_type_room"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Australia"
@@ -274,7 +256,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginHorizontal="15dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="15dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
