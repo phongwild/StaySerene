@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/border_ongoing"
+    android:layout_marginVertical="10dp"
+    android:gravity="center">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/hotel_image"
+            android:layout_width="110sp"
+            android:layout_height="110sp"
+            android:src="@drawable/hotel_popular_image"
+            android:scaleType="centerCrop"
+            android:layout_marginEnd="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="110sp"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/hotel_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Royale President Hotel"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/hotel_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Viet Nam, Ha Noi"
+                android:layout_marginVertical="15sp"
+                android:textSize="14sp"
+                android:textColor="#666" />
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Paid"
+                android:paddingVertical="5dp"
+                android:paddingHorizontal="20dp"
+                android:textStyle="bold"
+                android:textColor="#4C4DDC"
+                android:textSize="14sp"
+                android:background="@drawable/bgr_paid_ongoing" />
+        </LinearLayout>
+    </LinearLayout>
+    <TextView
+        android:layout_width="360sp"
+        android:layout_height="1dp"
+        android:background="#808080"
+        android:layout_marginHorizontal="10dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginVertical="10dp">
+
+        <TextView
+            android:id="@+id/cancelBookingButton"
+            android:layout_width="150dp"
+            android:gravity="center"
+            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content"
+            android:text="Cancel Booking"
+            android:textColor="#0000FF"
+            android:textStyle="bold"
+            android:paddingVertical="10dp"
+            android:background="@drawable/bgr_button_ongoing"
+            />
+
+
+        <TextView
+            android:id="@+id/btn_view_ticket3"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="View Ticket"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="10dp"
+            android:background="@drawable/bgr_button2_ongoing"
+            />
+    </LinearLayout>
+
+</LinearLayout>

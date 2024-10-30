@@ -31,10 +31,14 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
+import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.R;
+import phongtaph31865.poly.stayserene.Screen_admin.Activity_admin.MainActivity_admin;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.MainActivity_user;
-
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @SuppressLint("MissingInflatedId")
 public class Loginscreen extends AppCompatActivity {
@@ -75,7 +79,6 @@ public class Loginscreen extends AppCompatActivity {
                     layout_email.setError("Please enter your email");
                 } else {
                     layout_email.setErrorEnabled(false);
-                    //sdfghjgfds
                 }
             }
 
@@ -149,30 +152,30 @@ public class Loginscreen extends AppCompatActivity {
                     Account account = new Account();
                     account.setEmail(email);
                     account.setPassword(password);
-//                    Api_service.service.login(account).enqueue(new Callback<List<Account>>() {
-//                        @Override
-//                        public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
-//                            if (response.isSuccessful()) {
-//                                Intent intent = new Intent(Loginscreen.this, MainActivity_user.class);
-//                                List<Account> accountList = response.body();
-//                                if(accountList.get(0).getRole() == 1){
-//                                    SharedPreferences sharedPreferences = getSharedPreferences("user_data", Activity.MODE_PRIVATE);
-//                                    sharedPreferences.edit().putString("uid", accountList.get(0).get_id()).apply();
-//                                    saveLoginStatus(true, accountList.get(0).getEmail(), accountList.get(0).getPassword(), accountList.get(0).getRole());
-//                                    intent.putExtra("Username", accountList.get(0).get_id());
-//                                    Toast.makeText(Loginscreen.this, "Login success", Toast.LENGTH_SHORT).show();
-//                                    startActivity(intent);
-//                                }
-//
-//                            }else Toast.makeText(Loginscreen.this, "Login fail", Toast.LENGTH_SHORT).show();
-//
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<List<Account>> call, Throwable throwable) {
-//                            Log.e("Login", "onFailure: " + throwable.getMessage());
-//                        }
-//                    });
+                    Api_service.service.login(account).enqueue(new Callback<List<Account>>() {
+                        @Override
+                        public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                            if (response.isSuccessful()) {
+                                Intent intent = new Intent(Loginscreen.this, MainActivity_user.class);
+                                List<Account> accountList = response.body();
+                                if(accountList.get(0).getRole() == 1){
+                                    SharedPreferences sharedPreferences = getSharedPreferences("user_data", Activity.MODE_PRIVATE);
+                                    sharedPreferences.edit().putString("uid", accountList.get(0).get_id()).apply();
+                                    saveLoginStatus(true, accountList.get(0).getEmail(), accountList.get(0).getPassword(), accountList.get(0).getRole());
+                                    intent.putExtra("Username", accountList.get(0).get_id());
+                                    Toast.makeText(Loginscreen.this, "Login success", Toast.LENGTH_SHORT).show();
+                                    startActivity(intent);
+                                }
+
+                            }else Toast.makeText(Loginscreen.this, "Login fail", Toast.LENGTH_SHORT).show();
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                            Log.e("Login", "onFailure: " + throwable.getMessage());
+                        }
+                    });
                 }
             }
         });
@@ -233,7 +236,7 @@ public class Loginscreen extends AppCompatActivity {
         if (isLoggedIn) {
             switch (userRole) {
                 case 0:
-//                    startActivity(new Intent(Loginscreen.this, MainActivity_admin.class));
+                    startActivity(new Intent(Loginscreen.this, MainActivity_admin.class));
                     Toast.makeText(Loginscreen.this, "Welcome Admin", Toast.LENGTH_SHORT).show();
                     break;
                 case 1:
@@ -241,7 +244,6 @@ public class Loginscreen extends AppCompatActivity {
                     Toast.makeText(Loginscreen.this, "Welcome back", Toast.LENGTH_SHORT).show();
                     break;
                 default:
-                    //sfghjgfds
                     break;
             }
         }

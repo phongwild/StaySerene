@@ -1,17 +1,17 @@
 package phongtaph31865.poly.stayserene.Model;
 
 public class Hotel {
-    private String IdHotel, anhKhachSan, diaChi, emailKhachSan, moTaKhachSan, sdtKhachSan, tenKhachSan;
+    private String _id, anhKhachSan, diaChi, emailKhachSan, moTaKhachSan, sdt, tenKhachSan;
     private int status;
     private float danhGia;
 
-    public Hotel(String idHotel, String anhKhachSan, String diaChi, String emailKhachSan, String moTaKhachSan, String sdtKhachSan, String tenKhachSan, int status, float danhGia) {
-        IdHotel = idHotel;
+    public Hotel(String _id, String anhKhachSan, String diaChi, String emailKhachSan, String moTaKhachSan, String sdt, String tenKhachSan, int status, float danhGia) {
+        this._id = _id;
         this.anhKhachSan = anhKhachSan;
         this.diaChi = diaChi;
         this.emailKhachSan = emailKhachSan;
         this.moTaKhachSan = moTaKhachSan;
-        this.sdtKhachSan = sdtKhachSan;
+        this.sdt = sdt;
         this.tenKhachSan = tenKhachSan;
         this.status = status;
         this.danhGia = danhGia;
@@ -20,12 +20,12 @@ public class Hotel {
     public Hotel() {
     }
 
-    public String getIdHotel() {
-        return IdHotel;
+    public String get_id() {
+        return _id;
     }
 
-    public void setIdHotel(String idHotel) {
-        IdHotel = idHotel;
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public String getAnhKhachSan() {
@@ -60,12 +60,12 @@ public class Hotel {
         this.moTaKhachSan = moTaKhachSan;
     }
 
-    public String getSdtKhachSan() {
-        return sdtKhachSan;
+    public String getSdt() {
+        return sdt;
     }
 
-    public void setSdtKhachSan(String sdtKhachSan) {
-        this.sdtKhachSan = sdtKhachSan;
+    public void setSdt(String sdt) {
+        this.sdt = sdt;
     }
 
     public String getTenKhachSan() {

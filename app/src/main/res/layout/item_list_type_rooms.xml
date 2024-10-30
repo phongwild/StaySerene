@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    app:cardUseCompatPadding="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <androidx.cardview.widget.CardView
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            app:cardCornerRadius="10dp">
+            <ImageView
+                android:id="@+id/item_iv_type_rooms"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_beach" />
+        </androidx.cardview.widget.CardView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginVertical="10dp">
+            <TextView
+                android:id="@+id/item_tv_name_type_rooms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Adada d"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#101010"/>
+            <TextView
+                android:id="@+id/item_tv_desc_type_rooms"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
+                android:textSize="12sp"
+                android:layout_marginTop="5dp"
+                android:textStyle="normal"
+                android:textColor="#939393"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

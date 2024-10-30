@@ -89,23 +89,6 @@ public class Adapter_rcv2_home extends RecyclerView.Adapter<Adapter_rcv2_home.Vi
                         throwable.printStackTrace();
                     }
                 });
-//                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("LoaiPhong");
-//                ref.orderByChild("IdLoaiPhong").equalTo(idType).addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        if (snapshot.exists()) {
-//                            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-//                                viewHolder.tv_address.setText(dataSnapshot.child("tenLoaiPhong").getValue(String.class));
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-
             }catch (Exception e){
                 e.printStackTrace();
             }

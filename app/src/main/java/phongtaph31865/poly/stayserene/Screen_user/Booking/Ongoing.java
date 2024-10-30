@@ -1,66 +1,94 @@
 package phongtaph31865.poly.stayserene.Screen_user.Booking;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.FirebaseDatabase;
+
+import phongtaph31865.poly.stayserene.Model.Booking;
 import phongtaph31865.poly.stayserene.R;
+import phongtaph31865.poly.stayserene.adapter.Adapter_rcv_ongoing;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Ongoing#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Ongoing extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private RecyclerView recyclerView;
+    private Adapter_rcv_ongoing adapter;
 
     public Ongoing() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Ongoing.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Ongoing newInstance(String param1, String param2) {
-        Ongoing fragment = new Ongoing();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_ongoing, container, false);
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        recyclerView = view.findViewById(R.id.rcv_ongoing);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        String currentUserId = getCurrentUserId();
+
+//        if (currentUserId == null) {
+//            Toast.makeText(getContext(), "User ID not found", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+
+        //setupAdapter(currentUserId);
+    }
+
+    private String getCurrentUserId() {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_data", getContext().MODE_PRIVATE);
+        return sharedPreferences.getString("uid", null);
+    }
+
+//    private void setupAdapter(String userId) {
+//        FirebaseRecyclerOptions<Booking> options =
+//                new FirebaseRecyclerOptions.Builder<Booking>()
+//                        .setQuery(FirebaseDatabase.getInstance().getReference()
+//                                .child("DatPhong")
+//                                .orderByChild("uid")
+//                                .equalTo(userId), Booking.class)
+//                        .build();
+//
+//        adapter = new Adapter_rcv_ongoing(options, getContext());
+//
+//        recyclerView.setAdapter(adapter);
+//
+//        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+//            @Override
+//            public void onItemRangeChanged(int positionStart, int itemCount) {
+//                super.onItemRangeChanged(positionStart, itemCount);
+//                if (itemCount == 0) {
+//                    Toast.makeText(getContext(), "No ongoing bookings found.", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//    }
+
+
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        adapter.startListening();
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        adapter.stopListening();
+//    }
 }

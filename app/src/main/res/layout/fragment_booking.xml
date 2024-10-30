@@ -5,9 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingHorizontal="20dp"
     android:background="#ffffff"
-    tools:context=".Screen_user.Fragment_booking">
+    tools:context=".Screen_user.Fragment_booking"
+    android:paddingHorizontal="20dp"
+    >
 
     <TextView
         android:id="@+id/textBooking"
@@ -15,6 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Booking"
+        android:layout_marginTop="10dp"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="#101010" />

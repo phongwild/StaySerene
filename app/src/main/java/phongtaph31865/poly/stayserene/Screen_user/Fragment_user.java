@@ -27,10 +27,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import de.hdodenhof.circleimageview.CircleImageView;
+import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Login_Register.Loginscreen;
+import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.adapter.Adapter_rcv1_home;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Fragment_user extends Fragment {
     private LinearLayout btn_logout;
@@ -52,30 +59,24 @@ public class Fragment_user extends Fragment {
         gsc = GoogleSignIn.getClient(getActivity(), gso);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
         String getUsername = getUsernameFromSharedPreferences();
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("Account");
         if (getUsername != null) {
-            userRef.orderByChild("uid").equalTo(getUsername).addListenerForSingleValueEvent(new ValueEventListener() {
+            Api_service.service.get_account().enqueue(new Callback<List<Account>>() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                            String uid = snapshot1.getKey();
-                            String name = snapshot1.child("username").getValue(String.class);
-                            String email = snapshot1.child("email").getValue(String.class);
-                            String avt = snapshot1.child("avt").getValue(String.class);
-                            Log.d("UserData", uid + " " +name + " " + email + " " + avt);
-                            tv_username.setText(name);
-                            tv_email.setText(email);
-                            if (avt != null) {
-                                Picasso.get().load(avt).into(iv_avt);
+                public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                    if (response.isSuccessful()) {
+                        for (Account account : response.body()) {
+                            if (account.get_id().equals(getUsername)) {
+                                tv_email.setText(account.getEmail());
+                                tv_username.setText(account.getUsername());
+                                Picasso.get().load(account.getAvt()).into(iv_avt);
                             }
                         }
                     }
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
+                public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                    Log.e("UserData", throwable.getMessage());
                 }
             });
         } else if (account != null) {
@@ -101,12 +102,17 @@ public class Fragment_user extends Fragment {
     private void Logout() {
         SharedPreferences preferences = requireActivity().getSharedPreferences("loginStatus", Activity.MODE_PRIVATE);
         SharedPreferences preferences1 = requireActivity().getSharedPreferences("user_data", Activity.MODE_PRIVATE);
+        SharedPreferences preferences2 = requireActivity().getSharedPreferences("user_google", Activity.MODE_PRIVATE);
         preferences.edit().clear().apply();
         preferences1.edit().clear().apply();
+        preferences2.edit().clear().apply();
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(getActivity(), Loginscreen.class));
     }
-
+    private String getUserGoogleFromSharedPreferences() {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_google", Activity.MODE_PRIVATE);
+        return sharedPreferences.getString("uid", "");
+    }
     private String getUsernameFromSharedPreferences() {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_data", Activity.MODE_PRIVATE);
         return sharedPreferences.getString("uid", null);
