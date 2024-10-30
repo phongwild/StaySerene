@@ -16,7 +16,6 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -29,9 +28,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,7 +38,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnPausedListener;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
@@ -74,6 +70,7 @@ public class Add_phoneNumber extends AppCompatActivity {
     //Firebase
     DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Account");
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,11 +176,11 @@ public class Add_phoneNumber extends AppCompatActivity {
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult o) {
-                        if (o.getResultCode() == Activity.RESULT_OK){
+                        if (o.getResultCode() == Activity.RESULT_OK) {
                             Intent data = o.getData();
                             ImgUri = data.getData();
-                            Picasso.get().load(ImgUri).resize(140,140).centerCrop().into(img_avt);
-                        }else {
+                            Picasso.get().load(ImgUri).resize(140, 140).centerCrop().into(img_avt);
+                        } else {
                             Toast.makeText(Add_phoneNumber.this, "No image selected", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -223,7 +220,7 @@ public class Add_phoneNumber extends AppCompatActivity {
                         } else {
                             layout_date.setErrorEnabled(false);
                         }
-                    }else {
+                    } else {
                         //mAuth.createUserWithEmailAndPassword(email, password);
                         StorageReference imageRef = storageRef.child(System.currentTimeMillis() + "." + getFileExtension(ImgUri));
                         imageRef.putFile(ImgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -232,51 +229,42 @@ public class Add_phoneNumber extends AppCompatActivity {
                                 imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
-                                        Account newAccount = new Account(Uid, fullname, uri.toString(), email, gioiTinh, date, password, quocTich, phoneNumber, address, role, cccd);
-                                        userRef.child(Uid).setValue(newAccount).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        Account account = new Account();
+                                        account.setUsername(fullname);
+                                        account.setSdt(phoneNumber);
+                                        account.setEmail(email);
+                                        account.setPassword(password);
+                                        account.setDiaChi(address);
+                                        account.setNgaySinh(date);
+                                        account.setGioiTinh(gioiTinh);
+                                        account.setQuocTich(quocTich);
+                                        account.setRole(role);
+                                        account.setAvt(uri.toString());
+                                        account.setCccd(cccd);
+                                        Api_service.service.create_account(account).enqueue(new Callback<List<Account>>() {
                                             @Override
-                                            public void onSuccess(Void unused) {
-                                                Account account = new Account();
-                                                account.setUsername(fullname);
-                                                account.setSdt(phoneNumber);
-                                                account.setEmail(email);
-                                                account.setPassword(password);
-                                                account.setDiaChi(address);
-                                                account.setNgaySinh(date);
-                                                account.setGioiTinh(gioiTinh);
-                                                account.setQuocTich(quocTich);
-                                                account.setRole(role);
-                                                account.setAvt(uri.toString());
-                                                account.setCccd(cccd);
-                                                Api_service.service.create_account(account).enqueue(new Callback<List<Account>>() {
-                                                    @Override
-                                                    public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
-                                                        if (response.isSuccessful()){
-                                                            Toast.makeText(Add_phoneNumber.this, "Create " + fullname + " success", Toast.LENGTH_SHORT).show();
-                                                        }else Toast.makeText(Add_phoneNumber.this, "Create " + fullname + " failed", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                    @Override
-                                                    public void onFailure(Call<List<Account>> call, Throwable throwable) {
-                                                        Log.e(TAG, "Lỗi: " + throwable.getMessage());
-                                                        throwable.printStackTrace();
-                                                    }
-                                                });
-                                                startActivity(new Intent(Add_phoneNumber.this, Activity_success.class));
-                                                progressBar.setVisibility(View.VISIBLE);
+                                            public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                                                if (response.isSuccessful()) {
+                                                    Toast.makeText(Add_phoneNumber.this, "Create " + fullname + " success", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(Add_phoneNumber.this, "Create " + fullname + " failed", Toast.LENGTH_SHORT).show();
+                                                }
                                             }
-                                        }).addOnFailureListener(new OnFailureListener() {
+
                                             @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(Add_phoneNumber.this, "Create " + fullname + " failed", Toast.LENGTH_SHORT).show();
+                                            public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                                                Log.e(TAG, "Lỗi: " + throwable.getMessage());
+                                                throwable.printStackTrace();
                                             }
                                         });
 
+                                        startActivity(new Intent(Add_phoneNumber.this, Activity_success.class));
                                     }
                                 });
                             }
-                        }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+                        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                             @Override
-                            public void onPaused(@NonNull UploadTask.TaskSnapshot snapshot) {
+                            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
                                 progressBar.setVisibility(View.VISIBLE);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -289,11 +277,12 @@ public class Add_phoneNumber extends AppCompatActivity {
                     }
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    private void open_Date_Time(){
+
+    private void open_Date_Time() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -306,11 +295,13 @@ public class Add_phoneNumber extends AppCompatActivity {
         }, year, month, day);
         dialog.show();
     }
-    private String getFileExtension(Uri fileUri){
+
+    private String getFileExtension(Uri fileUri) {
         ContentResolver contentResolver = getContentResolver();
         MimeTypeMap mine = MimeTypeMap.getSingleton();
         return mine.getExtensionFromMimeType(contentResolver.getType(fileUri));
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -319,7 +310,8 @@ public class Add_phoneNumber extends AppCompatActivity {
             reload();
         }
     }
-    public void reload(){
+
+    public void reload() {
         //
     }
 }

@@ -17,6 +17,7 @@ import java.util.List;
 
 import phongtaph31865.poly.stayserene.Model.TypeRoom;
 import phongtaph31865.poly.stayserene.R;
+import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_detail_type_rooms;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_list_type_room;
 
 public class Adapter_type_rooms extends RecyclerView.Adapter<Adapter_type_rooms.ViewHolder> {
@@ -41,7 +42,7 @@ public class Adapter_type_rooms extends RecyclerView.Adapter<Adapter_type_rooms.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), Activity_list_type_room.class);
+                Intent intent = new Intent(v.getContext(), Activity_detail_type_rooms.class);
                 intent.putExtra("id_type_room", typeRoom.get_id());
                 v.getContext().startActivity(intent);
             }
