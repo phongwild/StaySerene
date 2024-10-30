@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import java.util.List;
 
 import phongtaph31865.poly.stayserene.Model.Account;
+import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.Room;
 import phongtaph31865.poly.stayserene.Model.TypeRoom;
 import retrofit2.Call;
@@ -14,6 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface Api_service {
     //Login http://localhost:3000/api/login
@@ -42,6 +44,10 @@ public interface Api_service {
     Call<List<Account>> get_account();
     @GET("rooms")
     Call<List<Room>> get_rooms();
+    @GET("typeroom/{id}")
+    Call<List<TypeRoom>> get_typeroom_byId_hotel(@Path("id") String id);
     @GET("typeroom")
     Call<List<TypeRoom>> get_typeroom();
+    @GET("hotel")
+    Call<List<Hotel>> get_hotel();
 }

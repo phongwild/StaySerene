@@ -1,6 +1,7 @@
 package phongtaph31865.poly.stayserene.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,35 +15,24 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.R;
+import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_list_type_room;
 
-public class Adapter_rcv1_home extends FirebaseRecyclerAdapter<Hotel, Adapter_rcv1_home.ViewHolder> {
-    private Context context;
-
-    public Adapter_rcv1_home(@NonNull FirebaseRecyclerOptions<Hotel> options, Context context) {
-        super(options);
-        this.context = context;
+public class Adapter_rcv1_home extends RecyclerView.Adapter<Adapter_rcv1_home.ViewHolder> {
+    String Uid;
+    private List<Hotel> hotels;
+    public String getUid() {
+        return Uid;
     }
-
-    @Override
-    protected void onBindViewHolder(@NonNull ViewHolder viewHolder, int i, @NonNull Hotel hotel) {
-        if (hotel != null){
-            viewHolder.tv_name.setText(hotel.getTenKhachSan());
-            viewHolder.tv_rate.setText(String.valueOf(hotel.getDanhGia()));
-            viewHolder.tv_address.setText(hotel.getDiaChi());
-            if(hotel.getAnhKhachSan() != null){
-                Picasso.get().load(hotel.getAnhKhachSan()).into(viewHolder.img);
-            }
-            viewHolder.img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-        }
+    public void setUid(String uid) {
+        Uid = uid;
     }
-
+    public Adapter_rcv1_home(List<Hotel> hotels) {
+        this.hotels = hotels;
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -50,8 +40,37 @@ public class Adapter_rcv1_home extends FirebaseRecyclerAdapter<Hotel, Adapter_rc
         return new ViewHolder(v);
     }
 
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+        Hotel hotel = hotels.get(position);
+        viewHolder.tv_name.setText(hotel.getTenKhachSan());
+        viewHolder.tv_rate.setText(String.valueOf(hotel.getDanhGia()));
+        viewHolder.tv_address.setText(hotel.getDiaChi());
+        if(hotel.getAnhKhachSan() != null){
+            Picasso.get().load(hotel.getAnhKhachSan()).into(viewHolder.img);
+        }
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), Activity_list_type_room.class);
+                intent.putExtra("id", hotel.get_id());
+                intent.putExtra("name", hotel.getTenKhachSan());
+                intent.putExtra("Uid", getUid());
+                v.getContext().startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        if (hotels != null) {
+            return hotels.size();
+        }
+        return 0;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tv_name, tv_rate, tv_address, tv_price;
+        private TextView tv_name, tv_rate, tv_address;
         private ImageView img;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

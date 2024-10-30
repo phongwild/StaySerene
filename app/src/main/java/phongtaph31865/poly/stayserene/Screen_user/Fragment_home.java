@@ -51,6 +51,7 @@ public class Fragment_home extends Fragment {
     private GoogleSignInOptions gso;
     private GoogleSignInClient gsc;
     private List<Room> rooms = new ArrayList<Room>();
+    private List<Hotel> hotels = new ArrayList<Hotel>();
     public Fragment_home() {}
     @SuppressLint("MissingInflatedId")
     @Override
@@ -79,17 +80,6 @@ public class Fragment_home extends Fragment {
         LinearLayoutManager llm2 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         rcv1.setLayoutManager(llm1);
         rcv2.setLayoutManager(llm2);
-        FirebaseRecyclerOptions<Hotel> options_1 =
-                new FirebaseRecyclerOptions.Builder<Hotel>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("KhachSan"), Hotel.class)
-                        .build();
-//        FirebaseRecyclerOptions<Room> options_2 =
-//                new FirebaseRecyclerOptions.Builder<Room>()
-//                        .setQuery(FirebaseDatabase.getInstance().getReference().child("Phong"), Room.class)
-//                        .build();
-        adapter_1 = new Adapter_rcv1_home(options_1, getActivity());
-        rcv1.setAdapter(adapter_1);
-        adapter_1.notifyDataSetChanged();
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(getActivity(), gso);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
@@ -108,6 +98,7 @@ public class Fragment_home extends Fragment {
                             String sdt = snapshot1.child("sdt").getValue(String.class);
                             String address = snapshot1.child("diaChi").getValue(String.class);
                             saveUserIdToSharedPreferences(uid, name, sdt, address, email);
+                            adapter_1.setUid(getUsername);
                             adapter_2.setUid(getUsername);
                             Log.d("save", "user Realtime: " + getUsername);
                         }
@@ -132,11 +123,37 @@ public class Fragment_home extends Fragment {
             if(adapter_2 != null){
                 adapter_2.setUid(getUid_google);
             }
+            if(adapter_1 != null){
+                adapter_1.setUid(getUid_google);
+            }
         }else{
             //Facebook
         }
+        get_ds_ks();
         get_ds_phong();
         return v;
+    }
+    public void get_ds_ks(){
+        Api_service.service.get_hotel().enqueue(new Callback<List<Hotel>>() {
+            @Override
+            public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        hotels.clear();
+                        hotels = response.body();
+                        adapter_1 = new Adapter_rcv1_home(hotels);
+                        rcv1.setAdapter(adapter_1);
+                        adapter_1.notifyDataSetChanged();
+                    }else Log.e("rcv1", "False: khong lay duoc du lieu 1");
+                }else Log.e("rcv1", "False: khong lay duoc du lieu 2");
+            }
+
+            @Override
+            public void onFailure(Call<List<Hotel>> call, Throwable throwable) {
+                Log.e("rcv1", "False: " + throwable.getMessage());
+                throwable.printStackTrace();
+            }
+        });
     }
     public void get_ds_phong(){
         Api_service.service.get_rooms().enqueue(new Callback<List<Room>>() {
@@ -159,17 +176,6 @@ public class Fragment_home extends Fragment {
                 throwable.printStackTrace();
             }
         });
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        adapter_1.startListening();
-
-    }
-    @Override
-    public void onStop() {
-        super.onStop();
-        adapter_1.stopListening();
     }
     private String getUser_google(){
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_google", Activity.MODE_PRIVATE);

@@ -42,12 +42,12 @@ public class Ongoing extends Fragment {
 
         String currentUserId = getCurrentUserId();
 
-        if (currentUserId == null) {
-            Toast.makeText(getContext(), "User ID not found", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (currentUserId == null) {
+//            Toast.makeText(getContext(), "User ID not found", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
-        setupAdapter(currentUserId);
+        //setupAdapter(currentUserId);
     }
 
     private String getCurrentUserId() {
@@ -55,40 +55,40 @@ public class Ongoing extends Fragment {
         return sharedPreferences.getString("uid", null);
     }
 
-    private void setupAdapter(String userId) {
-        FirebaseRecyclerOptions<Booking> options =
-                new FirebaseRecyclerOptions.Builder<Booking>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference()
-                                .child("DatPhong")
-                                .orderByChild("uid")
-                                .equalTo(userId), Booking.class)
-                        .build();
+//    private void setupAdapter(String userId) {
+//        FirebaseRecyclerOptions<Booking> options =
+//                new FirebaseRecyclerOptions.Builder<Booking>()
+//                        .setQuery(FirebaseDatabase.getInstance().getReference()
+//                                .child("DatPhong")
+//                                .orderByChild("uid")
+//                                .equalTo(userId), Booking.class)
+//                        .build();
+//
+//        adapter = new Adapter_rcv_ongoing(options, getContext());
+//
+//        recyclerView.setAdapter(adapter);
+//
+//        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+//            @Override
+//            public void onItemRangeChanged(int positionStart, int itemCount) {
+//                super.onItemRangeChanged(positionStart, itemCount);
+//                if (itemCount == 0) {
+//                    Toast.makeText(getContext(), "No ongoing bookings found.", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//    }
 
-        adapter = new Adapter_rcv_ongoing(options, getContext());
 
-        recyclerView.setAdapter(adapter);
-
-        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeChanged(int positionStart, int itemCount) {
-                super.onItemRangeChanged(positionStart, itemCount);
-                if (itemCount == 0) {
-                    Toast.makeText(getContext(), "No ongoing bookings found.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        adapter.startListening();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        adapter.stopListening();
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        adapter.startListening();
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        adapter.stopListening();
+//    }
 }
