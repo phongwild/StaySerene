@@ -4,20 +4,21 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.firebase.ui.database.FirebaseRecyclerOptions;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -44,6 +45,8 @@ import retrofit2.Response;
 
 
 public class Fragment_home extends Fragment {
+    private LocationManager locationManager = null;
+    private Activity activity = getActivity();
     private RecyclerView rcv1, rcv2;
     private TextView tv_more_ht, tv_more_room;
     private Adapter_rcv1_home adapter_1;
@@ -52,13 +55,31 @@ public class Fragment_home extends Fragment {
     private GoogleSignInClient gsc;
     private List<Room> rooms = new ArrayList<Room>();
     private List<Hotel> hotels = new ArrayList<Hotel>();
-    public Fragment_home() {}
-    @SuppressLint("MissingInflatedId")
+
+    public Fragment_home() { }
+
+    @SuppressLint({"MissingInflatedId", "MissingPermission"})
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         //lấy vị trí người dùng
+        LocationListener listener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                Log.d("location", "lat: " + latitude + " long: " + longitude);
+            }
+        };
+        if (activity != null) {
+            locationManager = (LocationManager) activity.getSystemService(activity.LOCATION_SERVICE);
+        }
+        if (locationManager != null) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+        }else {
+            Log.d("location", "null");
+        }
 
         rcv1 = v.findViewById(R.id.rcv_home_1);
         rcv2 = v.findViewById(R.id.rcv_home_2);
@@ -102,7 +123,7 @@ public class Fragment_home extends Fragment {
                             adapter_2.setUid(getUsername);
                             Log.d("save", "user Realtime: " + getUsername);
                         }
-                    }else {
+                    } else {
                         Log.d("save_1", "user null");
                     }
                 }
@@ -112,7 +133,7 @@ public class Fragment_home extends Fragment {
 
                 }
             });
-        }else if(getUid_google != null){
+        } else if (getUid_google != null) {
             //Google
             String name = account.getDisplayName();
             String email = account.getEmail();
@@ -120,20 +141,21 @@ public class Fragment_home extends Fragment {
             String address = "";
             saveUserIdToSharedPreferences(getUid_google, name, sdt, address, email);
             Log.d("save", "User google: " + getUid_google);
-            if(adapter_2 != null){
+            if (adapter_2 != null) {
                 adapter_2.setUid(getUid_google);
             }
-            if(adapter_1 != null){
+            if (adapter_1 != null) {
                 adapter_1.setUid(getUid_google);
             }
-        }else{
+        } else {
             //Facebook
         }
         get_ds_ks();
         get_ds_phong();
         return v;
     }
-    public void get_ds_ks(){
+
+    public void get_ds_ks() {
         Api_service.service.get_hotel().enqueue(new Callback<List<Hotel>>() {
             @Override
             public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
@@ -144,8 +166,8 @@ public class Fragment_home extends Fragment {
                         adapter_1 = new Adapter_rcv1_home(hotels);
                         rcv1.setAdapter(adapter_1);
                         adapter_1.notifyDataSetChanged();
-                    }else Log.e("rcv1", "False: khong lay duoc du lieu 1");
-                }else Log.e("rcv1", "False: khong lay duoc du lieu 2");
+                    } else Log.e("rcv1", "False: khong lay duoc du lieu 1");
+                } else Log.e("rcv1", "False: khong lay duoc du lieu 2");
             }
 
             @Override
@@ -155,19 +177,20 @@ public class Fragment_home extends Fragment {
             }
         });
     }
-    public void get_ds_phong(){
+
+    public void get_ds_phong() {
         Api_service.service.get_rooms().enqueue(new Callback<List<Room>>() {
             @Override
             public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                if(response.isSuccessful()){
-                    if(response.body() != null){
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
                         rooms.clear();
                         rooms = response.body();
                         adapter_2 = new Adapter_rcv2_home(rooms);
                         rcv2.setAdapter(adapter_2);
                         adapter_2.notifyDataSetChanged();
                     }
-                }else Log.e("rcv2", "False: khong lay duoc du lieu");
+                } else Log.e("rcv2", "False: khong lay duoc du lieu");
             }
 
             @Override
@@ -177,15 +200,18 @@ public class Fragment_home extends Fragment {
             }
         });
     }
-    private String getUser_google(){
+
+    private String getUser_google() {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_google", Activity.MODE_PRIVATE);
         return sharedPreferences.getString("uid", null);
     }
+
     private String getUsernameFromSharedPreferences() {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_data", Activity.MODE_PRIVATE);
         return sharedPreferences.getString("uid", null);
     }
-    private void saveUserIdToSharedPreferences(String Uid, String username, String sdt, String address, String email){
+
+    private void saveUserIdToSharedPreferences(String Uid, String username, String sdt, String address, String email) {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("userdata", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("uid", Uid);

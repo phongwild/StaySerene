@@ -1,9 +1,11 @@
 package phongtaph31865.poly.stayserene.Login_Register;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,8 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -42,6 +47,7 @@ import retrofit2.Response;
 
 @SuppressLint("MissingInflatedId")
 public class Loginscreen extends AppCompatActivity {
+    private static final int REQUEST_CODE_LOCATION = 100;
     private LinearLayout btn_Login;
     private TextView btn_SignUp, btn_forgotPass;
     private TextInputLayout layout_email, layout_pass;
@@ -58,6 +64,9 @@ public class Loginscreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_loginscreen);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
+        }
         btn_Login = findViewById(R.id.btn_Login);
         btn_SignUp = findViewById(R.id.btn_register_login);
         btn_forgotPass = findViewById(R.id.btn_forgot_pass);
@@ -253,5 +262,17 @@ public class Loginscreen extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         checkLoginStatus();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Log.d("Location", "Permission granted");
+            }else {
+                Log.d("Location", "Permission denied");
+            }
+        }
     }
 }
