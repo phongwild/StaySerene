@@ -1,8 +1,10 @@
 package phongtaph31865.poly.stayserene.Screen_user.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,7 +17,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Account;
@@ -28,9 +32,10 @@ import retrofit2.Response;
 
 public class Activity_detail_type_rooms extends AppCompatActivity {
     private ImageView btn_back_detail_type_room, img_detail_type_room;
-    private TextView tv_name_detail_type_room, tv_room_name_detail, tv_location_detail_type_room, tv_price_detail_type_room, tv_so_luong_phong_detail_type_room, tv_tienNghi_detail_type_room, tv_dienTich_detail_type_room, tv_description_detail_type_room;
-    private LinearLayout btn_booking_detail_type_room;
+    private TextView tv_name_detail_type_room, tv_name, tv_location_detail_type_room, tv_price_detail_type_room, tv_so_luong_phong_detail_type_room, tv_tienNghi_detail_type_room, tv_dienTich_detail_type_room, tv_description_detail_type_room;
+    private LinearLayout btn_booking;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,13 +46,26 @@ public class Activity_detail_type_rooms extends AppCompatActivity {
         btn_back_detail_type_room = findViewById(R.id.btn_back_detail_type_room);
         img_detail_type_room = findViewById(R.id.img_detail_type_room);
         tv_name_detail_type_room = findViewById(R.id.tv_name_detail_type_room);
-
         tv_location_detail_type_room = findViewById(R.id.tv_location_detail_type_room);
         tv_price_detail_type_room = findViewById(R.id.tv_price_detail_type_room);
         tv_so_luong_phong_detail_type_room = findViewById(R.id.tv_so_luong_phong_detail_type_room);
         tv_tienNghi_detail_type_room = findViewById(R.id.tv_tienNghi_detail_type_room);
         tv_dienTich_detail_type_room = findViewById(R.id.tv_dienTich_detail_type_room);
         tv_description_detail_type_room = findViewById(R.id.tv_description_detail_type_room);
+        tv_name = findViewById(R.id.tv_name2_detail_type_room);
+        btn_booking = findViewById(R.id.btn_booking_detail_type_room);
+        btn_back_detail_type_room.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        btn_booking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         if (id_type_room != null) {
             Api_service.service.get_typeroom().enqueue(new Callback<List<TypeRoom>>() {
                 @Override
@@ -55,12 +73,14 @@ public class Activity_detail_type_rooms extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         for (TypeRoom typeroom : response.body()) {
                             if (typeroom.get_id().equals(id_type_room)) {
-                                tv_dienTich_detail_type_room.setText(String.valueOf(typeroom.getDienTich()));
+                                NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
                                 tv_tienNghi_detail_type_room.setText(String.valueOf(typeroom.getTienNghi()));
                                 tv_so_luong_phong_detail_type_room.setText(String.valueOf(typeroom.getSoLuongPhong()));
                                 tv_description_detail_type_room.setText(typeroom.getMoTaLoaiPhong());
-                                tv_price_detail_type_room.setText(String.valueOf(typeroom.getGiaLoaiPhong()));
+                                double price = typeroom.getGiaLoaiPhong();
+                                tv_price_detail_type_room.setText(formatter.format(price));
                                 Picasso.get().load(typeroom.getAnhLoaiPhong()).into(img_detail_type_room);
+                                tv_name.setText(typeroom.getTenLoaiPhong());
                                 String idHotel = typeroom.getIdKhachSan();
                                 Api_service.service.get_hotel().enqueue(new Callback<List<Hotel>>() {
                                     @Override
@@ -69,6 +89,7 @@ public class Activity_detail_type_rooms extends AppCompatActivity {
                                             for(Hotel hotel: response.body()){
                                                 if (hotel.get_id().equals(idHotel)){
                                                     tv_location_detail_type_room.setText(hotel.getDiaChi());
+
                                                 }
                                             }
                                         }

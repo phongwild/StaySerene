@@ -3,13 +3,12 @@ package phongtaph31865.poly.stayserene.Model;
 public class TypeRoom {
     private String _id, IdKhachSan, tenLoaiPhong, moTaLoaiPhong, anhLoaiPhong, tienNghi;
     private int soLuongPhong;
-    private float dienTich;
     private double giaLoaiPhong;
 
     public TypeRoom() {
     }
 
-    public TypeRoom(String _id, String idKhachSan, String tenLoaiPhong, String moTaLoaiPhong, String anhLoaiPhong, String tienNghi, int soLuongPhong, float dienTich, double giaLoaiPhong) {
+    public TypeRoom(String _id, String idKhachSan, String tenLoaiPhong, String moTaLoaiPhong, String anhLoaiPhong, String tienNghi, int soLuongPhong, double giaLoaiPhong) {
         this._id = _id;
         IdKhachSan = idKhachSan;
         this.tenLoaiPhong = tenLoaiPhong;
@@ -17,7 +16,6 @@ public class TypeRoom {
         this.anhLoaiPhong = anhLoaiPhong;
         this.tienNghi = tienNghi;
         this.soLuongPhong = soLuongPhong;
-        this.dienTich = dienTich;
         this.giaLoaiPhong = giaLoaiPhong;
     }
 
@@ -85,11 +83,4 @@ public class TypeRoom {
         this.soLuongPhong = soLuongPhong;
     }
 
-    public float getDienTich() {
-        return dienTich;
-    }
-
-    public void setDienTich(float dienTich) {
-        this.dienTich = dienTich;
-    }
 }

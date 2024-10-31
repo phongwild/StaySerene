@@ -82,7 +82,12 @@ public class Fragment_user extends Fragment {
         } else if (account != null) {
             String name = account.getDisplayName();
             String email = account.getEmail();
-            String avt = account.getPhotoUrl().toString();
+            String avt = null;
+            if (account.getPhotoUrl() != null) {
+                avt = account.getPhotoUrl().toString();
+            } else {
+                avt = null;
+            }
             tv_username.setText(name);
             tv_email.setText(email);
             if (avt != null) {

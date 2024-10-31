@@ -37,7 +37,7 @@
                 android:id="@+id/tv_name_detail_type_room"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="5"
                 android:gravity="center"
                 android:text="Detail"
                 android:textColor="@color/black"
@@ -132,9 +132,21 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:orientation="vertical">
-
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/tv_name2_detail_type_room"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#101010"
+                        android:text="1"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_location_detail_type_room"
@@ -202,7 +214,7 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
@@ -233,7 +245,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Room area: "
+                    android:text="Area: "
                     android:textColor="#101010"
                     android:textSize="16sp"
                     android:textStyle="bold" />
