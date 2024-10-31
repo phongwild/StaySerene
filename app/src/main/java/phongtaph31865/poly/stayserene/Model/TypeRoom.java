@@ -4,11 +4,12 @@ public class TypeRoom {
     private String _id, IdKhachSan, tenLoaiPhong, moTaLoaiPhong, anhLoaiPhong, tienNghi;
     private int soLuongPhong;
     private float dienTich;
+    private double giaLoaiPhong;
 
     public TypeRoom() {
     }
 
-    public TypeRoom(String _id, String idKhachSan, String tenLoaiPhong, String moTaLoaiPhong, String anhLoaiPhong, String tienNghi, int soLuongPhong, float dienTich) {
+    public TypeRoom(String _id, String idKhachSan, String tenLoaiPhong, String moTaLoaiPhong, String anhLoaiPhong, String tienNghi, int soLuongPhong, float dienTich, double giaLoaiPhong) {
         this._id = _id;
         IdKhachSan = idKhachSan;
         this.tenLoaiPhong = tenLoaiPhong;
@@ -17,6 +18,15 @@ public class TypeRoom {
         this.tienNghi = tienNghi;
         this.soLuongPhong = soLuongPhong;
         this.dienTich = dienTich;
+        this.giaLoaiPhong = giaLoaiPhong;
+    }
+
+    public double getGiaLoaiPhong() {
+        return giaLoaiPhong;
+    }
+
+    public void setGiaLoaiPhong(double giaLoaiPhong) {
+        this.giaLoaiPhong = giaLoaiPhong;
     }
 
     public String get_id() {

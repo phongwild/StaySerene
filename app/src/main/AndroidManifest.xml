@@ -27,15 +27,7 @@
         <activity
             android:name=".Screen_user.Activity.Activity_detail_room"
             android:exported="false" />
-        <activity
-            android:name=".Screen_admin.Activity_admin.Activity_customer_management"
-            android:exported="false" />
-        <activity
-            android:name=".Screen_admin.Activity_admin.Activity_room_management"
-            android:exported="false" />
-        <activity
-            android:name=".Screen_admin.Activity_admin.Activity_account_management"
-            android:exported="false" />
+
         <activity
             android:name=".Screen_user.Activity.Information"
             android:exported="false" />
@@ -57,9 +49,7 @@
         <activity
             android:name=".Login_Register.Loginscreen"
             android:exported="false" />
-        <activity
-            android:name=".Screen_admin.Activity_admin.MainActivity_admin"
-            android:exported="true" />
+
         <activity
             android:name=".Screen_user.Activity.MainActivity_user"
             android:exported="false" />

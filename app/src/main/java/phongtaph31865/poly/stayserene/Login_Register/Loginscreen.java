@@ -39,7 +39,6 @@ import java.util.List;
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.R;
-import phongtaph31865.poly.stayserene.Screen_admin.Activity_admin.MainActivity_admin;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.MainActivity_user;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -245,7 +244,7 @@ public class Loginscreen extends AppCompatActivity {
         if (isLoggedIn) {
             switch (userRole) {
                 case 0:
-                    startActivity(new Intent(Loginscreen.this, MainActivity_admin.class));
+//                    startActivity(new Intent(Loginscreen.this, MainActivity_admin.class));
                     Toast.makeText(Loginscreen.this, "Welcome Admin", Toast.LENGTH_SHORT).show();
                     break;
                 case 1:

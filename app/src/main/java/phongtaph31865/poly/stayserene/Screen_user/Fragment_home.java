@@ -121,7 +121,7 @@ public class Fragment_home extends Fragment {
                             saveUserIdToSharedPreferences(uid, name, sdt, address, email);
                             adapter_1.setUid(getUsername);
                             adapter_2.setUid(getUsername);
-                            Log.d("save", "user Realtime: " + getUsername);
+//                            Log.d("save", "user Realtime: " + getUsername);
                         }
                     } else {
                         Log.d("save_1", "user null");
