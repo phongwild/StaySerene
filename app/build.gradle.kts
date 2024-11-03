@@ -26,6 +26,10 @@ android {
             )
         }
     }
+
+    buildFeatures {
+        dataBinding = true
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -63,4 +67,8 @@ dependencies {
     //Gson
     implementation ("com.google.code.gson:gson:2.11.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.10.0")
+    //PopUp dialog
+    implementation ("com.saadahmedev.popup-dialog:popup-dialog:2.0.0")
+    //Location
+    implementation ("io.ipgeolocation:ipgeolocation:1.0.16")
 }

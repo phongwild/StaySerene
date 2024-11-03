@@ -101,7 +101,7 @@
                     android:background="@drawable/custom_input"
                     android:enabled="false"
                     android:hint="Birthday"
-                    android:inputType="textPersonName" />
+                    android:inputType="date" />
             </com.google.android.material.textfield.TextInputLayout>
             <Button
                 android:id="@+id/btn_choose_date"

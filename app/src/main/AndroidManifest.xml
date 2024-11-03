@@ -4,7 +4,7 @@
     package="phongtaph31865.poly.stayserene">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -19,7 +19,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".Screen_user.Activity.Activity_detail_type_rooms"
+            android:name=".Screen_user.Activity.OrderRoom.Activity_payment_method"
+            android:exported="false" />
+        <activity
+            android:name=".Screen_user.Activity.OrderRoom.Activity_order_room"
+            android:exported="false" />
+        <activity
+            android:name=".Screen_user.Activity.OrderRoom.Activity_detail_type_rooms"
             android:exported="false" />
         <activity
             android:name=".Screen_user.Activity.Activity_list_type_room"
@@ -27,15 +33,11 @@
         <activity
             android:name=".Screen_user.Activity.Activity_detail_room"
             android:exported="false" />
-
         <activity
             android:name=".Screen_user.Activity.Information"
             android:exported="false" />
         <activity
             android:name=".Screen_user.Activity.Setting"
-            android:exported="false" />
-        <activity
-            android:name=".Login_Register.Activity_success"
             android:exported="false" />
         <activity
             android:name=".Login_Register.Add_phoneNumber"
@@ -49,7 +51,6 @@
         <activity
             android:name=".Login_Register.Loginscreen"
             android:exported="false" />
-
         <activity
             android:name=".Screen_user.Activity.MainActivity_user"
             android:exported="false" />

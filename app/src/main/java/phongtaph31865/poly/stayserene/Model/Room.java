@@ -1,13 +1,13 @@
 package phongtaph31865.poly.stayserene.Model;
 
 public class Room {
-    private String _id, IdLoaiPhong, anhPhong, moTaPhong, soPhong;
-    private int giaPhong, soTang, tinhTrangPhong;
+    private String _id, IdLoaiPhong, anhPhong, moTaPhong;
+    private int giaPhong, soTang, tinhTrangPhong, soPhong ;
 
     public Room() {
     }
 
-    public Room(String _id, String idLoaiPhong, String anhPhong, String moTaPhong, String soPhong, int giaPhong, int soTang, int tinhTrangPhong) {
+    public Room(String _id, String idLoaiPhong, String anhPhong, String moTaPhong, int soPhong, int giaPhong, int soTang, int tinhTrangPhong) {
         this._id = _id;
         IdLoaiPhong = idLoaiPhong;
         this.anhPhong = anhPhong;
@@ -50,11 +50,11 @@ public class Room {
         this.moTaPhong = moTaPhong;
     }
 
-    public String getSoPhong() {
+    public int getSoPhong() {
         return soPhong;
     }
 
-    public void setSoPhong(String soPhong) {
+    public void setSoPhong(int soPhong) {
         this.soPhong = soPhong;
     }
 

@@ -4,9 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,16 +19,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.ipgeolocation.api.Geolocation;
+import io.ipgeolocation.api.IPGeolocationAPI;
+import io.ipgeolocation.api.exceptions.IPGeolocationError;
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
+import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.Room;
 import phongtaph31865.poly.stayserene.R;
@@ -45,8 +40,7 @@ import retrofit2.Response;
 
 
 public class Fragment_home extends Fragment {
-    private LocationManager locationManager = null;
-    private Activity activity = getActivity();
+    String API_KEY_LOCATION = "1131ca2e24684123bca828e5717c9792";
     private RecyclerView rcv1, rcv2;
     private TextView tv_more_ht, tv_more_room;
     private Adapter_rcv1_home adapter_1;
@@ -56,7 +50,8 @@ public class Fragment_home extends Fragment {
     private List<Room> rooms = new ArrayList<Room>();
     private List<Hotel> hotels = new ArrayList<Hotel>();
 
-    public Fragment_home() { }
+    public Fragment_home() {
+    }
 
     @SuppressLint({"MissingInflatedId", "MissingPermission"})
     @Override
@@ -64,23 +59,7 @@ public class Fragment_home extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         //lấy vị trí người dùng
-        LocationListener listener = new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
-                Log.d("location", "lat: " + latitude + " long: " + longitude);
-            }
-        };
-        if (activity != null) {
-            locationManager = (LocationManager) activity.getSystemService(activity.LOCATION_SERVICE);
-        }
-        if (locationManager != null) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
-        }else {
-            Log.d("location", "null");
-        }
-
+        
         rcv1 = v.findViewById(R.id.rcv_home_1);
         rcv2 = v.findViewById(R.id.rcv_home_2);
         tv_more_ht = v.findViewById(R.id.tv_show_more_ht);
@@ -104,55 +83,57 @@ public class Fragment_home extends Fragment {
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(getActivity(), gso);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
-        String getUsername = getUsernameFromSharedPreferences();
-        String getUid_google = getUser_google();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Account");
-        if (getUsername != null) {
-            ref.orderByChild("uid").equalTo(getUsername).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                            String uid = snapshot1.getKey();
-                            String name = snapshot1.child("username").getValue(String.class);
-                            String email = snapshot1.child("email").getValue(String.class);
-                            String sdt = snapshot1.child("sdt").getValue(String.class);
-                            String address = snapshot1.child("diaChi").getValue(String.class);
-                            saveUserIdToSharedPreferences(uid, name, sdt, address, email);
-                            adapter_1.setUid(getUsername);
-                            adapter_2.setUid(getUsername);
-//                            Log.d("save", "user Realtime: " + getUsername);
-                        }
-                    } else {
-                        Log.d("save_1", "user null");
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        } else if (getUid_google != null) {
-            //Google
-            String name = account.getDisplayName();
-            String email = account.getEmail();
-            String sdt = "";
-            String address = "";
-            saveUserIdToSharedPreferences(getUid_google, name, sdt, address, email);
-            Log.d("save", "User google: " + getUid_google);
-            if (adapter_2 != null) {
-                adapter_2.setUid(getUid_google);
-            }
-            if (adapter_1 != null) {
-                adapter_1.setUid(getUid_google);
-            }
-        } else {
-            //Facebook
-        }
+//        Create_acc_gg(account.getId(), account.getDisplayName(), account.getEmail(), account.getPhotoUrl().toString());
         get_ds_ks();
         get_ds_phong();
         return v;
+    }
+
+    private void Create_acc_gg(String Uid, String name, String email, String photo) {
+        Api_service.service.get_account().enqueue(new Callback<List<Account>>() {
+            @Override
+            public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                if (response.isSuccessful()) {
+                    for (Account acc : response.body()) {
+                        if (acc.getUid().equals(Uid)) {
+                            Account account = new Account();
+                            account.setUid(Uid);
+                            account.setUsername(name);
+                            account.setSdt("");
+                            account.setEmail(email);
+                            account.setPassword("");
+                            account.setDiaChi("");
+                            account.setNgaySinh("");
+                            account.setGioiTinh("");
+                            account.setQuocTich("");
+                            account.setRole(1);
+                            account.setAvt(photo);
+                            account.setCccd(123456789);
+                            Api_service.service.create_account(account).enqueue(new Callback<List<Account>>() {
+                                @Override
+                                public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                                    if (response.isSuccessful()) {
+                                        Log.e("create acc gg", "success");
+                                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_data", Activity.MODE_PRIVATE);
+                                        sharedPreferences.edit().putString("uid", response.body().get(0).getUid()).apply();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                                    Log.e("error create acc gg", throwable.getMessage());
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                Log.e("error create acc gg", throwable.getMessage());
+            }
+        });
     }
 
     public void get_ds_ks() {
@@ -201,12 +182,12 @@ public class Fragment_home extends Fragment {
         });
     }
 
-    private String getUser_google() {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_google", Activity.MODE_PRIVATE);
+    private String getUsernameFromSharedPreferences() {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_data", Activity.MODE_PRIVATE);
         return sharedPreferences.getString("uid", null);
     }
 
-    private String getUsernameFromSharedPreferences() {
+    private String getEmailFromSharedPreferences() {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_data", Activity.MODE_PRIVATE);
         return sharedPreferences.getString("uid", null);
     }

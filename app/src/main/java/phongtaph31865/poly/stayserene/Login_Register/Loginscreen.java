@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.Dialog;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.saadahmedev.popupdialog.PopupDialog;
 
 import java.util.List;
 
@@ -175,7 +177,16 @@ public class Loginscreen extends AppCompatActivity {
                                     startActivity(intent);
                                 }
 
-                            }else Toast.makeText(Loginscreen.this, "Login fail", Toast.LENGTH_SHORT).show();
+                            }else {
+                                PopupDialog.getInstance(Loginscreen.this)
+                                        .statusDialogBuilder()
+                                        .createErrorDialog()
+                                        .setHeading("Uh-Oh")
+                                        .setDescription("Wrong email or password!" + "Please try again")
+                                        .setActionButtonText("Try again")
+                                        .build(Dialog::dismiss)
+                                        .show();
+                            }
 
                         }
 
@@ -199,17 +210,14 @@ public class Loginscreen extends AppCompatActivity {
                 task.getResult(ApiException.class);
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 String Uid = account.getId();
-                SharedPreferences preferences = getSharedPreferences("user_google", Activity.MODE_PRIVATE);
-                preferences.edit().putString("uid", Uid).apply();
-                finish();
+                SharedPreferences sharedPreferences = getSharedPreferences("user_google", Activity.MODE_PRIVATE);
+                sharedPreferences.edit().putString("uid", Uid).apply();
                 startActivity(new Intent(Loginscreen.this, MainActivity_user.class));
-                Toast.makeText(Loginscreen.this, "Login success", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Toast.makeText(Loginscreen.this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         }
     }
-
     private void saveLoginStatus(boolean isLoggedIN, String email, String password, int role) {
         SharedPreferences sharedPreferences = getSharedPreferences("loginStatus", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

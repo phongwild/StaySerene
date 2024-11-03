@@ -5,8 +5,9 @@ public class Account {
     private int role, cccd;
 
 
-    public Account(String uid, String username, String avt, String email, String gioiTinh, String ngaySinh, String password, String quocTich, String sdt, String diaChi, int role, int cccd) {
+    public Account(String uid, String username, String avt, String email, String gioiTinh, String ngaySinh, String password, String quocTich, String sdt, String diaChi, int role, int cccd, String _id) {
         Uid = uid;
+        this._id = _id;
         this.username = username;
         this.avt = avt;
         this.email = email;

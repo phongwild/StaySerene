@@ -41,6 +41,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.saadahmedev.popupdialog.PopupDialog;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
@@ -241,6 +242,7 @@ public class Add_phoneNumber extends AppCompatActivity {
                                         account.setRole(role);
                                         account.setAvt(uri.toString());
                                         account.setCccd(cccd);
+                                        account.setUid("");
                                         Api_service.service.create_account(account).enqueue(new Callback<List<Account>>() {
                                             @Override
                                             public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
@@ -257,8 +259,14 @@ public class Add_phoneNumber extends AppCompatActivity {
                                                 throwable.printStackTrace();
                                             }
                                         });
-
-                                        startActivity(new Intent(Add_phoneNumber.this, Activity_success.class));
+                                        PopupDialog.getInstance(Add_phoneNumber.this)
+                                                .statusDialogBuilder()
+                                                .createSuccessDialog()
+                                                .setHeading("Well Done")
+                                                .setDescription("You have successfully" +
+                                                        " completed the task")
+                                                .build(dialog -> startActivity(new Intent(Add_phoneNumber.this, Loginscreen.class)))
+                                                .show();
                                     }
                                 });
                             }

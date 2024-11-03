@@ -2,6 +2,7 @@ package phongtaph31865.poly.stayserene.Screen_user;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,6 +26,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.saadahmedev.popupdialog.PopupDialog;
+import com.saadahmedev.popupdialog.listener.StandardDialogActionListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -98,25 +101,39 @@ public class Fragment_user extends Fragment {
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Logout();
+                PopupDialog.getInstance(getActivity())
+                        .standardDialogBuilder()
+                        .createIOSDialog()
+                        .setHeading("Logout")
+                        .setDescription("Are you sure you want to logout?")
+                        .setPositiveButtonText("Yes")
+                        .build(new StandardDialogActionListener() {
+                            @Override
+                            public void onPositiveButtonClicked(Dialog dialog) {
+                                Logout();
+                            }
+
+                            @Override
+                            public void onNegativeButtonClicked(Dialog dialog) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
             }
         });
         return v;
     }
-
     private void Logout() {
         SharedPreferences preferences = requireActivity().getSharedPreferences("loginStatus", Activity.MODE_PRIVATE);
         SharedPreferences preferences1 = requireActivity().getSharedPreferences("user_data", Activity.MODE_PRIVATE);
         SharedPreferences preferences2 = requireActivity().getSharedPreferences("user_google", Activity.MODE_PRIVATE);
+//        SharedPreferences preferences3 = requireActivity().getSharedPreferences("id_google_account", Activity.MODE_PRIVATE);
         preferences.edit().clear().apply();
         preferences1.edit().clear().apply();
         preferences2.edit().clear().apply();
+//        preferences3.edit().clear().apply();
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(getActivity(), Loginscreen.class));
-    }
-    private String getUserGoogleFromSharedPreferences() {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_google", Activity.MODE_PRIVATE);
-        return sharedPreferences.getString("uid", "");
     }
     private String getUsernameFromSharedPreferences() {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_data", Activity.MODE_PRIVATE);

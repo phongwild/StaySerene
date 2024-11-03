@@ -12,13 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import phongtaph31865.poly.stayserene.Model.TypeRoom;
 import phongtaph31865.poly.stayserene.R;
-import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_detail_type_rooms;
-import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_list_type_room;
+import phongtaph31865.poly.stayserene.Screen_user.Activity.OrderRoom.Activity_detail_type_rooms;
 
 public class Adapter_type_rooms extends RecyclerView.Adapter<Adapter_type_rooms.ViewHolder> {
     private List<TypeRoom> list_type_rooms;

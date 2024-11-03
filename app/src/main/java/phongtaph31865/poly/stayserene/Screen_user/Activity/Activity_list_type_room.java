@@ -46,7 +46,8 @@ public class Activity_list_type_room extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Activity_list_type_room.this, MainActivity_user.class));
+//                startActivity(new Intent(Activity_list_type_room.this, MainActivity_user.class));
+                finish();
             }
         });
         LinearLayoutManager llm = new LinearLayoutManager(this);
