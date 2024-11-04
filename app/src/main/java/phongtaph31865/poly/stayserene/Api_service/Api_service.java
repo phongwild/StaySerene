@@ -28,9 +28,8 @@ public interface Api_service {
     //Đặt phòng: http://localhost:3000/api/orderroom
     //Xem phòng đặt theo Uid: http://localhost:3000/api/orderroom/{Uid}
     //Thêm + xem khách sạn: http://localhost:3000/api/hotel
-    //String BASE_URL = "http://192.168.0.102:3000/api/";
-    String BASE_URL = "http://192.168.10.103:3000/api/";
-    //String BASE_URL = "http://10.0.2.2:3000/api/";
+    //String BASE_URL = "http://192.168.10.103:3000/api/";
+    String BASE_URL = "http://10.62.4.33:3000/api/";
     Gson gson = new GsonBuilder().create();
     Api_service service = new Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -72,6 +71,6 @@ public interface Api_service {
     //OrderRoom
     @POST("orderroom")
     Call<List<Room>> order_room(@Body Order_Room ObjOrder_Room);
-    @GET("orderroom/{Uid}")
-    Call<List<Room>> get_orderroom_byUid(@Path("Uid") String Uid);
+    @GET("orderroombyUid/{Uid}")
+    Call<List<Order_Room>> get_orderroom_byUid(@Path("Uid") String Uid);
 }

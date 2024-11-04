@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Login_Register.Add_phoneNumber"
-    android:paddingHorizontal="20dp"
     android:fitsSystemWindows="true">
     <ProgressBar
         android:id="@+id/progressBar_add_avt"
@@ -16,6 +15,7 @@
         android:indeterminateTint="#4C4DDC"
         android:visibility="invisible"/>
     <LinearLayout
+        android:paddingHorizontal="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
