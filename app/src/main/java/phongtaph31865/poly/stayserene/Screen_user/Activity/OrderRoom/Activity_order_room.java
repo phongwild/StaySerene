@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,8 +23,11 @@ import androidx.cardview.widget.CardView;
 import com.saadahmedev.popupdialog.PopupDialog;
 
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -188,79 +192,92 @@ public class Activity_order_room extends AppCompatActivity {
         btn_booking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LocalDateTime now = LocalDateTime.now();
-                String date = now.getHour() + ":" + now.getMinute() + "-" + now.getDayOfMonth() + "/" + now.getMonthValue() + "/" + now.getYear();
-                Order_Room orderRoom = new Order_Room();
-                orderRoom.setOrderTime(date);
-                orderRoom.setNote(ed_note.getText().toString());
-                orderRoom.setImg(img);
-                //orderRoom.setTotal(Integer.parseInt(total));
-                orderRoom.setTimeGet(tv_time_in.getText().toString());
-                orderRoom.setTimeCheckout(tv_time_out.getText().toString());
-                if (getUsernameFromSharedPreferences() != null) {
-                    orderRoom.setUid(getUsernameFromSharedPreferences());
-                } else if (getUserGoogleFromSharedPreferences() != null) {
-                    orderRoom.setUid(getUserGoogleFromSharedPreferences());
-                }
-                Api_service.service.get_rooms_byId(id_room).enqueue(new Callback<List<Room>>() {
-                    @Override
-                    public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                        if (response.isSuccessful()) {
-                            List<Room> rooms = response.body();
-                            Room room = rooms.get(0);
-                            orderRoom.setIdPhong(room.get_id());
-                            orderRoom.setTotal(room.getGiaPhong());
-                            room.setTinhTrangPhong(1);
-                            Api_service.service.order_room(orderRoom).enqueue(new Callback<List<Room>>() {
-                                @Override
-                                public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                                    if (response.isSuccessful()) {
-                                        Api_service.service.update_rooms(id_room, room).enqueue(new Callback<List<Room>>() {
-                                            @Override
-                                            public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                                                if (response.isSuccessful()) {
-                                                    PopupDialog.getInstance(Activity_order_room.this)
-                                                            .statusDialogBuilder()
-                                                            .createSuccessDialog()
-                                                            .setHeading("Well Done")
-                                                            .setDescription("Your booking is complete!")
-                                                            .build(dialog1 -> startActivity(new Intent(Activity_order_room.this, MainActivity_user.class)))
-                                                            .show();
-                                                } else {
-                                                    PopupDialog.getInstance(Activity_order_room.this)
-                                                            .statusDialogBuilder()
-                                                            .createErrorDialog()
-                                                            .setHeading("Uh-Oh")
-                                                            .setDescription("Unexpected error occurred." +
-                                                                    " Try again later.")
-                                                            .build(Dialog::dismiss)
-                                                            .show();
-                                                }
-                                            }
-                                            @Override
-                                            public void onFailure(Call<List<Room>> call, Throwable throwable) {
-                                                Log.e("Failure update room", throwable.getMessage());
-                                            }
-                                        });
-                                    }else {
-                                        Log.e("Failure order room", response.message());
-                                    }
-                                }
-                                @Override
-                                public void onFailure(Call<List<Room>> call, Throwable throwable) {
-                                    Log.e("Failure order room", throwable.getMessage());
-                                }
-                            });
-                        }else {
-                            Log.e("Failure getRoomById", response.message());
+                String timeIn = tv_time_in.getText().toString();
+                String timeOut = tv_time_out.getText().toString();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                try {
+                    Date dateIn = dateFormat.parse(timeIn);
+                    Date dateOut = dateFormat.parse(timeOut);
+                    if(dateOut.before(dateIn)){
+                        Toast.makeText(Activity_order_room.this, "Check out time must be after check in time", Toast.LENGTH_SHORT).show();
+                    }else {
+                        LocalDateTime now = LocalDateTime.now();
+                        String date = now.getHour() + ":" + now.getMinute() + "-" + now.getDayOfMonth() + "/" + now.getMonthValue() + "/" + now.getYear();
+                        Order_Room orderRoom = new Order_Room();
+                        orderRoom.setOrderTime(date);
+                        orderRoom.setNote(ed_note.getText().toString());
+                        orderRoom.setImg(img);
+                        orderRoom.setTimeGet(tv_time_in.getText().toString());
+                        orderRoom.setTimeCheckout(tv_time_out.getText().toString());
+                        if (getUsernameFromSharedPreferences() != null) {
+                            orderRoom.setUid(getUsernameFromSharedPreferences());
+                        } else if (getUserGoogleFromSharedPreferences() != null) {
+                            orderRoom.setUid(getUserGoogleFromSharedPreferences());
                         }
-                    }
+                        Api_service.service.get_rooms_byId(id_room).enqueue(new Callback<List<Room>>() {
+                            @Override
+                            public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                                if (response.isSuccessful()) {
+                                    List<Room> rooms = response.body();
+                                    Room room = rooms.get(0);
+                                    orderRoom.setIdPhong(room.get_id());
+                                    orderRoom.setTotal(room.getGiaPhong());
+                                    room.setTinhTrangPhong(1);
+                                    Api_service.service.order_room(orderRoom).enqueue(new Callback<List<Room>>() {
+                                        @Override
+                                        public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                                            if (response.isSuccessful()) {
+                                                Api_service.service.update_rooms(id_room, room).enqueue(new Callback<List<Room>>() {
+                                                    @Override
+                                                    public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                                                        if (response.isSuccessful()) {
+                                                            PopupDialog.getInstance(Activity_order_room.this)
+                                                                    .statusDialogBuilder()
+                                                                    .createSuccessDialog()
+                                                                    .setHeading("Well Done")
+                                                                    .setDescription("Your booking is complete!")
+                                                                    .build(dialog1 -> startActivity(new Intent(Activity_order_room.this, MainActivity_user.class)))
+                                                                    .show();
+                                                        } else {
+                                                            PopupDialog.getInstance(Activity_order_room.this)
+                                                                    .statusDialogBuilder()
+                                                                    .createErrorDialog()
+                                                                    .setHeading("Uh-Oh")
+                                                                    .setDescription("Unexpected error occurred." +
+                                                                            " Try again later.")
+                                                                    .build(Dialog::dismiss)
+                                                                    .show();
+                                                        }
+                                                    }
+                                                    @Override
+                                                    public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                                                        Log.e("Failure update room", throwable.getMessage());
+                                                    }
+                                                });
+                                            }else {
+                                                Log.e("Failure order room", response.message());
+                                            }
+                                        }
+                                        @Override
+                                        public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                                            Log.e("Failure order room", throwable.getMessage());
+                                        }
+                                    });
+                                }else {
+                                    Log.e("Failure getRoomById", response.message());
+                                }
+                            }
 
-                    @Override
-                    public void onFailure(Call<List<Room>> call, Throwable throwable) {
-                        Log.e("Failure getRoomById", throwable.getMessage());
+                            @Override
+                            public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                                Log.e("Failure getRoomById", throwable.getMessage());
+                            }
+                        });
                     }
-                });
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(Activity_order_room.this, "Please choose check in and check out time", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

@@ -15,7 +15,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
@@ -55,6 +58,18 @@ public class Fragment_calendar extends Fragment {
                     order_rooms = response.body();
                     adapter = new Adapter_schedule(order_rooms);
                     rcv.setAdapter(adapter);
+                    adapter.setOnItemClickListener(new Adapter_schedule.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(int position, Order_Room order_room) {
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                            try {
+                                Date date = dateFormat.parse(order_room.getTimeGet());
+                                calendarView.setDate(date.getTime());
+                            } catch (ParseException e) {
+                                Log.e("Error parsing date", "onItemClick: " + e.getMessage());
+                            }
+                        }
+                    });
                     adapter.notifyDataSetChanged();
                 }else{
                     Log.e("Response order by id", "onResponse: " + response.message());

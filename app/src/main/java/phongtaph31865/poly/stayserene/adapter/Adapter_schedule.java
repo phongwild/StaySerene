@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -28,7 +31,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Adapter_schedule extends RecyclerView.Adapter<Adapter_schedule.ViewHolder>{
+    private OnItemClickListener onItemClickListener;
     private List<Order_Room> order_rooms;
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
     public Adapter_schedule(List<Order_Room> order_rooms) {
         this.order_rooms = order_rooms;
     }
@@ -38,7 +45,6 @@ public class Adapter_schedule extends RecyclerView.Adapter<Adapter_schedule.View
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_schedule, parent, false);
         return new ViewHolder(v);
     }
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Order_Room order_room = order_rooms.get(position);
@@ -100,8 +106,24 @@ public class Adapter_schedule extends RecyclerView.Adapter<Adapter_schedule.View
         holder.date.setText(order_room.getTimeGet());
         holder.price.setText(formatter.format(order_room.getTotal()));
         Picasso.get().load(order_room.getImg()).into(holder.img);
-    }
+        holder.btn_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onItemClickListener != null){
+                    onItemClickListener.onItemClick(position, order_room);
+                }
+            }
+        });
+    }
+    public interface OnItemClickListener{
+        void onItemClick(int position, Order_Room order_room);
+    }
     @Override
     public int getItemCount() {
         if(order_rooms != null){
