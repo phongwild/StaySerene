@@ -381,7 +381,7 @@
                                 android:layout_gravity="end"
                                 android:layout_height="wrap_content"
                                 android:text="Pay at check-in"
-                                android:textColor="#4C4DDC"
+                                android:textColor="#0F0F10"
                                 android:textStyle="bold"
                                 android:textSize="16sp"
                                 android:paddingRight="10dp"
