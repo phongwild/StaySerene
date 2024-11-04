@@ -41,9 +41,9 @@ import retrofit2.Response;
 
 public class Activity_order_room extends AppCompatActivity {
     private ImageView btn_back, btn_choose_payment;
-    private TextView tv_name_hotel, tv_type_room, tv_number_room, tv_floor, tv_desc, tv_fullName, tv_phone, tv_total, tv_time_in, tv_time_out;
+    private TextView tv_name_hotel, tv_type_room, tv_number_room, tv_floor, tv_desc, tv_fullName, tv_phone, tv_total, tv_time_in, tv_time_out, tv_paymethod;
     private EditText ed_note;
-    private RelativeLayout  btn_time_in, btn_time_out;
+    private RelativeLayout btn_time_in, btn_time_out;
     private CardView btn_booking;
 
     @SuppressLint("WrongViewCast")
@@ -64,6 +64,7 @@ public class Activity_order_room extends AppCompatActivity {
         tv_total = findViewById(R.id.tv_total_order_room);
         tv_time_in = findViewById(R.id.tv_time_check_in_order_room);
         tv_time_out = findViewById(R.id.tv_time_check_out_order_room);
+        tv_paymethod = findViewById(R.id.tv_payment_method_order_room);
         btn_booking = findViewById(R.id.btn_booking_order_room);
         btn_time_in = findViewById(R.id.btn_time_check_in_order_room);
         btn_time_out = findViewById(R.id.btn_time_check_out_order_room);
@@ -97,37 +98,55 @@ public class Activity_order_room extends AppCompatActivity {
         //Order room
         Intent intent = getIntent();
         String id_type_room = intent.getStringExtra("id_type_room");
+        // Lấy giá trị của phương thức thanh toán khi ấn nút paytcheckin
+        String payInCheckOut = intent.getStringExtra("Pay_in_check_out");
+
+        // Lấy giá trị của phương thức thanh toán khi ấn nút cardpayment
+        String cardPayment = intent.getStringExtra("Card_Pay_Ment");
         String id_room = intent.getStringExtra("id_room");
         String img = intent.getStringExtra("img");
-        if(getUsernameFromSharedPreferences() != null){
+
+        // Kiểm tra và sử dụng giá trị đã nhận được
+        if (payInCheckOut != null) {
+            // Xử lý phương thức thanh toán "Pay_in_check_out"
+            tv_paymethod.setText(payInCheckOut);
+        }
+
+        if (cardPayment != null) {
+            // Xử lý phương thức thanh toán "Card_Pay_Ment"
+            tv_paymethod.setText(cardPayment);
+        }
+
+        if (getUsernameFromSharedPreferences() != null) {
             Api_service.service.get_account_byId(getUsernameFromSharedPreferences()).enqueue(new Callback<List<Account>>() {
                 @Override
                 public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
-                    if (response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         List<Account> accounts = response.body();
                         Account account = accounts.get(0);
                         tv_fullName.setText(account.getUsername());
                         tv_phone.setText(account.getSdt());
-                    }else Log.e("Failure get account", response.message());
+                    } else Log.e("Failure get account", response.message());
                 }
+
                 @Override
                 public void onFailure(Call<List<Account>> call, Throwable throwable) {
                     Log.e("Failure get account", throwable.getMessage());
                 }
             });
-        }else if(getUserGoogleFromSharedPreferences() != null){
+        } else if (getUserGoogleFromSharedPreferences() != null) {
             tv_fullName.setText(getUserGoogleFromSharedPreferences());
         }
-        if(id_type_room != null){
+        if (id_type_room != null) {
             Api_service.service.get_rooms_byId_typeRoom(id_type_room).enqueue(new Callback<List<Room>>() {
                 @Override
                 public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                    if (response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         List<Room> rooms = response.body();
                         Room room = rooms.get(0);
                         tv_number_room.setText(String.valueOf(room.getSoPhong()));
                         tv_floor.setText(String.valueOf(room.getSoTang()));
-                    }else Log.e("Failure get room", response.message());
+                    } else Log.e("Failure get room", response.message());
                 }
 
                 @Override
@@ -138,7 +157,7 @@ public class Activity_order_room extends AppCompatActivity {
             Api_service.service.get_typeroom_byId(id_type_room).enqueue(new Callback<List<TypeRoom>>() {
                 @Override
                 public void onResponse(Call<List<TypeRoom>> call, Response<List<TypeRoom>> response) {
-                    if (response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         List<TypeRoom> typeRooms = response.body();
                         TypeRoom typeRoom = typeRooms.get(0);
                         tv_type_room.setText(typeRoom.getTenLoaiPhong());
@@ -146,7 +165,7 @@ public class Activity_order_room extends AppCompatActivity {
                         Api_service.service.get_hotel_byId(typeRoom.getIdKhachSan()).enqueue(new Callback<List<Hotel>>() {
                             @Override
                             public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
-                                if (response.isSuccessful()){
+                                if (response.isSuccessful()) {
                                     List<Hotel> hotels = response.body();
                                     Hotel hotel = hotels.get(0);
                                     tv_name_hotel.setText(hotel.getTenKhachSan());
@@ -167,11 +186,11 @@ public class Activity_order_room extends AppCompatActivity {
                 }
             });
         }
-        if(id_room != null){
+        if (id_room != null) {
             Api_service.service.get_rooms_byId(id_room).enqueue(new Callback<List<Room>>() {
                 @Override
                 public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                    if(response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         List<Room> rooms = response.body();
                         Room room = rooms.get(0);
                         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
@@ -237,21 +256,23 @@ public class Activity_order_room extends AppCompatActivity {
                                                             .show();
                                                 }
                                             }
+
                                             @Override
                                             public void onFailure(Call<List<Room>> call, Throwable throwable) {
                                                 Log.e("Failure update room", throwable.getMessage());
                                             }
                                         });
-                                    }else {
+                                    } else {
                                         Log.e("Failure order room", response.message());
                                     }
                                 }
+
                                 @Override
                                 public void onFailure(Call<List<Room>> call, Throwable throwable) {
                                     Log.e("Failure order room", throwable.getMessage());
                                 }
                             });
-                        }else {
+                        } else {
                             Log.e("Failure getRoomById", response.message());
                         }
                     }
@@ -264,6 +285,7 @@ public class Activity_order_room extends AppCompatActivity {
             }
         });
     }
+
     private String getUserGoogleFromSharedPreferences() {
         SharedPreferences sharedPreferences = this.getSharedPreferences("user_google", Activity.MODE_PRIVATE);
         return sharedPreferences.getString("id_google_account", "");
@@ -273,7 +295,8 @@ public class Activity_order_room extends AppCompatActivity {
         SharedPreferences sharedPreferences = this.getSharedPreferences("user_data", Activity.MODE_PRIVATE);
         return sharedPreferences.getString("uid", null);
     }
-    private void choose_TimeIN(){
+
+    private void choose_TimeIN() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -281,13 +304,14 @@ public class Activity_order_room extends AppCompatActivity {
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                String formattedDate = String.format("%02d/%02d/%04d", dayOfMonth , month + 1, year);
+                String formattedDate = String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year);
                 tv_time_in.setText(formattedDate);
             }
         }, year, month, day);
         dialog.show();
     }
-    private void choose_TimeOUT(){
+
+    private void choose_TimeOUT() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -295,7 +319,7 @@ public class Activity_order_room extends AppCompatActivity {
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                String formattedDate = String.format("%02d/%02d/%04d", dayOfMonth , month + 1, year);
+                String formattedDate = String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year);
                 tv_time_out.setText(formattedDate);
             }
         }, year, month, day);
