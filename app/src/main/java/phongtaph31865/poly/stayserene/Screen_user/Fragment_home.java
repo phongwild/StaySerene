@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +20,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+
+import org.imaginativeworld.oopsnointernet.callbacks.ConnectionCallback;
+import org.imaginativeworld.oopsnointernet.dialogs.signal.DialogPropertiesSignal;
+import org.imaginativeworld.oopsnointernet.dialogs.signal.NoInternetDialogSignal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +35,7 @@ import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.Room;
+import phongtaph31865.poly.stayserene.NetworkUtils.NetworkUtils;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_detail_room;
 import phongtaph31865.poly.stayserene.adapter.Adapter_rcv1_home;
@@ -39,6 +45,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
+/** @noinspection ALL*/
 public class Fragment_home extends Fragment {
     String API_KEY_LOCATION = "1131ca2e24684123bca828e5717c9792";
     private RecyclerView rcv1, rcv2;
@@ -85,7 +92,39 @@ public class Fragment_home extends Fragment {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
 //        Create_acc_gg(account.getId(), account.getDisplayName(), account.getEmail(), account.getPhotoUrl().toString());
         get_ds_ks();
-        get_ds_phong();
+        if(NetworkUtils.isNetworkConnected(getActivity())){
+            get_ds_ks();
+            get_ds_phong();
+        }else if(NetworkUtils.isNetworkConnected(getActivity()) == false) {
+            NoInternetDialogSignal.Builder builder = new NoInternetDialogSignal.Builder(
+                    getActivity(),
+                    getLifecycle()
+            );
+            DialogPropertiesSignal properties = builder.getDialogProperties();
+
+            properties.setConnectionCallback(new ConnectionCallback() { // Optional
+                @Override
+                public void hasActiveConnection(boolean hasActiveConnection) {
+                    get_ds_ks();
+                    get_ds_phong();
+                }
+            });
+            properties.setCancelable(false); // Optional
+            properties.setNoInternetConnectionTitle("No Internet"); // Optional
+            properties.setNoInternetConnectionMessage("Check your Internet connection and try again"); // Optional
+            properties.setShowInternetOnButtons(true); // Optional
+            properties.setPleaseTurnOnText("Please turn on"); // Optional
+            properties.setWifiOnButtonText("Wifi"); // Optional
+            properties.setMobileDataOnButtonText("Mobile data"); // Optional
+
+            properties.setOnAirplaneModeTitle("No Internet"); // Optional
+            properties.setOnAirplaneModeMessage("You have turned on the airplane mode."); // Optional
+            properties.setPleaseTurnOffText("Please turn off"); // Optional
+            properties.setAirplaneModeOffButtonText("Airplane mode"); // Optional
+            properties.setShowAirplaneModeOffButtons(true); // Optional
+            builder.build();
+        }
+
         return v;
     }
 
@@ -138,6 +177,7 @@ public class Fragment_home extends Fragment {
 
     public void get_ds_ks() {
         Api_service.service.get_hotel().enqueue(new Callback<List<Hotel>>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
                 if (response.isSuccessful()) {

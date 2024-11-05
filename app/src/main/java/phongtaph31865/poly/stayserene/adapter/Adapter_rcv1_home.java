@@ -47,7 +47,9 @@ public class Adapter_rcv1_home extends RecyclerView.Adapter<Adapter_rcv1_home.Vi
         viewHolder.tv_rate.setText(String.valueOf(hotel.getDanhGia()));
         viewHolder.tv_address.setText(hotel.getDiaChi());
         if(hotel.getAnhKhachSan() != null){
-            Picasso.get().load(hotel.getAnhKhachSan()).into(viewHolder.img);
+            Picasso picasso = Picasso.get();
+            picasso.setIndicatorsEnabled(true);
+            picasso.load(hotel.getAnhKhachSan()).into(viewHolder.img);
         }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -93,6 +93,11 @@ public class Adapter_rcv2_home extends RecyclerView.Adapter<Adapter_rcv2_home.Vi
                 e.printStackTrace();
             }
             holder.tv_price.setText(formatter.format(room.getGiaPhong()));
+            if(room.getAnhPhong() != null){
+                Picasso picasso = Picasso.get();
+                picasso.setIndicatorsEnabled(true);
+                picasso.load(room.getAnhPhong()).into(holder.img);
+            }
             Picasso.get().load(room.getAnhPhong()).into(holder.img);
             holder.btn_detail.setOnClickListener(new View.OnClickListener() {
                 @Override

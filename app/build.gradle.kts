@@ -70,6 +70,7 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.10.0")
     //PopUp dialog
     implementation ("com.saadahmedev.popup-dialog:popup-dialog:2.0.0")
+    implementation ("org.imaginativeworld.oopsnointernet:oopsnointernet:2.0.0")
     //Location
     implementation ("io.ipgeolocation:ipgeolocation:1.0.16")
 }
