@@ -47,18 +47,46 @@
                         android:textSize="14sp"
                         android:textColor="#101010"
                         android:textStyle="bold" />
-                    <TextView
-                        android:id="@+id/item_date_schedule"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:text="20/10/2024"
-                        android:textSize="12sp"
-                        android:textColor="#939393"
-                        android:drawableLeft="@drawable/ic_calendar"
-                        android:textAlignment="textStart"
                         android:gravity="center_vertical"
-                        tools:ignore="RtlCompat" />
+                        android:layout_weight="1">
+                        <TextView
+                            android:id="@+id/item_start_date_schedule"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
+                            android:text="20/10/2024"
+                            android:textSize="12sp"
+                            android:textColor="#939393"
+                            android:drawableLeft="@drawable/ic_calendar"
+                            android:textAlignment="textStart"
+                            android:gravity="center_vertical"
+                            tools:ignore="RtlCompat" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="to"
+                            android:layout_marginRight="10dp"
+                            android:textSize="12sp"
+                            android:textColor="#939393"
+                            android:textAlignment="center"
+                            android:gravity="center_vertical"
+                            tools:ignore="RtlCompat" />
+                        <TextView
+                            android:id="@+id/item_end_date_schedule"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="20/10/2024"
+                            android:textSize="12sp"
+                            android:textColor="#939393"
+                            android:textAlignment="textStart"
+                            android:gravity="center_vertical"
+                            tools:ignore="RtlCompat" />
+                    </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"

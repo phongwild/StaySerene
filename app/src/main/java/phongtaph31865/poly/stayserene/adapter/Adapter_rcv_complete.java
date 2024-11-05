@@ -19,25 +19,25 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import phongtaph31865.poly.stayserene.Model.Booking;
 import phongtaph31865.poly.stayserene.Model.Hotel;
+import phongtaph31865.poly.stayserene.Model.Order_Room;
 import phongtaph31865.poly.stayserene.R;
 
-public class Adapter_rcv_complete extends FirebaseRecyclerAdapter<Booking, Adapter_rcv_complete.ViewHolder> {
+public class Adapter_rcv_complete extends FirebaseRecyclerAdapter<Order_Room, Adapter_rcv_complete.ViewHolder> {
 private Context context;
 
-public Adapter_rcv_complete(@NonNull FirebaseRecyclerOptions<Booking> options, Context context) {
+public Adapter_rcv_complete(@NonNull FirebaseRecyclerOptions<Order_Room> options, Context context) {
     super(options);
     this.context = context;
 }
 
 @Override
-protected void onBindViewHolder(@NonNull Adapter_rcv_complete.ViewHolder viewHolder, int position, @NonNull Booking booking) {
-    if (booking == null || !"Complete".equals(booking.getTrangThai())) {
-        viewHolder.itemView.setVisibility(View.GONE);
-        viewHolder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-        return;
-    }
+protected void onBindViewHolder(@NonNull Adapter_rcv_complete.ViewHolder viewHolder, int position, @NonNull Order_Room booking) {
+//    if (booking == null || !"Complete".equals(booking.getTrangThai())) {
+//        viewHolder.itemView.setVisibility(View.GONE);
+//        viewHolder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
+//        return;
+//    }
     DatabaseReference hotelRef = FirebaseDatabase.getInstance().getReference("KhachSan").child(String.valueOf(booking.getIdPhong()));
     hotelRef.addListenerForSingleValueEvent(new ValueEventListener() {
         @Override
@@ -67,7 +67,7 @@ protected void onBindViewHolder(@NonNull Adapter_rcv_complete.ViewHolder viewHol
         }
     });
 
-    viewHolder.status.setText(booking.getTrangThai() != null ? booking.getTrangThai() : "Chưa xác định");
+//    viewHolder.status.setText(booking.getTrangThai() != null ? booking.getTrangThai() : "Chưa xác định");
 }
 
 @NonNull

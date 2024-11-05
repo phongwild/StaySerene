@@ -30,6 +30,7 @@ android {
     buildFeatures {
         dataBinding = true
     }
+    viewBinding { enable = true }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -59,7 +60,6 @@ dependencies {
     implementation ("com.firebaseui:firebase-ui-firestore:8.0.2")
     implementation ("com.firebaseui:firebase-ui-auth:8.0.2")
     implementation ("com.firebaseui:firebase-ui-storage:8.0.2")
-    ///sdfghjkl;lkjhg
     implementation ("com.google.android.gms:play-services-location:21.3.0")
     //Facebook
     //implementation ("com.facebook.android:facebook-android-sdk:[4,5)")

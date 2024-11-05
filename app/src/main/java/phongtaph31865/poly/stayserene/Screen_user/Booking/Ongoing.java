@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,10 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.database.FirebaseDatabase;
-
-import phongtaph31865.poly.stayserene.Model.Booking;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.adapter.Adapter_rcv_ongoing;
 
@@ -39,15 +34,6 @@ public class Ongoing extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.rcv_ongoing);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        String currentUserId = getCurrentUserId();
-
-//        if (currentUserId == null) {
-//            Toast.makeText(getContext(), "User ID not found", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-
-        //setupAdapter(currentUserId);
     }
 
     private String getCurrentUserId() {
@@ -55,40 +41,4 @@ public class Ongoing extends Fragment {
         return sharedPreferences.getString("uid", null);
     }
 
-//    private void setupAdapter(String userId) {
-//        FirebaseRecyclerOptions<Booking> options =
-//                new FirebaseRecyclerOptions.Builder<Booking>()
-//                        .setQuery(FirebaseDatabase.getInstance().getReference()
-//                                .child("DatPhong")
-//                                .orderByChild("uid")
-//                                .equalTo(userId), Booking.class)
-//                        .build();
-//
-//        adapter = new Adapter_rcv_ongoing(options, getContext());
-//
-//        recyclerView.setAdapter(adapter);
-//
-//        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-//            @Override
-//            public void onItemRangeChanged(int positionStart, int itemCount) {
-//                super.onItemRangeChanged(positionStart, itemCount);
-//                if (itemCount == 0) {
-//                    Toast.makeText(getContext(), "No ongoing bookings found.", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-//    }
-
-
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        adapter.startListening();
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        adapter.stopListening();
-//    }
 }

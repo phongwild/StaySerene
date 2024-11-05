@@ -19,28 +19,25 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.text.NumberFormat;
-import java.util.Locale;
-
-import phongtaph31865.poly.stayserene.Model.Booking;
 import phongtaph31865.poly.stayserene.Model.Hotel; // Assuming there's a Hotel model
+import phongtaph31865.poly.stayserene.Model.Order_Room;
 import phongtaph31865.poly.stayserene.R;
 
-public class Adapter_rcv_ongoing extends FirebaseRecyclerAdapter<Booking, Adapter_rcv_ongoing.ViewHolder> {
+public class Adapter_rcv_ongoing extends FirebaseRecyclerAdapter<Order_Room, Adapter_rcv_ongoing.ViewHolder> {
     private Context context;
 
-    public Adapter_rcv_ongoing(@NonNull FirebaseRecyclerOptions<Booking> options, Context context) {
+    public Adapter_rcv_ongoing(@NonNull FirebaseRecyclerOptions<Order_Room> options, Context context) {
         super(options);
         this.context = context;
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull Adapter_rcv_ongoing.ViewHolder viewHolder, int position, @NonNull Booking booking) {
-        if (booking == null || (!"Paid".equals(booking.getTrangThai()) && !"Deposited".equals(booking.getTrangThai()))) {
-            viewHolder.itemView.setVisibility(View.GONE);
-            viewHolder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-            return;
-        }
+    protected void onBindViewHolder(@NonNull Adapter_rcv_ongoing.ViewHolder viewHolder, int position, @NonNull Order_Room booking) {
+//        if (booking == null || (!"Paid".equals(booking.getTrangThai()) && !"Deposited".equals(booking.getTrangThai()))) {
+//            viewHolder.itemView.setVisibility(View.GONE);
+//            viewHolder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
+//            return;
+//        }
 
         // Nếu trạng thái là "Paid", hiển thị item bình thường
         DatabaseReference hotelRef = FirebaseDatabase.getInstance().getReference("KhachSan").child(String.valueOf(booking.getIdPhong()));
@@ -73,7 +70,7 @@ public class Adapter_rcv_ongoing extends FirebaseRecyclerAdapter<Booking, Adapte
             }
         });
 
-        viewHolder.status.setText(booking.getTrangThai() != null ? booking.getTrangThai() : "Chưa xác định");
+//        viewHolder.status.setText(booking.getTrangThai() != null ? booking.getTrangThai() : "Chưa xác định");
     }
 
     @NonNull

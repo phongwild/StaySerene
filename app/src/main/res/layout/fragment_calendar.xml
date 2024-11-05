@@ -57,7 +57,7 @@
                 android:textColor="#4C4DDC"/>
         </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginHorizontal="25dp"
+            android:layout_marginHorizontal="15dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/rcv_calendar"/>
