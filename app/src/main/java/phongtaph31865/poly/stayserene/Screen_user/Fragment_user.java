@@ -124,10 +124,12 @@ public class Fragment_user extends Fragment {
         return v;
     }
     private void Logout() {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("userdata", Activity.MODE_PRIVATE);
         SharedPreferences preferences = requireActivity().getSharedPreferences("loginStatus", Activity.MODE_PRIVATE);
         SharedPreferences preferences1 = requireActivity().getSharedPreferences("user_data", Activity.MODE_PRIVATE);
         SharedPreferences preferences2 = requireActivity().getSharedPreferences("user_google", Activity.MODE_PRIVATE);
 //        SharedPreferences preferences3 = requireActivity().getSharedPreferences("id_google_account", Activity.MODE_PRIVATE);
+        sharedPreferences.edit().clear().apply();
         preferences.edit().clear().apply();
         preferences1.edit().clear().apply();
         preferences2.edit().clear().apply();

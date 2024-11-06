@@ -18,6 +18,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface Api_service {
     //Login http://localhost:3000/api/login
@@ -47,6 +48,8 @@ public interface Api_service {
     Call<List<Account>> get_account_byId(@Path("id") String id);
     @PUT("account/{id}")
     Call<List<Account>> update_account(@Path("id") String id, @Body Account ObjAccount);
+    @GET("checkusergoogle")
+    Call<Boolean> check_user_google(@Query("id") String id);
     //Room
     @GET("rooms")
     Call<List<Room>> get_rooms();

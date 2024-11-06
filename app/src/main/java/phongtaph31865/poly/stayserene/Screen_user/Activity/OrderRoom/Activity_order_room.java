@@ -20,6 +20,10 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.saadahmedev.popupdialog.PopupDialog;
 
 import java.text.NumberFormat;
@@ -49,6 +53,8 @@ public class Activity_order_room extends AppCompatActivity {
     private EditText ed_note;
     private RelativeLayout btn_time_in, btn_time_out;
     private CardView btn_booking;
+    private GoogleSignInOptions gso;
+    private GoogleSignInClient gsc;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -57,6 +63,10 @@ public class Activity_order_room extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_order_room);
         SharedPreferences payMethod = getSharedPreferences("payment_method", MODE_PRIVATE);
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        gsc = GoogleSignIn.getClient(Activity_order_room.this, gso);
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(Activity_order_room.this);
+        Log.e("idgg", String.valueOf(account.getId()));
         //Anh xa
         btn_back = findViewById(R.id.btn_back_order_room);
         tv_name_hotel = findViewById(R.id.tv_hotelName_order_room);
@@ -225,8 +235,6 @@ public class Activity_order_room extends AppCompatActivity {
                         orderRoom.setTimeCheckout(tv_time_out.getText().toString());
                         if (getUsernameFromSharedPreferences() != null) {
                             orderRoom.setUid(getUsernameFromSharedPreferences());
-                        } else if (getUserGoogleFromSharedPreferences() != null) {
-                            orderRoom.setUid(getUserGoogleFromSharedPreferences());
                         }
                         Api_service.service.get_rooms_byId(id_room).enqueue(new Callback<List<Room>>() {
                             @Override
@@ -271,6 +279,14 @@ public class Activity_order_room extends AppCompatActivity {
                                                     }
                                                 });
                                             } else {
+                                                PopupDialog.getInstance(Activity_order_room.this)
+                                                        .statusDialogBuilder()
+                                                        .createErrorDialog()
+                                                        .setHeading("Uh-Oh")
+                                                        .setDescription("Unexpected error occurred." +
+                                                                " Try again later.")
+                                                        .build(Dialog::dismiss)
+                                                        .show();
                                                 Log.e("Failure order room", response.message());
                                             }
                                         }
@@ -302,7 +318,7 @@ public class Activity_order_room extends AppCompatActivity {
 
     private String getUserGoogleFromSharedPreferences() {
         SharedPreferences sharedPreferences = this.getSharedPreferences("user_google", Activity.MODE_PRIVATE);
-        return sharedPreferences.getString("id_google_account", "");
+        return sharedPreferences.getString("uid", "");
     }
 
     private String getUsernameFromSharedPreferences() {

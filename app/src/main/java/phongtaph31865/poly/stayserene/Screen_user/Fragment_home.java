@@ -45,11 +45,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-/** @noinspection ALL*/
+/**
+ * @noinspection ALL
+ */
 public class Fragment_home extends Fragment {
     String API_KEY_LOCATION = "1131ca2e24684123bca828e5717c9792";
     private RecyclerView rcv1, rcv2;
-    private TextView tv_more_ht, tv_more_room;
+    private TextView tv_more_ht, tv_more_room, tv_location;
     private Adapter_rcv1_home adapter_1;
     private Adapter_rcv2_home adapter_2;
     private GoogleSignInOptions gso;
@@ -66,11 +68,32 @@ public class Fragment_home extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         //lấy vị trí người dùng
-        
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        gsc = GoogleSignIn.getClient(getActivity(), gso);
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
+        Api_service.service.get_account_byId(getUsernameFromSharedPreferences()).enqueue(new Callback<List<Account>>() {
+            @Override
+            public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        for (Account acc : response.body()) {
+                            saveUserIdToSharedPreferences(acc.getUid(), acc.getUsername(), acc.getSdt(), acc.getDiaChi(), acc.getEmail());
+                            tv_location.setText(acc.getDiaChi());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Account>> call, Throwable throwable) {
+
+            }
+        });
         rcv1 = v.findViewById(R.id.rcv_home_1);
         rcv2 = v.findViewById(R.id.rcv_home_2);
         tv_more_ht = v.findViewById(R.id.tv_show_more_ht);
         tv_more_room = v.findViewById(R.id.tv_show_more_room);
+        tv_location = v.findViewById(R.id.tv_location_home);
         tv_more_ht.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,15 +110,10 @@ public class Fragment_home extends Fragment {
         LinearLayoutManager llm2 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         rcv1.setLayoutManager(llm1);
         rcv2.setLayoutManager(llm2);
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        gsc = GoogleSignIn.getClient(getActivity(), gso);
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
-//        Create_acc_gg(account.getId(), account.getDisplayName(), account.getEmail(), account.getPhotoUrl().toString());
-        get_ds_ks();
-        if(NetworkUtils.isNetworkConnected(getActivity())){
+        if (NetworkUtils.isNetworkConnected(getActivity())) {
             get_ds_ks();
             get_ds_phong();
-        }else if(NetworkUtils.isNetworkConnected(getActivity()) == false) {
+        } else if (NetworkUtils.isNetworkConnected(getActivity()) == false) {
             NoInternetDialogSignal.Builder builder = new NoInternetDialogSignal.Builder(
                     getActivity(),
                     getLifecycle()
@@ -128,52 +146,6 @@ public class Fragment_home extends Fragment {
         return v;
     }
 
-    private void Create_acc_gg(String Uid, String name, String email, String photo) {
-        Api_service.service.get_account().enqueue(new Callback<List<Account>>() {
-            @Override
-            public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
-                if (response.isSuccessful()) {
-                    for (Account acc : response.body()) {
-                        if (acc.getUid().equals(Uid)) {
-                            Account account = new Account();
-                            account.setUid(Uid);
-                            account.setUsername(name);
-                            account.setSdt("");
-                            account.setEmail(email);
-                            account.setPassword("");
-                            account.setDiaChi("");
-                            account.setNgaySinh("");
-                            account.setGioiTinh("");
-                            account.setQuocTich("");
-                            account.setRole(1);
-                            account.setAvt(photo);
-                            account.setCccd(123456789);
-                            Api_service.service.create_account(account).enqueue(new Callback<List<Account>>() {
-                                @Override
-                                public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
-                                    if (response.isSuccessful()) {
-                                        Log.e("create acc gg", "success");
-                                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_data", Activity.MODE_PRIVATE);
-                                        sharedPreferences.edit().putString("uid", response.body().get(0).getUid()).apply();
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<List<Account>> call, Throwable throwable) {
-                                    Log.e("error create acc gg", throwable.getMessage());
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Account>> call, Throwable throwable) {
-                Log.e("error create acc gg", throwable.getMessage());
-            }
-        });
-    }
 
     public void get_ds_ks() {
         Api_service.service.get_hotel().enqueue(new Callback<List<Hotel>>() {
@@ -228,7 +200,7 @@ public class Fragment_home extends Fragment {
     }
 
     private String getEmailFromSharedPreferences() {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_data", Activity.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_google", Activity.MODE_PRIVATE);
         return sharedPreferences.getString("uid", null);
     }
 
