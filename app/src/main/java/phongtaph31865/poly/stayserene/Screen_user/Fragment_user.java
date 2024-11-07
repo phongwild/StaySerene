@@ -37,6 +37,7 @@ import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Login_Register.Loginscreen;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.R;
+import phongtaph31865.poly.stayserene.Screen_user.Messenger.Activiti_messenger_list_hotel;
 import phongtaph31865.poly.stayserene.adapter.Adapter_rcv1_home;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,6 +55,7 @@ public class Fragment_user extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_user, container, false);
         btn_logout = v.findViewById(R.id.btn_logout_user);
+        LinearLayout btnMessenger = v.findViewById(R.id.btn_messenger);
         iv_avt = v.findViewById(R.id.iv_avt_user);
         tv_username = v.findViewById(R.id.tv_name_user);
         tv_email = v.findViewById(R.id.tv_email_user);
@@ -98,6 +100,14 @@ public class Fragment_user extends Fragment {
             }
             Log.d("UserData", name + " " + email + " " + avt);
         }
+        btnMessenger.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to HomeActivity (or any other Activity)
+                Intent intent = new Intent(getActivity(), Activiti_messenger_list_hotel.class);  // Replace `HomeActivity.class` with the appropriate Activity class
+                startActivity(intent);
+            }
+        });
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

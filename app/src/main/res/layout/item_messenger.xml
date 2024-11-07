@@ -1,0 +1,42 @@
+<!-- item_messenger.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/tvThoiGianGui"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thời gian gửi"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tvNoiDung"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nội dung gửi"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tvVaiTro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vai trò"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tvTrangThaiKh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Trạng thái khách"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tvTrangThaiNv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Trạng thái nhân viên"
+        android:textSize="12sp" />
+</LinearLayout>

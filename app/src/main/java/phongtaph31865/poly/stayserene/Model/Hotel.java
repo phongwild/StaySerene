@@ -16,7 +16,10 @@ public class Hotel {
         this.status = status;
         this.danhGia = danhGia;
     }
-
+    public Hotel(String tenKhachSan, String anhKhachSan) {
+        this.tenKhachSan = tenKhachSan;
+        this.anhKhachSan = anhKhachSan;
+    }
     public Hotel() {
     }
 

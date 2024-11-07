@@ -20,6 +20,14 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Screen_user.Messenger.Activiti_list_messenger"
+            android:exported="false"
+            android:theme="@style/Theme.StaySerene" />
+        <activity
+            android:name=".Screen_user.Messenger.Activiti_messenger_list_hotel"
+            android:exported="false"
+            android:theme="@style/Theme.StaySerene" />
+        <activity
             android:name=".Screen_user.Activity.OrderRoom.Activity_show_detail_booking"
             android:exported="false" />
         <activity

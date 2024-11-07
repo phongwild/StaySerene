@@ -1,5 +1,6 @@
 package phongtaph31865.poly.stayserene.Api_service;
 
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -10,6 +11,7 @@ import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.Order_Room;
 import phongtaph31865.poly.stayserene.Model.Room;
 import phongtaph31865.poly.stayserene.Model.TypeRoom;
+import phongtaph31865.poly.stayserene.Model.Messenger;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -29,7 +31,7 @@ public interface Api_service {
     //Xem phòng đặt theo Uid: http://localhost:3000/api/orderroom/{Uid}
     //Thêm + xem khách sạn: http://localhost:3000/api/hotel
     //String BASE_URL = "http://192.168.10.103:3000/api/";
-    String BASE_URL = "http://10.62.4.33:3000/api/";
+    String BASE_URL = "http://192.168.1.2:3000/api/";
     Gson gson = new GsonBuilder().create();
     Api_service service = new Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -73,4 +75,11 @@ public interface Api_service {
     Call<List<Room>> order_room(@Body Order_Room ObjOrder_Room);
     @GET("orderroombyUid/{Uid}")
     Call<List<Order_Room>> get_orderroom_byUid(@Path("Uid") String Uid);
+    @GET("messenger/{hotelId}/{Uid}")
+    Call<List<Messenger>> getMessengersForHotel(@Path("hotelId") String IdKhachSan, @Path("Uid") String Uid);
+    @POST("messenger")
+    Call<Messenger> createMessenger(@Body Messenger messenger);
+    @POST("messenger")
+    Call<Void> sendMessage(@Body Messenger messenger);
+
 }
