@@ -65,8 +65,6 @@ public class Activity_order_room extends AppCompatActivity {
         SharedPreferences payMethod = getSharedPreferences("payment_method", MODE_PRIVATE);
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(Activity_order_room.this, gso);
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(Activity_order_room.this);
-        Log.e("idgg", String.valueOf(account.getId()));
         //Anh xa
         btn_back = findViewById(R.id.btn_back_order_room);
         tv_name_hotel = findViewById(R.id.tv_hotelName_order_room);
@@ -230,7 +228,6 @@ public class Activity_order_room extends AppCompatActivity {
                         Order_Room orderRoom = new Order_Room();
                         orderRoom.setOrderTime(date);
                         orderRoom.setNote(ed_note.getText().toString());
-                        orderRoom.setImg(img);
                         orderRoom.setTimeGet(tv_time_in.getText().toString());
                         orderRoom.setTimeCheckout(tv_time_out.getText().toString());
                         if (getUsernameFromSharedPreferences() != null) {
@@ -242,6 +239,7 @@ public class Activity_order_room extends AppCompatActivity {
                                 if (response.isSuccessful()) {
                                     List<Room> rooms = response.body();
                                     Room room = rooms.get(0);
+                                    orderRoom.setImg(room.getAnhPhong());
                                     orderRoom.setIdPhong(room.get_id());
                                     orderRoom.setTotal(room.getGiaPhong());
                                     room.setTinhTrangPhong(1);
@@ -250,6 +248,7 @@ public class Activity_order_room extends AppCompatActivity {
                                         public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
                                             if (response.isSuccessful()) {
                                                 Api_service.service.update_rooms(id_room, room).enqueue(new Callback<List<Room>>() {
+                                                    @SuppressLint("CommitPrefEdits")
                                                     @Override
                                                     public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
                                                         if (response.isSuccessful()) {
@@ -262,6 +261,7 @@ public class Activity_order_room extends AppCompatActivity {
                                                                     .build(dialog1 -> startActivity(new Intent(Activity_order_room.this, MainActivity_user.class)))
                                                                     .show();
                                                         } else {
+                                                            payMethod.edit().clear();
                                                             PopupDialog.getInstance(Activity_order_room.this)
                                                                     .statusDialogBuilder()
                                                                     .createErrorDialog()

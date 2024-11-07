@@ -191,7 +191,7 @@ public class Loginscreen extends AppCompatActivity {
                                         .statusDialogBuilder()
                                         .createErrorDialog()
                                         .setHeading("Uh-Oh")
-                                        .setDescription("Wrong email or password!" + "Please try again")
+                                        .setDescription("Wrong email or password!" + " Please try again")
                                         .setActionButtonText("Try again")
                                         .build(Dialog::dismiss)
                                         .show();
@@ -330,6 +330,27 @@ public class Loginscreen extends AppCompatActivity {
         SharedPreferences googlePref = getSharedPreferences("user_google", Activity.MODE_PRIVATE);
         String googleUid = googlePref.getString("uid", "");
         if (!googleUid.isEmpty()) {
+            Api_service.service.get_account().enqueue(new Callback<List<Account>>() {
+                @Override
+                public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body() != null) {
+                            for (Account acc : response.body()) {
+                                if (acc.getUid().equals(googleUid)) {
+                                    SharedPreferences sharedPreferences = getSharedPreferences("user_data", Activity.MODE_PRIVATE);
+                                    sharedPreferences.edit().putString("uid", acc.get_id()).apply();
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                    Log.e("onFailure", throwable.getMessage());
+                }
+            });
             isLoggedIn = true;
             userRole = 1;
         }

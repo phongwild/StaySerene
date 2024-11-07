@@ -1,6 +1,7 @@
 package phongtaph31865.poly.stayserene.Screen_user.Activity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,12 +19,22 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.saadahmedev.popupdialog.PopupDialog;
+import com.saadahmedev.popupdialog.listener.StandardDialogActionListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
 
+import phongtaph31865.poly.stayserene.Api_service.Api_service;
+import phongtaph31865.poly.stayserene.Model.TypeRoom;
 import phongtaph31865.poly.stayserene.R;
+import phongtaph31865.poly.stayserene.Screen_user.Activity.OrderRoom.Activity_detail_type_rooms;
+import phongtaph31865.poly.stayserene.Screen_user.Activity.OrderRoom.Activity_order_room;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Detail_room_screen extends AppCompatActivity {
     private ImageView img, btn_back;
@@ -48,7 +59,7 @@ public class Detail_room_screen extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Detail_room_screen.this, MainActivity_user.class));
+//                startActivity(new Intent(Detail_room_screen.this, MainActivity_user.class));
                 finish();
             }
         });
@@ -63,8 +74,9 @@ public class Detail_room_screen extends AppCompatActivity {
         String description = intent.getStringExtra("desc");
         int floor = intent.getIntExtra("floor", 0);
         int status = intent.getIntExtra("status", 0);
+        int soPhong = intent.getIntExtra("numberroom", 0);
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-        tv_name.setText(IdRoom);
+        tv_name.setText(String.valueOf(soPhong));
         Picasso.get().load(img).into(this.img);
         tv_price.setText(formatter.format(price));
         tv_description.setText(description);
@@ -74,52 +86,48 @@ public class Detail_room_screen extends AppCompatActivity {
         }else if(status == 1){
             tv_status.setText("Close");
         }
-        try {
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("LoaiPhong");
-            ref.orderByChild("IdLoaiPhong").equalTo(IdTypeRoom).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            String type = dataSnapshot.child("tenLoaiPhong").getValue(String.class);
-                            tv_type.setText(type);
-                            String ID_hotel = dataSnapshot.child("IdHotel").getValue(String.class);
-                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("KhachSan");
-                            reference.orderByChild("IdHotel").equalTo(ID_hotel).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if (snapshot.exists()) {
-                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                            String location = dataSnapshot.child("diaChi").getValue(String.class);
-                                            tv_location.setText(location);
-                                        }
-                                    }else{
-                                        Log.e("Detail_Error", "Data not found");
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    Log.e("Detail_Error", error.getMessage());
-                                }
-                            });
-                        }
-                    }else{
-                        Log.e("Detail_Error", "Data not found");
+        Intent intent1 = new Intent(Detail_room_screen.this, Activity_order_room.class);
+        Api_service.service.get_typeroom_byId(IdTypeRoom).enqueue(new Callback<List<TypeRoom>>() {
+            @Override
+            public void onResponse(Call<List<TypeRoom>> call, Response<List<TypeRoom>> response) {
+                if (response.isSuccessful()){
+                    for (TypeRoom typeRoom : response.body()){
+                        tv_type.setText(typeRoom.getTenLoaiPhong());
+                        intent1.putExtra("total", typeRoom.getGiaLoaiPhong());
                     }
-                }
+                }else Log.e("Response error", "Response is not successful");
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("Detail_Error", error.getMessage());
-                }
-            });
-        }catch (Exception e){
-            Log.e("Detail_Error", e.getMessage());
-        }
+            @Override
+            public void onFailure(Call<List<TypeRoom>> call, Throwable throwable) {
+                Log.e("Failure getTypeRoom", throwable.getMessage());
+            }
+        });
         btn_booking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                PopupDialog.getInstance(Detail_room_screen.this).standardDialogBuilder().createStandardDialog()
+                        .setHeading("Booking")
+                        .setDescription("Would you prefer this type of room?" + "A room will be selected randomly from this room type")
+                        .setCancelable(false)
+                        .setPositiveButtonText("Yes")
+                        .setNegativeButtonText("No")
+                        .setPositiveButtonTextColor(R.color.white)
+                        .setIcon(R.drawable.ic_booking)
+                        .build(new StandardDialogActionListener() {
+                            @Override
+                            public void onPositiveButtonClicked(Dialog dialog) {
+                                intent1.putExtra("id_type_room", IdTypeRoom);
+                                intent1.putExtra("id_room", IdRoom);
+                                intent1.putExtra("img", img);
+                                startActivity(intent1);
+                            }
+
+                            @Override
+                            public void onNegativeButtonClicked(Dialog dialog) {
+                                dialog.dismiss();
+                            }
+                        }).show();
 
             }
         });
