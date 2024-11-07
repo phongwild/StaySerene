@@ -41,10 +41,8 @@ public class Activiti_messenger_list_hotel extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(android.R.id.content, new Fragment_user());
-                transaction.addToBackStack(null);
-                transaction.commit();
+                finish(); // Đóng activity hiện tại
+
             }
         });
         fetchHotels();
