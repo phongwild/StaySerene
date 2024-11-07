@@ -61,7 +61,7 @@ public class Activity_show_detail_booking extends AppCompatActivity {
             binding.tvTimeCheckoutDetailBooking.setText(time_checkout);
             binding.tvTotalDetailBooking.setText(price);
             Picasso.get().load(img).into(binding.imgDetailBooking);
-            binding.edNoteOrderRoom.setText(note);
+            binding.tvNoteOrderRoom.setText(note);
             Api_service.service.get_rooms_byId(id_room).enqueue(new Callback<List<Room>>() {
                 @Override
                 public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
