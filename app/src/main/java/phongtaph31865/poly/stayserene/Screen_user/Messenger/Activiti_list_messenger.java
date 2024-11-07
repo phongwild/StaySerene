@@ -38,7 +38,7 @@ public class Activiti_list_messenger extends AppCompatActivity {
     private TextInputEditText edMessenger;
     private Handler handler = new Handler();
     private Runnable refreshRunnable;
-    private static final long REFRESH_INTERVAL = 1000;
+    private static final long REFRESH_INTERVAL = 5000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,11 +60,9 @@ public class Activiti_list_messenger extends AppCompatActivity {
         hotelId = intent.getStringExtra("IdKhachSan");
         hotelName = intent.getStringExtra("TenKhachSan");
 
-        // Set hotel name in the TextView
         tvHotelName.setText(hotelName);
         fetchMessages();
 
-        // Add onClickListener to send message when the button is clicked
         btnSendMessenger.setOnClickListener(v -> sendMessage());
         startPolling();
     }
@@ -73,72 +71,65 @@ public class Activiti_list_messenger extends AppCompatActivity {
             @Override
             public void run() {
                 fetchMessages(); // Fetch new messages
-                handler.postDelayed(this, REFRESH_INTERVAL); // Run again after the specified interval
+                handler.postDelayed(this, REFRESH_INTERVAL);
             }
         };
-        handler.post(refreshRunnable); // Start polling
+        handler.post(refreshRunnable);
     }
 
     private void stopPolling() {
-        handler.removeCallbacks(refreshRunnable); // Stop polling when the activity is destroyed
+        handler.removeCallbacks(refreshRunnable);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stopPolling(); // Stop polling when activity is destroyed to avoid memory leaks
+        stopPolling();
     }
     private void sendMessage() {
-        String messageContent = edMessenger.getText().toString().trim(); // Get the message content and remove leading/trailing spaces
-
-        // Validate that the message content is not empty
+        String messageContent = edMessenger.getText().toString().trim();
         if (messageContent.isEmpty()) {
             Toast.makeText(Activiti_list_messenger.this, "Please enter a message!", Toast.LENGTH_SHORT).show();
-            return; // Exit early if the message is empty
+            return;
         }
 
-        // Retrieve the userId from shared preferences
         SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
         String userId = sharedPreferences.getString("uid", "");
 
-        // Ensure that userId and hotelId are not empty before making the API request
         if (userId.isEmpty()) {
             Toast.makeText(Activiti_list_messenger.this, "User ID is missing!", Toast.LENGTH_SHORT).show();
-            return; // Exit early if userId is not available
+            return;
         }
 
         if (hotelId == null || hotelId.isEmpty()) {
             Toast.makeText(Activiti_list_messenger.this, "Hotel ID is missing!", Toast.LENGTH_SHORT).show();
-            return; // Exit early if hotelId is not available
+            return;
         }
 
-        // Get the current time and subtract 7 hours
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR_OF_DAY, -7); // Subtract 7 hours
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); // Include milliseconds
-        String currentTime = dateFormat.format(calendar.getTime()); // Get the time with milliseconds
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        String currentTime = dateFormat.format(calendar.getTime());
 
-        // Create a Messenger object with the required details
         Messenger messenger = new Messenger();
         messenger.setIdKhachSan(hotelId);
         messenger.setUid(userId);
-        messenger.setThoiGianGui(currentTime);  // Use the time with milliseconds
+        messenger.setThoiGianGui(currentTime);
         messenger.setNoiDungGui(messageContent);
         messenger.setVaiTro("Khách hàng");
         messenger.setTrangThaiNv(1);
         messenger.setTrangThaiKh(1);
 
-        // API call to send the message
         Api_service apiService = Api_service.service;
-        Call<Void> call = apiService.sendMessage(messenger); // You might need to define this method in Api_service
+        Call<Void> call = apiService.sendMessage(messenger);
 
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(Activiti_list_messenger.this, "Message sent successfully", Toast.LENGTH_SHORT).show();
-                    edMessenger.setText(""); // Clear the input field
-                    fetchMessages(); // Refresh the message list
+                    edMessenger.setText("");
+                    fetchMessages();
                 } else {
                     Toast.makeText(Activiti_list_messenger.this, "Error: Unable to send message", Toast.LENGTH_SHORT).show();
                 }
@@ -153,22 +144,19 @@ public class Activiti_list_messenger extends AppCompatActivity {
 
 
     private void fetchMessages() {
-        // Retrieve the userId from shared preferences
         SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
         String userId = sharedPreferences.getString("uid", "");
 
-        // Ensure that userId and hotelId are not empty before making the API request
         if (userId.isEmpty()) {
             Toast.makeText(Activiti_list_messenger.this, "User ID is missing!", Toast.LENGTH_SHORT).show();
-            return; // Exit early if userId is not available
+            return;
         }
 
         if (hotelId == null || hotelId.isEmpty()) {
             Toast.makeText(Activiti_list_messenger.this, "Hotel ID is missing!", Toast.LENGTH_SHORT).show();
-            return; // Exit early if hotelId is not available
+            return;
         }
 
-        // API call to fetch messages
         Api_service apiService = Api_service.service;
         Call<List<Messenger>> call = apiService.getMessengersForHotel(hotelId, userId);
 
@@ -178,11 +166,8 @@ public class Activiti_list_messenger extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     List<Messenger> messengerList = response.body();
                     if (messengerList != null && !messengerList.isEmpty()) {
-                        // Set up the adapter with the list of messages
                         adapter = new Adapter_list_messenger(Activiti_list_messenger.this, messengerList);
                         recyclerView.setAdapter(adapter);
-
-                        // Cuộn đến cuối danh sách tin nhắn
                         recyclerView.scrollToPosition(adapter.getItemCount() - 1);
                     } else {
                         Toast.makeText(Activiti_list_messenger.this, "No messages available", Toast.LENGTH_SHORT).show();

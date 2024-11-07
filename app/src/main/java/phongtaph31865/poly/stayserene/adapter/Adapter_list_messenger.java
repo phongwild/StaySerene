@@ -1,9 +1,12 @@
 package phongtaph31865.poly.stayserene.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,31 +29,45 @@ public class Adapter_list_messenger extends RecyclerView.Adapter<Adapter_list_me
 
     @Override
     public MessengerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // Inflate the item layout for each message
         View view = LayoutInflater.from(context).inflate(R.layout.item_messenger, parent, false);
         return new MessengerViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MessengerViewHolder holder, int position) {
-        // Get the message object at the current position
         Messenger messenger = messengerList.get(position);
 
-        // Convert the time to the desired format: HH:mm:ss dd/MM/yyyy
-        try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); // Updated format
-            SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+        if (messenger.getVaiTro().equals("Khách hàng")) {
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.messageContainer.getLayoutParams();
+            params.gravity = Gravity.END;
+            params.leftMargin = 200;
+            holder.messageContainer.setLayoutParams(params);
+            holder.tvNoiDung.setGravity(Gravity.END); // Căn nội dung tin nhắn về bên phải
+            holder.tvNoiDung.setTextColor(Color.parseColor("#FFFFFF")); // Màu chữ trắng cho khách hàng
 
-            // Parse the original time
+            holder.messageContainer.setBackgroundResource(R.drawable.message_background_customer);
+        } else if (messenger.getVaiTro().equals("Khách sạn")) {
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.messageContainer.getLayoutParams();
+            params.gravity = Gravity.START;
+            params.rightMargin = 200;
+            holder.messageContainer.setLayoutParams(params);
+            holder.tvNoiDung.setGravity(Gravity.START); // Căn nội dung tin nhắn về bên phải
+            holder.tvNoiDung.setTextColor(Color.parseColor("#3498db")); // Màu chữ trắng cho khách hàng
+
+            holder.messageContainer.setBackgroundResource(R.drawable.message_background_hotel);
+        }
+
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
             Date date = inputFormat.parse(messenger.getThoiGianGui());
 
-            // Add 7 hours to the parsed date
+            // Add 7 hours
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-            calendar.add(Calendar.HOUR_OF_DAY, 7); // Add 7 hours
-            Date newDate = calendar.getTime(); // Get the updated time
+            calendar.add(Calendar.HOUR_OF_DAY, 7);
+            Date newDate = calendar.getTime();
 
-            // Format the new time and display it
             String formattedTime = outputFormat.format(newDate);
             holder.tvThoiGianGui.setText(formattedTime);
         } catch (Exception e) {
@@ -58,11 +75,8 @@ public class Adapter_list_messenger extends RecyclerView.Adapter<Adapter_list_me
             holder.tvThoiGianGui.setText("Invalid Date");
         }
 
-        // Bind other data
         holder.tvNoiDung.setText(messenger.getNoiDungGui());
-        holder.tvVaiTro.setText(messenger.getVaiTro());
-        holder.tvTrangThaiKh.setText(String.valueOf(messenger.getTrangThaiKh()));
-        holder.tvTrangThaiNv.setText(String.valueOf(messenger.getTrangThaiNv()));
+
     }
 
 
@@ -75,15 +89,16 @@ public class Adapter_list_messenger extends RecyclerView.Adapter<Adapter_list_me
 
     // ViewHolder class to hold the view references
     public static class MessengerViewHolder extends RecyclerView.ViewHolder {
-        TextView tvThoiGianGui, tvNoiDung, tvVaiTro, tvTrangThaiKh, tvTrangThaiNv;
+        TextView tvThoiGianGui, tvNoiDung;
+        LinearLayout messageContainer;
 
         public MessengerViewHolder(View itemView) {
             super(itemView);
             tvThoiGianGui = itemView.findViewById(R.id.tvThoiGianGui);
             tvNoiDung = itemView.findViewById(R.id.tvNoiDung);
-            tvVaiTro = itemView.findViewById(R.id.tvVaiTro);
-            tvTrangThaiKh = itemView.findViewById(R.id.tvTrangThaiKh);
-            tvTrangThaiNv = itemView.findViewById(R.id.tvTrangThaiNv);
+            messageContainer = itemView.findViewById(R.id.messageContainer);
+
         }
     }
+
 }

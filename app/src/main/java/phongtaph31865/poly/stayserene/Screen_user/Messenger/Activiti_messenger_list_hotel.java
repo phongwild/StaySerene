@@ -34,36 +34,31 @@ public class Activiti_messenger_list_hotel extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activiti_messenger_list_hotel);
 
-        // Initialize RecyclerView
         recyclerView = findViewById(R.id.rcv_hotel_messenger);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         backButton = findViewById(R.id.btn_back_fragment_user);
 
-        // Set the click listener
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Replace the current activity content with Fragment_user
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(android.R.id.content, new Fragment_user()); // Replace with the Fragment_user
-                transaction.addToBackStack(null); // Optional: Adds the transaction to the back stack
-                transaction.commit(); // Apply the transaction
+                transaction.replace(android.R.id.content, new Fragment_user());
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
-        // Call the API to get list of hotels
         fetchHotels();
     }
 
     private void fetchHotels() {
         Api_service apiService = Api_service.service;
-        Call<List<Hotel>> call = apiService.get_hotel(); // Assume `getHotels` is your API method.
+        Call<List<Hotel>> call = apiService.get_hotel();
 
         call.enqueue(new Callback<List<Hotel>>() {
             @Override
             public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
                 if (response.isSuccessful()) {
                     List<Hotel> hotelList = response.body();
-                    // Initialize the adapter with the list of hotels
                     adapter = new Adapter_list_hotel_messenger(Activiti_messenger_list_hotel.this, hotelList);
                     recyclerView.setAdapter(adapter);
                 } else {

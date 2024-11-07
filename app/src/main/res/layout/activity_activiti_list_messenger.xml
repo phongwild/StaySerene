@@ -64,7 +64,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/custom_input"
                 android:lineBreakStyle="none"
-                android:hint="Messenger" />
+                android:hint="Nhập nội dung" />
         </com.google.android.material.textfield.TextInputLayout>
         <ImageView
             android:id="@+id/btn_send_messenger"

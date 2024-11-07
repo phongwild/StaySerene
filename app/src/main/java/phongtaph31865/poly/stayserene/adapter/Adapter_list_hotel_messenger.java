@@ -38,24 +38,17 @@ public class Adapter_list_hotel_messenger extends RecyclerView.Adapter<Adapter_l
     public void onBindViewHolder(HotelViewHolder holder, int position) {
         Hotel hotel = hotelList.get(position);
 
-        // Set hotel name
         holder.hotelName.setText(hotel.getTenKhachSan());
-
-        // Load image using Picasso (or Glide)
         Picasso.get().load(hotel.getAnhKhachSan()).into(holder.hotelImage);
 
-        // Set item click listener
         holder.itemView.setOnClickListener(v -> {
-            // Get IdKhachSan and TenKhachSan
             String hotelId = hotel.get_id();
             String hotelName = hotel.getTenKhachSan();
 
-            // Create an intent to start Activity_list_messenger
             Intent intent = new Intent(context, Activiti_list_messenger.class);
             intent.putExtra("IdKhachSan", hotelId);
             intent.putExtra("TenKhachSan", hotelName);
 
-            // Start Activity_list_messenger
             context.startActivity(intent);
         });
     }
