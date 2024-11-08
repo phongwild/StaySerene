@@ -79,4 +79,11 @@ public interface Api_service {
     Call<List<Room>> order_room(@Body Order_Room ObjOrder_Room);
     @GET("orderroombyUid/{Uid}")
     Call<List<Order_Room>> get_orderroom_byUid(@Path("Uid") String Uid);
+    @GET("orderroom/status/0/{id}")
+    Call<List<Order_Room>> get_orderroom_status0(@Path("id") String id);
+    @GET("orderroom/status/1/{id}")
+    Call<List<Order_Room>> get_orderroom_status1(@Path("id") String id);
+    @GET("orderroom/status/2/{id}")
+    Call<List<Order_Room>> get_orderroom_status2(@Path("id") String id);
+
 }
