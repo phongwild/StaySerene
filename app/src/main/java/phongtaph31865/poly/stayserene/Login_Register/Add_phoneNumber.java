@@ -16,6 +16,7 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -64,12 +65,12 @@ public class Add_phoneNumber extends AppCompatActivity {
     private RelativeLayout btn_add_avt, btn_back;
     private ProgressBar progressBar;
     private CircleImageView img_avt;
+    private ImageView img;
     private Uri ImgUri;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private String phoneNumber, address, date;
     //Firebase
-    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Account");
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
     @SuppressLint("MissingInflatedId")
@@ -89,6 +90,7 @@ public class Add_phoneNumber extends AppCompatActivity {
         btn_add_avt = findViewById(R.id.btn_add_avt);
         img_avt = findViewById(R.id.iv_add_avt);
         btn_back = findViewById(R.id.btn_back_add_number);
+        img = findViewById(R.id.img_add_phone_number);
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,7 +169,6 @@ public class Add_phoneNumber extends AppCompatActivity {
         String quocTich = "";
         int cccd = 987654321;
         int role = 1;
-        String Uid = UUID.randomUUID().toString();
         String fullname = intent.getStringExtra("fullName");
         String email = intent.getStringExtra("email");
         String password = intent.getStringExtra("password");
@@ -181,6 +182,7 @@ public class Add_phoneNumber extends AppCompatActivity {
                             Intent data = o.getData();
                             ImgUri = data.getData();
                             Picasso.get().load(ImgUri).resize(140, 140).centerCrop().into(img_avt);
+                            img.setVisibility(View.GONE);
                         } else {
                             Toast.makeText(Add_phoneNumber.this, "No image selected", Toast.LENGTH_SHORT).show();
                         }
