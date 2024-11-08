@@ -53,7 +53,7 @@ public class Fragment_calendar extends Fragment {
         return view;
     }
     public void get_order_by_id_user(){
-        Api_service.service.get_orderroom_byUid(checkUid()).enqueue(new Callback<List<Order_Room>>() {
+        Api_service.service.get_orderroom_status0(checkUid()).enqueue(new Callback<List<Order_Room>>() {
             @Override
             public void onResponse(Call<List<Order_Room>> call, Response<List<Order_Room>> response) {
                 if(response.isSuccessful()){
