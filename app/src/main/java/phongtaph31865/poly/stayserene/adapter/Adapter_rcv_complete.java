@@ -1,6 +1,7 @@
 package phongtaph31865.poly.stayserene.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,83 +11,114 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
+import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.Order_Room;
+import phongtaph31865.poly.stayserene.Model.Room;
+import phongtaph31865.poly.stayserene.Model.TypeRoom;
 import phongtaph31865.poly.stayserene.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class Adapter_rcv_complete extends FirebaseRecyclerAdapter<Order_Room, Adapter_rcv_complete.ViewHolder> {
-private Context context;
+public class Adapter_rcv_complete extends RecyclerView.Adapter<Adapter_rcv_complete.ViewHolder> {
+    private Context context;
+    private List<Order_Room> orderroomslist;
 
-public Adapter_rcv_complete(@NonNull FirebaseRecyclerOptions<Order_Room> options, Context context) {
-    super(options);
-    this.context = context;
-}
+    public Adapter_rcv_complete(List<Order_Room> orderroomslist) {
+        this.context = context;
+        this.orderroomslist = orderroomslist;
+    }
 
-@Override
-protected void onBindViewHolder(@NonNull Adapter_rcv_complete.ViewHolder viewHolder, int position, @NonNull Order_Room booking) {
-//    if (booking == null || !"Complete".equals(booking.getTrangThai())) {
-//        viewHolder.itemView.setVisibility(View.GONE);
-//        viewHolder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-//        return;
-//    }
-    DatabaseReference hotelRef = FirebaseDatabase.getInstance().getReference("KhachSan").child(String.valueOf(booking.getIdPhong()));
-    hotelRef.addListenerForSingleValueEvent(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot snapshot) {
-            if (snapshot.exists()) {
-                Hotel hotel = snapshot.getValue(Hotel.class);
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_complete, parent, false);
+        return new ViewHolder(v);
+    }
 
-                if (hotel != null) {
-                    viewHolder.ht_name.setText(hotel.getTenKhachSan());
-                    viewHolder.ht_location.setText(hotel.getDiaChi());
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+        Order_Room orderRoom1 = orderroomslist.get(position);
+        Picasso.get().load(orderRoom1.getImg()).into(viewHolder.img);
+        String idRoom1 = orderRoom1.getIdPhong();
+        Api_service.service.get_rooms_byId(idRoom1).enqueue(new Callback<List<Room>>() {
+            @Override
+            public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                if (response.isSuccessful()){
+                    if (response.body() != null){
+                        for (Room room: response.body()){
+                            String idTypeRoom = room.getIdLoaiPhong();
+                            Api_service.service.get_typeroom_byId(idTypeRoom).enqueue(new Callback<List<TypeRoom>>() {
+                                @Override
+                                public void onResponse(Call<List<TypeRoom>> call, Response<List<TypeRoom>> response) {
+                                    if (response.isSuccessful()){
+                                        if (response.body() != null){
+                                            for (TypeRoom typeRoom : response.body()){
+                                                String idht = typeRoom.getIdKhachSan();
+                                                Api_service.service.get_hotel_byId(idht).enqueue(new Callback<List<Hotel>>() {
+                                                    @Override
+                                                    public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
+                                                        if (response.isSuccessful()){
+                                                            if (response.body() != null){
+                                                                for (Hotel hotel : response.body()){
+                                                                    viewHolder.ht_name.setText(hotel.getTenKhachSan());
+                                                                    viewHolder.ht_location.setText(hotel.getDiaChi());
+                                                                }
+                                                            }
+                                                        }
+                                                    }
 
-                    if (hotel.getAnhKhachSan() != null && !hotel.getAnhKhachSan().isEmpty()) {
-                        Picasso.get().load(hotel.getAnhKhachSan()).into(viewHolder.img);
-                    } else {
-                        viewHolder.img.setImageResource(R.drawable.hotel_popular_image);
+                                                    @Override
+                                                    public void onFailure(Call<List<Hotel>> call, Throwable throwable) {
+                                                        Log.e("Failure get ht by id", throwable.getMessage());
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<TypeRoom>> call, Throwable throwable) {
+                                    Log.e("Failure get ht by id", throwable.getMessage());
+
+                                }
+                            });
+                        }
                     }
                 }
-            } else {
-                viewHolder.ht_name.setText("Khách sạn không tìm thấy");
-                viewHolder.ht_location.setText("");
-                viewHolder.img.setImageResource(R.drawable.hotel_popular_image);
             }
-        }
 
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {
-        }
-    });
+            @Override
+            public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                Log.e("Failure get ht by id", throwable.getMessage());
 
-//    viewHolder.status.setText(booking.getTrangThai() != null ? booking.getTrangThai() : "Chưa xác định");
-}
-
-@NonNull
-@Override
-public Adapter_rcv_complete.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_complete, parent, false);
-    return new Adapter_rcv_complete.ViewHolder(v);
-}
-
-public class ViewHolder extends RecyclerView.ViewHolder {
-    private TextView ht_name, ht_location, status;
-    private ImageView img;
-
-    public ViewHolder(@NonNull View itemView) {
-        super(itemView);
-        ht_name = itemView.findViewById(R.id.hotel_name);
-        ht_location = itemView.findViewById(R.id.hotel_location);
-        status = itemView.findViewById(R.id.status);
-        img = itemView.findViewById(R.id.hotel_image);
+            }
+        });
     }
-}
+
+
+
+    @Override
+    public int getItemCount() {
+        return orderroomslist != null ? orderroomslist.size() : 0;
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView ht_name, ht_location, status;
+        private ImageView img;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            ht_name = itemView.findViewById(R.id.hotel_name);
+            ht_location = itemView.findViewById(R.id.hotel_location);
+            status = itemView.findViewById(R.id.status);
+            img = itemView.findViewById(R.id.hotel_image);
+        }
+    }
 }

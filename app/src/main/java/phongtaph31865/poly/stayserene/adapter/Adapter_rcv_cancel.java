@@ -1,6 +1,7 @@
 package phongtaph31865.poly.stayserene.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,75 +11,118 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
+import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.Order_Room;
+import phongtaph31865.poly.stayserene.Model.Room;
+import phongtaph31865.poly.stayserene.Model.TypeRoom;
 import phongtaph31865.poly.stayserene.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class Adapter_rcv_cancel extends FirebaseRecyclerAdapter<Order_Room, Adapter_rcv_cancel.ViewHolder> {
+public class Adapter_rcv_cancel extends RecyclerView.Adapter<Adapter_rcv_cancel.ViewHolder> {
     private Context context;
+    private List<Order_Room> orderRoomLists;
 
-    public Adapter_rcv_cancel(@NonNull FirebaseRecyclerOptions<Order_Room> options, Context context) {
-        super(options);
+    // Constructor nhận danh sách Order_Room
+    public Adapter_rcv_cancel(List<Order_Room> orderRoomLists) {
         this.context = context;
-    }
-
-    @Override
-    protected void onBindViewHolder(@NonNull Adapter_rcv_cancel.ViewHolder viewHolder, int position, @NonNull Order_Room booking) {
-//        if (booking == null || (!"Canceled".equals(booking.getTrangThai()) && !"Canceled & Refuned".equals(booking.getTrangThai()))) {
-//            viewHolder.itemView.setVisibility(View.GONE);
-//            viewHolder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-//            return;
-//        }
-        DatabaseReference hotelRef = FirebaseDatabase.getInstance().getReference("KhachSan").child(String.valueOf(booking.getIdPhong()));
-        hotelRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    Hotel hotel = snapshot.getValue(Hotel.class);
-
-                    if (hotel != null) {
-                        viewHolder.ht_name.setText(hotel.getTenKhachSan());
-                        viewHolder.ht_location.setText(hotel.getDiaChi());
-
-                        if (hotel.getAnhKhachSan() != null && !hotel.getAnhKhachSan().isEmpty()) {
-                            Picasso.get().load(hotel.getAnhKhachSan()).into(viewHolder.img);
-                        } else {
-                            viewHolder.img.setImageResource(R.drawable.hotel_popular_image);
-                        }
-                    }
-                } else {
-                    viewHolder.ht_name.setText("Khách sạn không tìm thấy");
-                    viewHolder.ht_location.setText("");
-                    viewHolder.img.setImageResource(R.drawable.hotel_popular_image);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Handle error
-            }
-        });
-
-//        viewHolder.status.setText(booking.getTrangThai() != null ? booking.getTrangThai() : "Chưa xác định");
+        this.orderRoomLists = orderRoomLists;
     }
 
     @NonNull
     @Override
-    public Adapter_rcv_cancel.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Inflate layout item_cancel
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cancel, parent, false);
-        return new Adapter_rcv_cancel.ViewHolder(v);
+        return new ViewHolder(v);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+        Order_Room orderRooms = orderRoomLists.get(position);
+        Picasso.get().load(orderRooms.getImg()).into(viewHolder.img);
+        String idRooms = orderRooms.getIdPhong();
+
+        viewHolder.status.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Api_service.service.xoaLoaiPhong(idRooms).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            Log.d("Delete TypeRoom", "Loại phòng đã được xóa thành công");
+                        } else {
+                            Log.e("Delete TypeRoom", "Không thể xóa loại phòng: " + response.code() + ", " + response.message());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.e("Delete TypeRoom", "Lỗi: " + t.getMessage());
+
+                    }
+                });
+
+
+            }
+        });
+
+        Api_service.service.get_rooms_byId(idRooms).enqueue(new Callback<List<Room>>() {
+            @Override
+            public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                if (response.isSuccessful()){
+                    if (response.body() != null){
+                        for (Room room: response.body()){
+                            String idht = room.getIdLoaiPhong();
+                            Api_service.service.get_hotel_byId(idht).enqueue(new Callback<List<Hotel>>() {
+                                @Override
+                                public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
+                                    if (response.isSuccessful()){
+                                        if (response.body() != null){
+                                            for (Hotel hotel: response.body()){
+                                                viewHolder.ht_name.setText(hotel.getTenKhachSan());
+                                                viewHolder.ht_location.setText(hotel.getDiaChi());
+                                                viewHolder.status.setText(hotel.getStatus());
+
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<Hotel>> call, Throwable throwable) {
+                                    Log.e("Failure get ht by id", throwable.getMessage());
+
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                Log.e("Failure get ht by id", throwable.getMessage());
+
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        // Trả về kích thước của danh sách orderRoomList
+        return orderRoomLists != null ? orderRoomLists.size() : 0;
+    }
+
+    // ViewHolder chứa các thành phần giao diện của item_cancel
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView ht_name, ht_location, status;
         private ImageView img;
 
