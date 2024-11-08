@@ -77,7 +77,7 @@ public class Fragment_home extends Fragment {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
                         for (Account acc : response.body()) {
-                            saveUserIdToSharedPreferences(acc.getUid(), acc.getUsername(), acc.getSdt(), acc.getDiaChi(), acc.getEmail());
+                            saveUserIdToSharedPreferences(acc.get_id(), acc.getUsername(), acc.getSdt(), acc.getDiaChi(), acc.getEmail(), acc.getCccd(), acc.getGioiTinh(), acc.getNgaySinh(), acc.getAvt(), acc.getQuocTich());
                             tv_location.setText(acc.getDiaChi());
                         }
                     }
@@ -86,7 +86,7 @@ public class Fragment_home extends Fragment {
 
             @Override
             public void onFailure(Call<List<Account>> call, Throwable throwable) {
-
+                Log.e("onFailure id user", "False: " + throwable.getMessage());
             }
         });
         rcv1 = v.findViewById(R.id.rcv_home_1);
@@ -204,7 +204,7 @@ public class Fragment_home extends Fragment {
         return sharedPreferences.getString("uid", null);
     }
 
-    private void saveUserIdToSharedPreferences(String Uid, String username, String sdt, String address, String email) {
+    private void saveUserIdToSharedPreferences(String Uid, String username, String sdt, String address, String email, int cccd, String gender, String birthday, String avatar, String quoctich) {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("userdata", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("uid", Uid);
@@ -212,6 +212,11 @@ public class Fragment_home extends Fragment {
         editor.putString("sdt", sdt);
         editor.putString("address", address);
         editor.putString("email", email);
+        editor.putString("cccd", String.valueOf(cccd));
+        editor.putString("gender", gender);
+        editor.putString("birthday", birthday);
+        editor.putString("avatar", avatar);
+        editor.putString("quoctich", quoctich);
         editor.apply();
     }
 }

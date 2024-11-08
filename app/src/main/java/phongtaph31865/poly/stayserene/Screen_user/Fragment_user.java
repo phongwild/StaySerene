@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -37,13 +38,15 @@ import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Login_Register.Loginscreen;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.R;
+import phongtaph31865.poly.stayserene.Screen_user.Activity.Information;
+import phongtaph31865.poly.stayserene.Screen_user.Activity.Setting;
 import phongtaph31865.poly.stayserene.adapter.Adapter_rcv1_home;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Fragment_user extends Fragment {
-    private LinearLayout btn_logout;
+    private CardView btn_logout, btn_edit_profile, btn_setting;
     private CircleImageView iv_avt;
     private TextView tv_username, tv_email;
     private GoogleSignInOptions gso;
@@ -57,31 +60,22 @@ public class Fragment_user extends Fragment {
         iv_avt = v.findViewById(R.id.iv_avt_user);
         tv_username = v.findViewById(R.id.tv_name_user);
         tv_email = v.findViewById(R.id.tv_email_user);
+        btn_edit_profile = v.findViewById(R.id.btn_edit_profile_frm_user);
+        btn_setting = v.findViewById(R.id.btn_setting_frm_user);
         iv_avt = v.findViewById(R.id.iv_avt_user);
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(getActivity(), gso);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
-        String getUsername = getUsernameFromSharedPreferences();
-        if (getUsername != null) {
-            Api_service.service.get_account().enqueue(new Callback<List<Account>>() {
-                @Override
-                public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
-                    if (response.isSuccessful()) {
-                        for (Account account : response.body()) {
-                            if (account.get_id().equals(getUsername)) {
-                                tv_email.setText(account.getEmail());
-                                tv_username.setText(account.getUsername());
-                                Picasso.get().load(account.getAvt()).into(iv_avt);
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<Account>> call, Throwable throwable) {
-                    Log.e("UserData", throwable.getMessage());
-                }
-            });
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("userdata", Activity.MODE_PRIVATE);
+        if (sharedPreferences != null) {
+            String email = sharedPreferences.getString("email", "");
+            String avatar = sharedPreferences.getString("avatar", "");
+            String username = sharedPreferences.getString("username", "");
+            tv_username.setText(username);
+            tv_email.setText(email);
+            if (avatar != null) {
+                Picasso.get().load(avatar).error(R.drawable.icon_user02).into(iv_avt);
+            }
         } else if (account != null) {
             String name = account.getDisplayName();
             String email = account.getEmail();
@@ -98,6 +92,18 @@ public class Fragment_user extends Fragment {
             }
             Log.d("UserData", name + " " + email + " " + avt);
         }
+        btn_edit_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), Information.class));
+            }
+        });
+        btn_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), Setting.class));
+            }
+        });
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

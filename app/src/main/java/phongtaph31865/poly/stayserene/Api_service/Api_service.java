@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import java.util.List;
 
 import phongtaph31865.poly.stayserene.Model.Account;
+import phongtaph31865.poly.stayserene.Model.ChangePassRequest;
 import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.Order_Room;
 import phongtaph31865.poly.stayserene.Model.Room;
@@ -50,6 +51,8 @@ public interface Api_service {
     Call<List<Account>> update_account(@Path("id") String id, @Body Account ObjAccount);
     @GET("checkusergoogle")
     Call<Boolean> check_user_google(@Query("id") String id);
+    @POST("change-pass")
+    Call<ChangePassRequest> change_password(@Body ChangePassRequest ObjChangePassRequest);
     //Room
     @GET("rooms")
     Call<List<Room>> get_rooms();
