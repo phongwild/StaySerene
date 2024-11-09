@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class Ongoing extends Fragment {
 
     private RecyclerView recyclerView;
     private Adapter_rcv_ongoing adapter;
+    private SwipeRefreshLayout refreshLayout;
     List<Order_Room> order_rooms;
 
     public Ongoing() {
@@ -43,6 +45,14 @@ public class Ongoing extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.rcv_ongoing);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        refreshLayout = view.findViewById(R.id.swipe_refresh_ongoing);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                get_orderroom_by_status0();
+            }
+        });
+
         get_orderroom_by_status0();
     }
 
@@ -57,11 +67,13 @@ public class Ongoing extends Fragment {
                         recyclerView.setAdapter(adapter);
                     }
                 }
+                refreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<List<Order_Room>> call, Throwable throwable) {
                 Log.e("Error get order room by status", throwable.getMessage());
+                refreshLayout.setRefreshing(false);
             }
         });
     }

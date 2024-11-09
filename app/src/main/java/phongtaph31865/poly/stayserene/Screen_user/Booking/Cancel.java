@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ public class Cancel extends Fragment {
     private RecyclerView recyclerView;
     private Adapter_rcv_cancel adapter;
     List<Order_Room> order_rooms;
+    private SwipeRefreshLayout refreshLayout;
 
     public Cancel() {
     }
@@ -47,10 +49,17 @@ public class Cancel extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.rcv_cancel);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        refreshLayout = view.findViewById(R.id.swipe_refresh_cancel);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                get_orderroom_by_status2();
+            }
+        });
         get_orderroom_by_status2();
     }
     public void get_orderroom_by_status2() {
-        Api_service.service.get_orderroom_status0(getCurrentUserId()).enqueue(new Callback<List<Order_Room>>() {
+        Api_service.service.get_orderroom_status2(getCurrentUserId()).enqueue(new Callback<List<Order_Room>>() {
             @Override
             public void onResponse(Call<List<Order_Room>> call, Response<List<Order_Room>> response) {
                 if (response.isSuccessful()) {
@@ -60,11 +69,13 @@ public class Cancel extends Fragment {
                         recyclerView.setAdapter(adapter);
                     }
                 }
+                refreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<List<Order_Room>> call, Throwable throwable) {
                 Log.e("Error get order room", throwable.getMessage());
+                refreshLayout.setRefreshing(false);
             }
         });
     }

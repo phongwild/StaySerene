@@ -47,51 +47,16 @@ public class Adapter_rcv_cancel extends RecyclerView.Adapter<Adapter_rcv_cancel.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Order_Room orderRoom = order_rooms.get(position);
-        String idRoom = orderRoom.getIdPhong();
-        Api_service.service.get_rooms_byId(idRoom).enqueue(new Callback<List<Room>>() {
+        loadRoomDetail(holder, orderRoom);
+    }
+    private void loadRoomDetail(ViewHolder holder, Order_Room orderRoom){
+        Api_service.service.get_rooms_byId(orderRoom.getIdPhong()).enqueue(new Callback<List<Room>>() {
             @Override
             public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                if (response.isSuccessful()) {
-                    List<Room> rooms = response.body();
-                    for (Room room : rooms) {
-                        if (room.getAnhPhong() != null) {
-                            Picasso.get().load(room.getAnhPhong()).into(holder.img);
-                        }
-                        String idTypeRoom = room.getIdLoaiPhong();
-                        Api_service.service.get_typeroom_byId(idTypeRoom).enqueue(new Callback<List<TypeRoom>>() {
-                            @Override
-                            public void onResponse(Call<List<TypeRoom>> call, Response<List<TypeRoom>> response) {
-                                if (response.isSuccessful()) {
-                                    List<TypeRoom> typeRooms = response.body();
-                                    for (TypeRoom typeRoom : typeRooms){
-                                        String idHotel = typeRoom.getIdKhachSan();
-                                        Api_service.service.get_hotel_byId(idHotel).enqueue(new Callback<List<Hotel>>() {
-                                            @Override
-                                            public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
-                                                if (response.isSuccessful()) {
-                                                    List<Hotel> hotels = response.body();
-                                                    for (Hotel hotel : hotels){
-                                                        holder.ht_name.setText(hotel.getTenKhachSan());
-                                                        holder.ht_location.setText(hotel.getDiaChi());
-                                                    }
-                                                }else Log.e("Error get hotel by id", response.message());
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<List<Hotel>> call, Throwable throwable) {
-                                                Log.e("Error get hotel by id", throwable.getMessage());
-                                            }
-                                        });
-                                    }
-                                }else Log.e("Error get type room by id", response.message());
-                            }
-
-                            @Override
-                            public void onFailure(Call<List<TypeRoom>> call, Throwable throwable) {
-                                Log.e("Error get type room by id", throwable.getMessage());
-                            }
-                        });
-                    }
+                if (response.isSuccessful() && response.body() != null){
+                    Room room = response.body().get(0);
+                    updateRoomImage(holder, room);
+                    loadTypeRoom(holder, room);
                 }else Log.e("Error get room by id", response.message());
             }
 
@@ -101,7 +66,44 @@ public class Adapter_rcv_cancel extends RecyclerView.Adapter<Adapter_rcv_cancel.
             }
         });
     }
+    private void loadTypeRoom(ViewHolder holder, Room room){
+        Api_service.service.get_typeroom_byId(room.getIdLoaiPhong()).enqueue(new Callback<List<TypeRoom>>() {
+            @Override
+            public void onResponse(Call<List<TypeRoom>> call, Response<List<TypeRoom>> response) {
+                if (response.isSuccessful() && response.body() != null){
+                    TypeRoom typeRoom = response.body().get(0);
+                    loadHotel(holder, typeRoom);
+                }else Log.e("Error get type room by id", response.message());
+            }
 
+            @Override
+            public void onFailure(Call<List<TypeRoom>> call, Throwable throwable) {
+                Log.e("Error get type room by id", throwable.getMessage());
+            }
+        });
+    }
+    private void loadHotel(ViewHolder holder, TypeRoom typeRoom){
+        Api_service.service.get_hotel_byId(typeRoom.getIdKhachSan()).enqueue(new Callback<List<Hotel>>() {
+            @Override
+            public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
+                if (response.isSuccessful() && response.body() != null){
+                    Hotel hotel = response.body().get(0);
+                    holder.ht_name.setText(hotel.getTenKhachSan());
+                    holder.ht_location.setText(hotel.getDiaChi());
+                }else Log.e("Error get hotel by id", response.message());
+            }
+
+            @Override
+            public void onFailure(Call<List<Hotel>> call, Throwable throwable) {
+                Log.e("Error get hotel by id", throwable.getMessage());
+            }
+        });
+    }
+    private void updateRoomImage(ViewHolder holder, Room room){
+        if (room.getAnhPhong() != null){
+            Picasso.get().load(room.getAnhPhong()).into(holder.img);
+        }
+    }
     @Override
     public int getItemCount() {
         if (order_rooms != null) {

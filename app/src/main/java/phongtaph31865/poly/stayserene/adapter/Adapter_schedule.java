@@ -1,12 +1,10 @@
 package phongtaph31865.poly.stayserene.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,122 +33,134 @@ import retrofit2.Response;
 
 public class Adapter_schedule extends RecyclerView.Adapter<Adapter_schedule.ViewHolder> {
     private OnItemClickListener onItemClickListener;
-    private List<Order_Room> order_rooms;
+    private final List<Order_Room> orderRooms;
+    private final NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
+    public Adapter_schedule(List<Order_Room> orderRooms) {
+        this.orderRooms = orderRooms;
     }
-
-    public Adapter_schedule(List<Order_Room> order_rooms) {
-        this.order_rooms = order_rooms;
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
     }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_schedule, parent, false);
-        return new ViewHolder(v);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_schedule, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Order_Room orderRoom = orderRooms.get(position);
+        SimpleDateFormat originalFormat = new SimpleDateFormat("HH:mm:ss-dd/MM/yyyy");
+
+        // Định dạng mới chỉ để lấy dd/MM/yyyy
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date timeCheckIn = originalFormat.parse(orderRoom.getTimeGet());
+            Date timeCheckOut = originalFormat.parse(orderRoom.getTimeCheckout());
+            String dateCheckIn = dateFormat.format(timeCheckIn);
+            String dateCheckOut = dateFormat.format(timeCheckOut);
+            holder.start_date.setText(dateCheckIn);
+            holder.end_date.setText(dateCheckOut);
+        }catch (Exception e){
+            Log.e("Error", e.getMessage());
+        }
+        holder.price.setText(formatter.format(orderRoom.getTotal()));
+        Picasso.get().load(orderRoom.getImg()).into(holder.img);
+        // Set up Intent with orderRoom data
+        Intent intent = createIntentWithExtras(holder, orderRoom);
+
+        // Load hotel details based on room ID
+        loadHotelDetails(orderRoom.getIdPhong(), holder, intent);
+
+        holder.btn_item.setOnClickListener(v -> v.getContext().startActivity(intent));
+        holder.itemView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(position, orderRoom);
+            }
+        });
+    }
+
+    private Intent createIntentWithExtras(ViewHolder holder, Order_Room orderRoom) {
         Intent intent = new Intent(holder.itemView.getContext(), Activity_show_detail_booking.class);
-        Order_Room order_room = order_rooms.get(position);
-        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-        String idRoom = order_room.getIdPhong();
-        Api_service.service.get_rooms_byId(idRoom).enqueue(new Callback<List<Room>>() {
+        intent.putExtra("id_room", orderRoom.getIdPhong());
+        intent.putExtra("time_checkin", orderRoom.getTimeGet());
+        intent.putExtra("time_checkout", orderRoom.getTimeCheckout());
+        intent.putExtra("total", orderRoom.getTotal());
+        intent.putExtra("img", orderRoom.getImg());
+        intent.putExtra("note", orderRoom.getNote());
+        return intent;
+    }
+
+    private void loadHotelDetails(String roomId, ViewHolder holder, Intent intent) {
+        Api_service.service.get_rooms_byId(roomId).enqueue(new Callback<List<Room>>() {
             @Override
             public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                if (response.isSuccessful()) {
-                    List<Room> rooms = response.body();
-                    for (Room room : rooms) {
-                        String idTypeRoom = room.getIdLoaiPhong();
-                        Api_service.service.get_typeroom_byId(idTypeRoom).enqueue(new Callback<List<TypeRoom>>() {
-                            @Override
-                            public void onResponse(Call<List<TypeRoom>> call, Response<List<TypeRoom>> response) {
-                                if (response.isSuccessful()) {
-                                    List<TypeRoom> typeRooms = response.body();
-                                    for (TypeRoom typeRoom : typeRooms) {
-                                        String idHotel = typeRoom.getIdKhachSan();
-                                        Api_service.service.get_hotel_byId(idHotel).enqueue(new Callback<List<Hotel>>() {
-                                            @Override
-                                            public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
-                                                if (response.isSuccessful()) {
-                                                    for (Hotel hotel : response.body()) {
-                                                        holder.name.setText(hotel.getTenKhachSan());
-                                                        intent.putExtra("name_hotel", hotel.getTenKhachSan());
-                                                    }
-                                                } else {
-                                                    Log.e("Response hotel by id", "onResponse: " + response.message());
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<List<Hotel>> call, Throwable throwable) {
-                                                Log.e("Failure hotel by id", "onFailure: " + throwable.getMessage());
-                                            }
-                                        });
-                                    }
-                                } else {
-                                    Log.e("Response type room by id", "onResponse: " + response.message());
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<List<TypeRoom>> call, Throwable throwable) {
-                                Log.e("Failure type room by id", "onFailure: " + throwable.getMessage());
-                            }
-                        });
-                    }
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    Room room = response.body().get(0);
+                    loadTypeRoomDetails(room.getIdLoaiPhong(), holder, intent);
                 } else {
-                    Log.e("Response room by id", "onResponse: " + response.message());
+                    Log.e("Room Fetch", "Failed to fetch room details: " + response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<List<Room>> call, Throwable throwable) {
-                Log.e("Failure room by id", "onFailure: " + throwable.getMessage());
-            }
-        });
-        holder.start_date.setText(order_room.getTimeGet());
-        holder.end_date.setText(order_room.getTimeCheckout());
-        holder.price.setText(formatter.format(order_room.getTotal()));
-        Picasso.get().load(order_room.getImg()).into(holder.img);
-        intent.putExtra("id_room", order_room.getIdPhong());
-        intent.putExtra("time_checkin", order_room.getTimeGet());
-        intent.putExtra("time_checkout", order_room.getTimeCheckout());
-        intent.putExtra("total", order_room.getTotal());
-        intent.putExtra("img", order_room.getImg());
-        intent.putExtra("note", order_room.getNote());
-        holder.btn_item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.getContext().startActivity(intent);
-            }
-        });
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(position, order_room);
-                }
+                Log.e("Room Fetch Failure", throwable.getMessage());
             }
         });
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(int position, Order_Room order_room);
+    private void loadTypeRoomDetails(String typeRoomId, ViewHolder holder, Intent intent) {
+        Api_service.service.get_typeroom_byId(typeRoomId).enqueue(new Callback<List<TypeRoom>>() {
+            @Override
+            public void onResponse(Call<List<TypeRoom>> call, Response<List<TypeRoom>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    TypeRoom typeRoom = response.body().get(0);
+                    loadHotelName(typeRoom.getIdKhachSan(), holder, intent);
+                } else {
+                    Log.e("Type Room Fetch", "Failed to fetch type room details: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TypeRoom>> call, Throwable throwable) {
+                Log.e("Type Room Fetch Failure", throwable.getMessage());
+            }
+        });
+    }
+
+    private void loadHotelName(String hotelId, ViewHolder holder, Intent intent) {
+        Api_service.service.get_hotel_byId(hotelId).enqueue(new Callback<List<Hotel>>() {
+            @Override
+            public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    Hotel hotel = response.body().get(0);
+                    holder.name.setText(hotel.getTenKhachSan());
+                    intent.putExtra("name_hotel", hotel.getTenKhachSan());
+                } else {
+                    Log.e("Hotel Fetch", "Failed to fetch hotel details: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Hotel>> call, Throwable throwable) {
+                Log.e("Hotel Fetch Failure", throwable.getMessage());
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        if (order_rooms != null) {
-            return order_rooms.size();
-        }
-        return 0;
+        return (orderRooms != null) ? orderRooms.size() : 0;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public interface OnItemClickListener {
+        void onItemClick(int position, Order_Room orderRoom);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView img;
         TextView name, start_date, end_date, price;
         RelativeLayout btn_item;
