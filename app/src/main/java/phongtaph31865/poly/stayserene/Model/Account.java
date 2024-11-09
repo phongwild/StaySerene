@@ -1,11 +1,11 @@
 package phongtaph31865.poly.stayserene.Model;
 
 public class Account {
-    private String Uid, username, avt, email, gioiTinh, ngaySinh, password, quocTich, sdt, diaChi, _id;
+    private String Uid, username, avt, email, gioiTinh, ngaySinh, password, quocTich, sdt, diaChi, _id, imgcccdtruoc, imgcccdsau;
     private int role, cccd;
 
 
-    public Account(String uid, String username, String avt, String email, String gioiTinh, String ngaySinh, String password, String quocTich, String sdt, String diaChi, int role, int cccd, String _id) {
+    public Account(String uid, String username, String avt, String email, String gioiTinh, String ngaySinh, String password, String quocTich, String sdt, String diaChi, int role, int cccd, String _id, String imgcccdtruoc, String imgcccdsau) {
         Uid = uid;
         this._id = _id;
         this.username = username;
@@ -19,9 +19,27 @@ public class Account {
         this.diaChi = diaChi;
         this.role = role;
         this.cccd = cccd;
+        this.imgcccdtruoc = imgcccdtruoc;
+        this.imgcccdsau = imgcccdsau;
     }
 
     public Account() {
+    }
+
+    public String getImgcccdtruoc() {
+        return imgcccdtruoc;
+    }
+
+    public void setImgcccdtruoc(String imgcccdtruoc) {
+        this.imgcccdtruoc = imgcccdtruoc;
+    }
+
+    public String getImgcccdsau() {
+        return imgcccdsau;
+    }
+
+    public void setImgcccdsau(String imgcccdsau) {
+        this.imgcccdsau = imgcccdsau;
     }
 
     public int getCccd() {
