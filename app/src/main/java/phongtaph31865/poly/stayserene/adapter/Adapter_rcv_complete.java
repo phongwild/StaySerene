@@ -69,7 +69,7 @@ public class Adapter_rcv_complete extends RecyclerView.Adapter<Adapter_rcv_compl
 
     private void updateRoomImage(ViewHolder holder, Room room) {
         if (room.getAnhPhong() != null) {
-            Picasso.get().load(room.getAnhPhong()).into(holder.img);
+            Picasso.get().load(room.getAnhPhong()).resize(110, 110).into(holder.img);
         }
     }
 

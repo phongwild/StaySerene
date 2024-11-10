@@ -67,7 +67,7 @@ public class Adapter_schedule extends RecyclerView.Adapter<Adapter_schedule.View
             Log.e("Error", e.getMessage());
         }
         holder.price.setText(formatter.format(orderRoom.getTotal()));
-        Picasso.get().load(orderRoom.getImg()).into(holder.img);
+        Picasso.get().load(orderRoom.getImg()).resize(110, 110).into(holder.img);
         // Set up Intent with orderRoom data
         Intent intent = createIntentWithExtras(holder, orderRoom);
 

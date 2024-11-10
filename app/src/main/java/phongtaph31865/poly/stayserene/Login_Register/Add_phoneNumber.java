@@ -309,10 +309,7 @@ public class Add_phoneNumber extends AppCompatActivity {
             Toast.makeText(this, "Please select all images", Toast.LENGTH_SHORT).show();
             return;
         }
-
         progressBar.setVisibility(View.VISIBLE);
-//        String userId = mAuth.getCurrentUser().getUid();
-
         // Tạo StorageReference cho từng ảnh
         StorageReference avatarRef = storageRef.child("images/" + "_avatar." + System.currentTimeMillis()+ "." + getFileExtension(ImgUri));
         StorageReference frontIdRef = storageRef.child("id-card/" + "_front_id." + System.currentTimeMillis()+ "." + getFileExtension(front_ImgUri));

@@ -10,10 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
@@ -22,28 +20,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.saadahmedev.popupdialog.PopupDialog;
 import com.saadahmedev.popupdialog.listener.StandardDialogActionListener;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
 import de.hdodenhof.circleimageview.CircleImageView;
-import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Login_Register.Loginscreen;
-import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.R;
-import phongtaph31865.poly.stayserene.Screen_user.Activity.Information;
-import phongtaph31865.poly.stayserene.Screen_user.Activity.Setting;
-import phongtaph31865.poly.stayserene.adapter.Adapter_rcv1_home;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import phongtaph31865.poly.stayserene.Screen_user.Activity.Setting.Information;
+import phongtaph31865.poly.stayserene.Screen_user.Activity.Setting.Setting;
 
 public class Fragment_user extends Fragment {
     private CardView btn_logout, btn_edit_profile, btn_setting;
