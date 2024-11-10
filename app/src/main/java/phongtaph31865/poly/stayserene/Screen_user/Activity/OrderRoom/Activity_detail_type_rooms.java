@@ -85,7 +85,6 @@ public class Activity_detail_type_rooms extends AppCompatActivity {
                                                     .findFirst();
                                             if (availableRoom.isPresent()) {
                                                 Room room = availableRoom.get();
-                                                room.setTinhTrangPhong(1);
                                                 Intent intent = new Intent(Activity_detail_type_rooms.this, Activity_order_room.class);
                                                 intent.putExtra("id_type_room", id_type_room);
                                                 intent.putExtra("id_room", room.get_id());

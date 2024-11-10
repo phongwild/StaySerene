@@ -1,6 +1,8 @@
 package phongtaph31865.poly.stayserene.Screen_user.Activity.OrderRoom;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +41,11 @@ public class Activity_show_detail_booking extends AppCompatActivity {
         setContentView(binding.getRoot());
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         Intent intent = getIntent();
+        SharedPreferences sharedPreferences = getSharedPreferences("userdata", Activity.MODE_PRIVATE);
+        String username = sharedPreferences.getString("username", "");
+        String sdt = sharedPreferences.getString("sdt", "");
+        binding.tvFullNameDetailBooking.setText(username);
+        binding.tvPhoneNumberDetailBooking.setText(sdt);
         if (intent != null) {
             String name_hotel = intent.getStringExtra("name_hotel");
             String id_room = intent.getStringExtra("id_room");
@@ -54,7 +61,7 @@ public class Activity_show_detail_booking extends AppCompatActivity {
             binding.tvTimeCheckoutDetailBooking.setText(time_checkout);
             binding.tvTotalDetailBooking.setText(price);
             Picasso.get().load(img).into(binding.imgDetailBooking);
-            binding.edNoteOrderRoom.setText(note);
+            binding.tvNoteOrderRoom.setText(note);
             Api_service.service.get_rooms_byId(id_room).enqueue(new Callback<List<Room>>() {
                 @Override
                 public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {

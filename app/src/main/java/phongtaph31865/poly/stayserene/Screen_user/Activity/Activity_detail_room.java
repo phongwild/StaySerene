@@ -102,7 +102,7 @@ public class Activity_detail_room extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Activity_detail_room.this, MainActivity_user.class));
+//                startActivity(new Intent(Activity_detail_room.this, MainActivity_user.class));
                 finish();
             }
         });
