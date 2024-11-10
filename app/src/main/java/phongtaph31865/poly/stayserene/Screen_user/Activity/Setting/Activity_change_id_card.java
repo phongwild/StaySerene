@@ -106,7 +106,7 @@ public class Activity_change_id_card extends AppCompatActivity {
         Account account = new Account();
         account.setImgcccdtruoc(frontUrl);
         account.setImgcccdsau(backUrl);
-
+        account.setRole(1);
         Api_service.service.update_account(uid, account).enqueue(new Callback<List<Account>>() {
             @Override
             public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
