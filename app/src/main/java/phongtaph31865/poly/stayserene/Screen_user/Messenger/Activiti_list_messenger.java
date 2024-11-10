@@ -111,7 +111,7 @@ public class Activiti_list_messenger extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         String currentTime = dateFormat.format(calendar.getTime());
 
-        Messenger messenger = new Messenger();
+        phongtaph31865.poly.stayserene.Model.Messenger messenger = new phongtaph31865.poly.stayserene.Model.Messenger();
         messenger.setIdKhachSan(hotelId);
         messenger.setUid(userId);
         messenger.setThoiGianGui(currentTime);
@@ -141,6 +141,7 @@ public class Activiti_list_messenger extends AppCompatActivity {
             }
         });
     }
+
 
 
     private void fetchMessages() {
