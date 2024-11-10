@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -21,7 +23,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.saadahmedev.popupdialog.PopupDialog;
@@ -84,6 +85,10 @@ public class Activity_order_room extends AppCompatActivity {
         ed_note = findViewById(R.id.ed_note_order_room);
         btn_choose_payment = findViewById(R.id.img_choose_payment_method_order_room);
         //Code logic
+        //Order room
+        Intent intent = getIntent();
+        String id_type_room = intent.getStringExtra("id_type_room");
+        String id_room = intent.getStringExtra("id_room");
         btn_choose_payment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,30 +105,26 @@ public class Activity_order_room extends AppCompatActivity {
         btn_time_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                choose_TimeIN();
+                choose_TimeIN(id_room);
             }
         });
         btn_time_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                choose_TimeOUT();
+                choose_TimeOUT(id_room);
             }
         });
-        //Order room
-        Intent intent = getIntent();
-        String id_type_room = intent.getStringExtra("id_type_room");
-        String id_room = intent.getStringExtra("id_room");
-        String img = intent.getStringExtra("img");
+
         //Get payment method
         String pay_at_checkIn = payMethod.getString("pay_checkin", "");
         String cardPayment = payMethod.getString("pay_card", "");
         Log.e("getPayMethod", pay_at_checkIn + " " + cardPayment);
         if (pay_at_checkIn != null) {
             tv_paymethod.setText(pay_at_checkIn);
-        }else Log.e("getPayMethod", "pay_at_checkIn is null");
+        } else Log.e("getPayMethod", "pay_at_checkIn is null");
         if (cardPayment != null) {
             tv_paymethod.setText(cardPayment);
-        }else Log.e("getPayMethod", "cardPayment is null");
+        } else Log.e("getPayMethod", "cardPayment is null");
         if (getUsernameFromSharedPreferences() != null) {
             Api_service.service.get_account_byId(getUsernameFromSharedPreferences()).enqueue(new Callback<List<Account>>() {
                 @Override
@@ -153,6 +154,8 @@ public class Activity_order_room extends AppCompatActivity {
                         Room room = rooms.get(0);
                         tv_number_room.setText(String.valueOf(room.getSoPhong()));
                         tv_floor.setText(String.valueOf(room.getSoTang()));
+                        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                        tv_total.setText(formatter.format(room.getGiaPhong()));
                     } else Log.e("Failure get room", response.message());
                 }
 
@@ -169,6 +172,8 @@ public class Activity_order_room extends AppCompatActivity {
                         TypeRoom typeRoom = typeRooms.get(0);
                         tv_type_room.setText(typeRoom.getTenLoaiPhong());
                         tv_desc.setText(typeRoom.getMoTaLoaiPhong());
+//                        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+//                        tv_total.setText(formatter.format(typeRoom.getGiaLoaiPhong()));
                         Api_service.service.get_hotel_byId(typeRoom.getIdKhachSan()).enqueue(new Callback<List<Hotel>>() {
                             @Override
                             public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
@@ -176,7 +181,7 @@ public class Activity_order_room extends AppCompatActivity {
                                     List<Hotel> hotels = response.body();
                                     Hotel hotel = hotels.get(0);
                                     tv_name_hotel.setText(hotel.getTenKhachSan());
-                                }
+                                } else Log.e("Failure get hotel", response.message());
                             }
 
                             @Override
@@ -200,8 +205,8 @@ public class Activity_order_room extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         List<Room> rooms = response.body();
                         Room room = rooms.get(0);
-                        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-                        tv_total.setText(formatter.format(room.getGiaPhong()));
+                        tv_number_room.setText(String.valueOf(room.getSoPhong()));
+                        tv_floor.setText(String.valueOf(room.getSoTang()));
                     }
                 }
 
@@ -218,13 +223,15 @@ public class Activity_order_room extends AppCompatActivity {
                 String timeOut = tv_time_out.getText().toString();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 try {
-                    Date dateIn = dateFormat.parse(timeIn);
-                    Date dateOut = dateFormat.parse(timeOut);
+                    Date dateIn = dateFormat.parse(timeIn.split(" - ")[1]);
+                    Date dateOut = dateFormat.parse(timeOut.split(" - ")[1]);
                     if (dateOut.before(dateIn)) {
                         Toast.makeText(Activity_order_room.this, "Time check out must be after time check in", Toast.LENGTH_SHORT).show();
-                    }else {
+                    } else {
                         LocalDateTime now = LocalDateTime.now();
-                        String date = now.getHour() + ":" + now.getMinute() + "-" + now.getDayOfMonth() + "/" + now.getMonthValue() + "/" + now.getYear();
+                        long diffInMillis = dateOut.getTime() - dateIn.getTime();
+                        int numDays = (int) (diffInMillis / (1000 * 60 * 60 * 24)) + 1; // Số ngày thuê phòng
+                        String date = now.getHour() + ":" + now.getMinute() + ":" + now.getSecond() + "-" + now.getDayOfMonth() + "/" + now.getMonthValue() + "/" + now.getYear();
                         Order_Room orderRoom = new Order_Room();
                         orderRoom.setOrderTime(date);
                         orderRoom.setNote(ed_note.getText().toString());
@@ -239,9 +246,10 @@ public class Activity_order_room extends AppCompatActivity {
                                 if (response.isSuccessful()) {
                                     List<Room> rooms = response.body();
                                     Room room = rooms.get(0);
+                                    float total = room.getGiaPhong() * numDays;
                                     orderRoom.setImg(room.getAnhPhong());
                                     orderRoom.setIdPhong(room.get_id());
-                                    orderRoom.setTotal(room.getGiaPhong());
+                                    orderRoom.setTotal(total);
                                     room.setTinhTrangPhong(1);
                                     Api_service.service.order_room(orderRoom).enqueue(new Callback<List<Room>>() {
                                         @Override
@@ -326,33 +334,98 @@ public class Activity_order_room extends AppCompatActivity {
         return sharedPreferences.getString("uid", null);
     }
 
-    private void choose_TimeIN() {
+    private void choose_TimeIN(String id_room) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH) + 1;
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                String formattedDate = String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year);
-                tv_time_in.setText(formattedDate);
+                TimePickerDialog timePicker = new TimePickerDialog(Activity_order_room.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        int selectedSecond = Calendar.getInstance().get(Calendar.SECOND);
+                        String formattedDateTime = String.format("%02d:%02d:%02d - %02d/%02d/%04d",
+                                hourOfDay, minute, selectedSecond, dayOfMonth, month + 1, year);
+                        tv_time_in.setText(formattedDateTime);
+                        updateTotalPrice(id_room);
+                    }
+                }, hour, minute, true);
+                timePicker.show();
             }
         }, year, month, day);
         dialog.show();
     }
 
-    private void choose_TimeOUT() {
+    private void choose_TimeOUT(String id_room) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH) + 1;
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                String formattedDate = String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year);
-                tv_time_out.setText(formattedDate);
+                TimePickerDialog timePicker = new TimePickerDialog(Activity_order_room.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        int selectedSecond = Calendar.getInstance().get(Calendar.SECOND);
+                        String formattedDateTime = String.format("%02d:%02d:%02d - %02d/%02d/%04d",
+                                hourOfDay, minute, selectedSecond, dayOfMonth, month + 1, year);
+                        tv_time_out.setText(formattedDateTime);
+                        updateTotalPrice(id_room);
+                    }
+                }, hour, minute, true);
+                timePicker.show();
             }
         }, year, month, day);
         dialog.show();
+    }
+
+    private void updateTotalPrice(String id_room) {
+        String timeIn = tv_time_in.getText().toString();
+        String timeOut = tv_time_out.getText().toString();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss - dd/MM/yyyy", Locale.getDefault());
+
+        try {
+            Date dateIn = dateFormat.parse(timeIn);
+            Date dateOut = dateFormat.parse(timeOut);
+
+            // Kiểm tra nếu dateOut trước dateIn thì thông báo lỗi
+            if (dateOut != null && dateIn != null && dateOut.before(dateIn)) {
+                Toast.makeText(Activity_order_room.this, "Time check out must be after time check in", Toast.LENGTH_SHORT).show();
+            } else {
+                // Tính số ngày thuê phòng
+                long diffInMillis = dateOut.getTime() - dateIn.getTime();
+                int numDays = (int) (diffInMillis / (1000 * 60 * 60 * 24)) + 1; // Số ngày thuê phòng
+
+                Api_service.service.get_rooms_byId(id_room).enqueue(new Callback<List<Room>>() {
+                    @Override
+                    public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                        if (response.isSuccessful()) {
+                            List<Room> rooms = response.body();
+                            Room room = rooms.get(0);
+                            // Tính tổng tiền
+                            float total = room.getGiaPhong() * numDays;
+                            NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                            tv_total.setText(String.format(formatter.format(total))); // Cập nhật tổng tiền
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                        Log.e("Failure get room", throwable.getMessage());
+                    }
+                });
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(Activity_order_room.this, "Please choose time check in and time check out", Toast.LENGTH_SHORT).show();
+        }
     }
 }

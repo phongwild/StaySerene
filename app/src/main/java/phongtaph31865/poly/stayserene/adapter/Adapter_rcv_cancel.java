@@ -11,6 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -26,103 +33,86 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Adapter_rcv_cancel extends RecyclerView.Adapter<Adapter_rcv_cancel.ViewHolder> {
-    private Context context;
-    private List<Order_Room> orderRoomLists;
-
-    // Constructor nhận danh sách Order_Room
-    public Adapter_rcv_cancel(List<Order_Room> orderRoomLists) {
-        this.context = context;
-        this.orderRoomLists = orderRoomLists;
+    List<Order_Room> order_rooms;
+    public Adapter_rcv_cancel(List<Order_Room> order_rooms){
+        this.order_rooms = order_rooms;
     }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate layout item_cancel
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cancel, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        Order_Room orderRooms = orderRoomLists.get(position);
-        Picasso.get().load(orderRooms.getImg()).into(viewHolder.img);
-        String idRooms = orderRooms.getIdPhong();
-
-        viewHolder.status.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Api_service.service.xoaLoaiPhong(idRooms).enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if (response.isSuccessful()) {
-                            Log.d("Delete TypeRoom", "Loại phòng đã được xóa thành công");
-                        } else {
-                            Log.e("Delete TypeRoom", "Không thể xóa loại phòng: " + response.code() + ", " + response.message());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Log.e("Delete TypeRoom", "Lỗi: " + t.getMessage());
-
-                    }
-                });
-
-
-            }
-        });
-
-        Api_service.service.get_rooms_byId(idRooms).enqueue(new Callback<List<Room>>() {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Order_Room orderRoom = order_rooms.get(position);
+        loadRoomDetail(holder, orderRoom);
+    }
+    private void loadRoomDetail(ViewHolder holder, Order_Room orderRoom){
+        Api_service.service.get_rooms_byId(orderRoom.getIdPhong()).enqueue(new Callback<List<Room>>() {
             @Override
             public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                if (response.isSuccessful()){
-                    if (response.body() != null){
-                        for (Room room: response.body()){
-                            String idht = room.getIdLoaiPhong();
-                            Api_service.service.get_hotel_byId(idht).enqueue(new Callback<List<Hotel>>() {
-                                @Override
-                                public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
-                                    if (response.isSuccessful()){
-                                        if (response.body() != null){
-                                            for (Hotel hotel: response.body()){
-                                                viewHolder.ht_name.setText(hotel.getTenKhachSan());
-                                                viewHolder.ht_location.setText(hotel.getDiaChi());
-                                                viewHolder.status.setText(hotel.getStatus());
-
-                                            }
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<List<Hotel>> call, Throwable throwable) {
-                                    Log.e("Failure get ht by id", throwable.getMessage());
-
-                                }
-                            });
-                        }
-                    }
-                }
+                if (response.isSuccessful() && response.body() != null){
+                    Room room = response.body().get(0);
+                    updateRoomImage(holder, room);
+                    loadTypeRoom(holder, room);
+                }else Log.e("Error get room by id", response.message());
             }
 
             @Override
             public void onFailure(Call<List<Room>> call, Throwable throwable) {
-                Log.e("Failure get ht by id", throwable.getMessage());
-
+                Log.e("Error get room by id", throwable.getMessage());
             }
         });
     }
+    private void loadTypeRoom(ViewHolder holder, Room room){
+        Api_service.service.get_typeroom_byId(room.getIdLoaiPhong()).enqueue(new Callback<List<TypeRoom>>() {
+            @Override
+            public void onResponse(Call<List<TypeRoom>> call, Response<List<TypeRoom>> response) {
+                if (response.isSuccessful() && response.body() != null){
+                    TypeRoom typeRoom = response.body().get(0);
+                    loadHotel(holder, typeRoom);
+                }else Log.e("Error get type room by id", response.message());
+            }
 
+            @Override
+            public void onFailure(Call<List<TypeRoom>> call, Throwable throwable) {
+                Log.e("Error get type room by id", throwable.getMessage());
+            }
+        });
+    }
+    private void loadHotel(ViewHolder holder, TypeRoom typeRoom){
+        Api_service.service.get_hotel_byId(typeRoom.getIdKhachSan()).enqueue(new Callback<List<Hotel>>() {
+            @Override
+            public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
+                if (response.isSuccessful() && response.body() != null){
+                    Hotel hotel = response.body().get(0);
+                    holder.ht_name.setText(hotel.getTenKhachSan());
+                    holder.ht_location.setText(hotel.getDiaChi());
+                }else Log.e("Error get hotel by id", response.message());
+            }
+
+            @Override
+            public void onFailure(Call<List<Hotel>> call, Throwable throwable) {
+                Log.e("Error get hotel by id", throwable.getMessage());
+            }
+        });
+    }
+    private void updateRoomImage(ViewHolder holder, Room room){
+        if (room.getAnhPhong() != null){
+            Picasso.get().load(room.getAnhPhong()).resize(110, 110).into(holder.img);
+        }
+    }
     @Override
     public int getItemCount() {
-        // Trả về kích thước của danh sách orderRoomList
-        return orderRoomLists != null ? orderRoomLists.size() : 0;
+        if (order_rooms != null) {
+            return order_rooms.size();
+        }
+        return 0;
     }
 
-    // ViewHolder chứa các thành phần giao diện của item_cancel
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView ht_name, ht_location, status;
         private ImageView img;
 

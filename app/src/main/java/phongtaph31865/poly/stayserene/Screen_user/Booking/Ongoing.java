@@ -12,8 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
@@ -28,7 +28,8 @@ public class Ongoing extends Fragment {
 
     private RecyclerView recyclerView;
     private Adapter_rcv_ongoing adapter;
-    private List<Order_Room> orderroom = new ArrayList<Order_Room>();
+    private SwipeRefreshLayout refreshLayout;
+    List<Order_Room> order_rooms;
 
     public Ongoing() {
     }
@@ -36,50 +37,50 @@ public class Ongoing extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_ongoing, container, false);
-
-        return v;
+        return inflater.inflate(R.layout.fragment_ongoing, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(v, savedInstanceState);
-        recyclerView = v.findViewById(R.id.rcv_ongoing);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        get_ds_ongoing();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        recyclerView = view.findViewById(R.id.rcv_ongoing);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        refreshLayout = view.findViewById(R.id.swipe_refresh_ongoing);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                get_orderroom_by_status0();
+            }
+        });
+
+        get_orderroom_by_status0();
     }
 
-    private String getCurrentUserId() {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_data", getContext().MODE_PRIVATE);
-        return sharedPreferences.getString("uid", null);
-    }
-
-
-    public void get_ds_ongoing() {
-        Api_service.service.get_orderroom_byUid(getCurrentUserId()).enqueue(new Callback<List<Order_Room>>() {
+    public void get_orderroom_by_status0() {
+        Api_service.service.get_orderroom_status0(getCurrentUserId()).enqueue(new Callback<List<Order_Room>>() {
             @Override
             public void onResponse(Call<List<Order_Room>> call, Response<List<Order_Room>> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
-                        orderroom = response.body();
-                        adapter = new Adapter_rcv_ongoing(orderroom);
+                        order_rooms = response.body();
+                        adapter = new Adapter_rcv_ongoing(order_rooms);
                         recyclerView.setAdapter(adapter);
-                    } else {
-                        Log.e("ongoing", "False: khong lay duoc du lieu 1");
                     }
-                } else {
-                    Log.e("ongoing", "False: khong lay duoc du lieu 1");
                 }
+                refreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<List<Order_Room>> call, Throwable throwable) {
-                Log.e("ongoing", "False:" + throwable.getMessage());
-                throwable.printStackTrace();
+                Log.e("Error get order room by status", throwable.getMessage());
+                refreshLayout.setRefreshing(false);
             }
-        }
-        );
-
+        });
     }
+
+    private String getCurrentUserId() {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_data", getContext().MODE_PRIVATE);
+        return sharedPreferences.getString("uid", "");
+    }
+
 }

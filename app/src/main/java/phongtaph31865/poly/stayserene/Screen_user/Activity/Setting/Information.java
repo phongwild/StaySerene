@@ -1,4 +1,4 @@
-package phongtaph31865.poly.stayserene.Screen_user.Activity;
+package phongtaph31865.poly.stayserene.Screen_user.Activity.Setting;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -8,13 +8,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.DatePicker;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -39,10 +36,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
-import phongtaph31865.poly.stayserene.Login_Register.Add_phoneNumber;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.databinding.ActivityInformationBinding;
-import phongtaph31865.poly.stayserene.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

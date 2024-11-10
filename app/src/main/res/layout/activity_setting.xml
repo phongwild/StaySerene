@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Screen_user.Activity.Setting"
+    tools:context=".Screen_user.Activity.Setting.Setting"
     android:background="#ffffff">
     <LinearLayout
         android:layout_width="match_parent"
@@ -132,6 +132,49 @@
                             android:layout_weight="1"
                             android:textAlignment="textStart"
                             android:text="Change Password"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="#4c4ddc"
+                            android:layout_marginLeft="10dp"/>
+                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_right_arrow_purple"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="10dp"/>
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btn_change_card_id_frm_user"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                app:cardUseCompatPadding="true"
+                app:cardCornerRadius="10dp"
+                app:cardBackgroundColor="#ededfb"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="10dp">
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:src="@drawable/ic_credit_card"
+                            app:tint="#4c4ddc"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textAlignment="textStart"
+                            android:text="Change Id Card"
                             android:textSize="13sp"
                             android:textStyle="bold"
                             android:textColor="#4c4ddc"
