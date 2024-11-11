@@ -33,5 +33,8 @@ public class Setting extends AppCompatActivity {
         binding.btnChangeCardIdFrmUser.setOnClickListener(v -> {
             startActivity(new Intent(Setting.this, Activity_change_id_card.class));
         });
+        binding.btnPolicyFrmUser.setOnClickListener(v -> {
+            startActivity(new Intent(Setting.this, Activity_policy.class));
+        });
     }
 }

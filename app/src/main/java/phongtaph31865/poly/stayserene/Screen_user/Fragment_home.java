@@ -38,6 +38,7 @@ import phongtaph31865.poly.stayserene.Model.Room;
 import phongtaph31865.poly.stayserene.NetworkUtils.NetworkUtils;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_detail_room;
+import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_more_hotel;
 import phongtaph31865.poly.stayserene.adapter.Adapter_rcv1_home;
 import phongtaph31865.poly.stayserene.adapter.Adapter_rcv2_home;
 import retrofit2.Call;
@@ -89,16 +90,11 @@ public class Fragment_home extends Fragment {
                 Log.e("onFailure id user", "False: " + throwable.getMessage());
             }
         });
-        rcv1 = v.findViewById(R.id.rcv_home_1);
-        rcv2 = v.findViewById(R.id.rcv_home_2);
-        tv_more_ht = v.findViewById(R.id.tv_show_more_ht);
-        tv_more_room = v.findViewById(R.id.tv_show_more_room);
-        tv_location = v.findViewById(R.id.tv_location_home);
-        tv_more_ht.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
+        initView(v);
+
+        tv_more_ht.setOnClickListener(v1 -> {
+            startActivity(new Intent(getActivity(), Activity_more_hotel.class));
         });
         tv_more_room.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +106,17 @@ public class Fragment_home extends Fragment {
         LinearLayoutManager llm2 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         rcv1.setLayoutManager(llm1);
         rcv2.setLayoutManager(llm2);
+        checkNetWorkUtils();
+        return v;
+    }
+    private void initView(View v){
+        rcv1 = v.findViewById(R.id.rcv_home_1);
+        rcv2 = v.findViewById(R.id.rcv_home_2);
+        tv_more_ht = v.findViewById(R.id.tv_show_more_ht);
+        tv_more_room = v.findViewById(R.id.tv_show_more_room);
+        tv_location = v.findViewById(R.id.tv_location_home);
+    }
+    private void checkNetWorkUtils(){
         if (NetworkUtils.isNetworkConnected(getActivity())) {
             get_ds_ks();
             get_ds_phong();
@@ -142,10 +149,7 @@ public class Fragment_home extends Fragment {
             properties.setShowAirplaneModeOffButtons(true); // Optional
             builder.build();
         }
-
-        return v;
     }
-
 
     public void get_ds_ks() {
         Api_service.service.get_hotel().enqueue(new Callback<List<Hotel>>() {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="phongtaph31865.poly.stayserene" >
+    package="phongtaph31865.poly.stayserene">
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -25,7 +25,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StaySerene"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31" >
+        tools:targetApi="31">
+        <activity
+            android:name=".Screen_user.Activity.Setting.Activity_policy"
+            android:exported="false" />
+        <activity
+            android:name=".Screen_user.Activity.Activity_more_hotel"
+            android:exported="false" />
         <activity
             android:name=".Screen_user.Activity.Setting.Activity_change_id_card"
             android:exported="false" />
@@ -73,7 +79,7 @@
             android:exported="false" />
         <activity
             android:name=".Login_Register.Welcome"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
