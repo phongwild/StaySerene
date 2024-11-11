@@ -167,8 +167,6 @@ public class Activity_order_room extends AppCompatActivity {
                         TypeRoom typeRoom = typeRooms.get(0);
                         tv_type_room.setText(typeRoom.getTenLoaiPhong());
                         tv_desc.setText(typeRoom.getMoTaLoaiPhong());
-//                        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-//                        tv_total.setText(formatter.format(typeRoom.getGiaLoaiPhong()));
                         Api_service.service.get_hotel_byId(typeRoom.getIdKhachSan()).enqueue(new Callback<List<Hotel>>() {
                             @Override
                             public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {

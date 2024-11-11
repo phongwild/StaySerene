@@ -27,6 +27,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Login_Register.ForgotPass.Activity_otp_authen"
+            android:exported="false" />
+        <activity
+            android:name=".Login_Register.ForgotPass.Activity_type_phone_number"
+            android:exported="false" />
+        <activity
             android:name=".Screen_user.Activity.Setting.Activity_policy"
             android:exported="false" />
         <activity

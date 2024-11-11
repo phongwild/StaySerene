@@ -48,6 +48,7 @@ import com.saadahmedev.popupdialog.PopupDialog;
 import java.util.List;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
+import phongtaph31865.poly.stayserene.Login_Register.ForgotPass.Activity_type_phone_number;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.MainActivity_user;
@@ -150,6 +151,9 @@ public class Loginscreen extends AppCompatActivity {
             public void onClick(View v) {
 
             }
+        });
+        btn_forgotPass.setOnClickListener(v -> {
+            startActivity(new Intent(Loginscreen.this, Activity_type_phone_number.class));
         });
         btn_Login.setOnClickListener(new View.OnClickListener() {
             @Override
