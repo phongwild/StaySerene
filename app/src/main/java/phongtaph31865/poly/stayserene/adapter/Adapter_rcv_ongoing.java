@@ -3,6 +3,7 @@ package phongtaph31865.poly.stayserene.adapter;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import phongtaph31865.poly.stayserene.Model.Order_Room;
 import phongtaph31865.poly.stayserene.Model.Room;
 import phongtaph31865.poly.stayserene.Model.TypeRoom;
 import phongtaph31865.poly.stayserene.R;
+import phongtaph31865.poly.stayserene.Screen_user.Activity.OrderRoom.Activity_show_detail_booking;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,6 +57,19 @@ public class Adapter_rcv_ongoing extends RecyclerView.Adapter<Adapter_rcv_ongoin
         loadStatus(holder, orderRoom);
         loadRoomDetails(holder, orderRoom, position);
         setupCancelButton(holder, orderRoom, position);
+        Intent intent = createIntentWithExtras(holder, orderRoom);
+        holder.btn_show_ticket.setOnClickListener(v -> v.getContext().startActivity(intent));
+    }
+
+    private Intent createIntentWithExtras(ViewHolder holder, Order_Room orderRoom) {
+        Intent intent = new Intent(holder.itemView.getContext(), Activity_show_detail_booking.class);
+        intent.putExtra("id_room", orderRoom.getIdPhong());
+        intent.putExtra("time_checkin", orderRoom.getTimeGet());
+        intent.putExtra("time_checkout", orderRoom.getTimeCheckout());
+        intent.putExtra("total", orderRoom.getTotal());
+        intent.putExtra("img", orderRoom.getImg());
+        intent.putExtra("note", orderRoom.getNote());
+        return intent;
     }
     private void loadStatus(ViewHolder holder, Order_Room orderRoom) {
         if (orderRoom.getStatus() == 0) {

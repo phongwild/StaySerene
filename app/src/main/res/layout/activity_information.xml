@@ -106,6 +106,7 @@
                         android:background="@drawable/custom_input_info"
                         android:hint="Full name"
                         android:inputType="textPersonName|textCapWords"
+                        android:textColorHint="#4C4DDC"
                         android:padding="10dp"
                         android:textColor="#4c4ddc"
                         android:textSize="15sp" />
@@ -123,6 +124,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:text="Nationality: "
+
                         android:textColor="#4d4ddc"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -133,6 +135,7 @@
                         android:layout_height="50dp"
                         android:background="@drawable/custom_input_info"
                         android:hint="Your nationality"
+                        android:textColorHint="#4C4DDC"
                         android:inputType="text|textCapWords"
                         android:padding="10dp"
                         android:textColor="#4c4ddc"
@@ -207,6 +210,7 @@
                             android:layout_height="50dp"
                             android:background="@drawable/custom_input_info"
                             android:hint="dd/MM/yyyy"
+                            android:textColorHint="#4C4DDC"
                             android:inputType="date"
                             android:padding="10dp"
                             android:enabled="false"
@@ -251,6 +255,7 @@
                         android:background="@drawable/custom_input_info"
                         android:hint="abcxyz@gmail.com"
                         android:inputType="textEmailAddress"
+                        android:textColorHint="#4C4DDC"
                         android:padding="10dp"
                         android:textColor="#4c4ddc"
                         android:textSize="15sp" />
@@ -276,6 +281,7 @@
                         android:id="@+id/ed_phoneNumber_info"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
+                        android:textColorHint="#4C4DDC"
                         android:background="@drawable/custom_input_info"
                         android:hint="19/10/2004"
                         android:inputType="number"
@@ -303,6 +309,7 @@
                     <EditText
                         android:id="@+id/ed_cccd_info"
                         android:layout_width="match_parent"
+                        android:textColorHint="#4C4DDC"
                         android:layout_height="50dp"
                         android:background="@drawable/custom_input_info"
                         android:hint="12345675324"
@@ -333,6 +340,7 @@
                         android:layout_height="50dp"
                         android:background="@drawable/custom_input_info"
                         android:hint="HN"
+                        android:textColorHint="#4C4DDC"
                         android:inputType="text|textCapWords"
                         android:padding="10dp"
                         android:textColor="#4c4ddc"

@@ -60,7 +60,6 @@ public class Activity_show_detail_booking extends AppCompatActivity {
             binding.tvTimeCheckinDetailBooking.setText(time_checkin);
             binding.tvTimeCheckoutDetailBooking.setText(time_checkout);
             binding.tvTotalDetailBooking.setText(price);
-            Picasso.get().load(img).into(binding.imgDetailBooking);
             binding.tvNoteOrderRoom.setText(note);
             Api_service.service.get_rooms_byId(id_room).enqueue(new Callback<List<Room>>() {
                 @Override
@@ -68,6 +67,7 @@ public class Activity_show_detail_booking extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         List<Room> rooms = response.body();
                         Room room = rooms.get(0);
+                        Picasso.get().load(room.getAnhPhong()).into(binding.imgDetailBooking);
                         binding.tvNumberRoomDetailBooking.setText(String.valueOf(room.getSoPhong()));
                         binding.tvFloorDetailBooking.setText(String.valueOf(room.getSoTang()));
                         String id_type_room = room.getIdLoaiPhong();
