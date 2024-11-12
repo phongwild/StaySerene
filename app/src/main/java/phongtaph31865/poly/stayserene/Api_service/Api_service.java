@@ -9,6 +9,7 @@ import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.Model.ChangePassRequest;
 import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.Order_Room;
+import phongtaph31865.poly.stayserene.Model.PhanHoi;
 import phongtaph31865.poly.stayserene.Model.Room;
 import phongtaph31865.poly.stayserene.Model.TypeRoom;
 import retrofit2.Call;
@@ -79,12 +80,15 @@ public interface Api_service {
     Call<List<Room>> order_room(@Body Order_Room ObjOrder_Room);
     @GET("orderroombyUid/{Uid}")
     Call<List<Order_Room>> get_orderroom_byUid(@Path("Uid") String Uid);
-    @GET("orderroom/status/0/{id}")
-    Call<List<Order_Room>> get_orderroom_status0(@Path("id") String id);
-    @GET("orderroom/status/1/{id}")
-    Call<List<Order_Room>> get_orderroom_status1(@Path("id") String id);
+    @GET("orderroom/status/01/{id}")
+    Call<List<Order_Room>> get_orderroom_status01(@Path("id") String id);
     @GET("orderroom/status/2/{id}")
     Call<List<Order_Room>> get_orderroom_status2(@Path("id") String id);
+    @GET("orderroom/status/3/{id}")
+    Call<List<Order_Room>> get_orderroom_status3(@Path("id") String id);
     @PUT("orderroom/{id}")
     Call<List<Order_Room>> update_orderroom(@Path("id") String id, @Body Order_Room ObjOrder_Room);
+    //Phan hoi
+    @POST("phanhoiuser")
+    Call <List<PhanHoi>> phan_hoi(@Body PhanHoi ObjPhanHoi);
 }

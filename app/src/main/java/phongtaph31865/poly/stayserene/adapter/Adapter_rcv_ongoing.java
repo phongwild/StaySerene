@@ -52,8 +52,16 @@ public class Adapter_rcv_ongoing extends RecyclerView.Adapter<Adapter_rcv_ongoin
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Order_Room orderRoom = order_rooms.get(position);
+        loadStatus(holder, orderRoom);
         loadRoomDetails(holder, orderRoom, position);
         setupCancelButton(holder, orderRoom, position);
+    }
+    private void loadStatus(ViewHolder holder, Order_Room orderRoom) {
+        if (orderRoom.getStatus() == 0) {
+            holder.status.setText("Unpaid");
+        }else if(orderRoom.getStatus() == 1){
+            holder.status.setText("Paid");
+        }
     }
     private void loadRoomDetails(ViewHolder holder, Order_Room orderRoom, int position) {
         String idRoom = orderRoom.getIdPhong();
@@ -151,12 +159,12 @@ public class Adapter_rcv_ongoing extends RecyclerView.Adapter<Adapter_rcv_ongoin
 
     private void cancelBooking(Order_Room orderRoom, int position, Dialog dialog) {
         Room room = new Room();
-        room.setTinhTrangPhong(2);
+        room.setTinhTrangPhong(0);
         Api_service.service.update_rooms(orderRoom.getIdPhong(), room).enqueue(new Callback<List<Room>>() {
             @Override
             public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
                 if (response.isSuccessful()) {
-                    orderRoom.setStatus(2);
+                    orderRoom.setStatus(3);
                     Api_service.service.update_orderroom(orderRoom.get_id(), orderRoom).enqueue(new Callback<List<Order_Room>>() {
                         @Override
                         public void onResponse(Call<List<Order_Room>> call, Response<List<Order_Room>> response) {

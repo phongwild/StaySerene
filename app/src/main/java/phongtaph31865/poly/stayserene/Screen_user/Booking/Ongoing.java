@@ -49,15 +49,15 @@ public class Ongoing extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                get_orderroom_by_status0();
+                get_orderroom_by_status01();
             }
         });
 
-        get_orderroom_by_status0();
+        get_orderroom_by_status01();
     }
 
-    public void get_orderroom_by_status0() {
-        Api_service.service.get_orderroom_status0(getCurrentUserId()).enqueue(new Callback<List<Order_Room>>() {
+    public void get_orderroom_by_status01() {
+        Api_service.service.get_orderroom_status01(getCurrentUserId()).enqueue(new Callback<List<Order_Room>>() {
             @Override
             public void onResponse(Call<List<Order_Room>> call, Response<List<Order_Room>> response) {
                 if (response.isSuccessful()) {

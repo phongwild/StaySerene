@@ -65,7 +65,7 @@ public class Fragment_calendar extends Fragment {
 
     // Fetch order list based on user ID
     public void get_order_by_id_user() {
-        Api_service.service.get_orderroom_status0(checkUid()).enqueue(new Callback<List<Order_Room>>() {
+        Api_service.service.get_orderroom_status01(checkUid()).enqueue(new Callback<List<Order_Room>>() {
             @Override
             public void onResponse(Call<List<Order_Room>> call, Response<List<Order_Room>> response) {
                 if (response.isSuccessful()) {
@@ -97,7 +97,7 @@ public class Fragment_calendar extends Fragment {
 
     // Update Calendar view with booking dates
     private void updateCalendarView(Order_Room order_room) {
-        SimpleDateFormat originalFormat = new SimpleDateFormat("HH:mm:ss-dd/MM/yyyy");
+        SimpleDateFormat originalFormat = new SimpleDateFormat("HH:mm:ss - dd/MM/yyyy");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         try {
             Date timeCheckIn = originalFormat.parse(order_room.getTimeGet());
