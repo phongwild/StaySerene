@@ -94,7 +94,7 @@ public class Adapter_rcv2_home extends RecyclerView.Adapter<Adapter_rcv2_home.Vi
                 e.printStackTrace();
             }
             if(room.getAnhPhong() != null){
-                Picasso.get().load(room.getAnhPhong()).error(R.drawable.room_image1).resize(84,84).into(holder.img);
+                Picasso.get().load(room.getAnhPhong()).error(R.drawable.room_image1).fit().centerCrop().into(holder.img);
             }
 
             holder.btn_detail.setOnClickListener(new View.OnClickListener() {

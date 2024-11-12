@@ -86,7 +86,7 @@ public class Adapter_rcv_ongoing extends RecyclerView.Adapter<Adapter_rcv_ongoin
 
     private void loadRoomImage(ViewHolder holder, Room room) {
         if (room.getAnhPhong() != null) {
-            Picasso.get().load(room.getAnhPhong()).resize(110, 110).into(holder.img);
+            Picasso.get().load(room.getAnhPhong()).fit().centerCrop().into(holder.img);
         }
     }
 

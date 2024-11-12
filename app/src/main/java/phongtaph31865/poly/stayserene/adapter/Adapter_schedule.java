@@ -99,7 +99,7 @@ public class Adapter_schedule extends RecyclerView.Adapter<Adapter_schedule.View
             public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
                     Room room = response.body().get(0);
-                    Picasso.get().load(room.getAnhPhong()).resize(110, 110).into(holder.img);
+                    Picasso.get().load(room.getAnhPhong()).fit().centerCrop().into(holder.img);
                     loadTypeRoomDetails(room.getIdLoaiPhong(), holder, intent);
                 } else {
                     Log.e("Room Fetch", "Failed to fetch room details: " + response.message());
