@@ -202,7 +202,8 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:background="@drawable/custom_input">
 
                         <ImageView
                             android:id="@+id/iv_front_cccd"
@@ -229,7 +230,8 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:background="@drawable/custom_input">
 
                         <ImageView
                             android:id="@+id/iv_back_cccd"

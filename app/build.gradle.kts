@@ -75,4 +75,6 @@ dependencies {
     implementation ("io.ipgeolocation:ipgeolocation:1.0.16")
     //Handle image
     implementation ("com.google.mlkit:text-recognition:16.0.1")
+    //Country picker
+    implementation ("com.hbb20:ccp:2.7.1")
 }

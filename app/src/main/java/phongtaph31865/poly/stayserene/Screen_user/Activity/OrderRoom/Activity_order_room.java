@@ -90,6 +90,7 @@ public class Activity_order_room extends AppCompatActivity {
         String id_type_room = intent.getStringExtra("id_type_room");
         String id_room = intent.getStringExtra("id_room");
         btn_choose_payment.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("CommitPrefEdits")
             @Override
             public void onClick(View v) {
                 payMethod.edit().clear();
@@ -116,15 +117,9 @@ public class Activity_order_room extends AppCompatActivity {
         });
 
         //Get payment method
-        String pay_at_checkIn = payMethod.getString("pay_checkin", "");
-        String cardPayment = payMethod.getString("pay_card", "");
-        Log.e("getPayMethod", pay_at_checkIn + " " + cardPayment);
-        if (pay_at_checkIn != null) {
-            tv_paymethod.setText(pay_at_checkIn);
-        } else Log.e("getPayMethod", "pay_at_checkIn is null");
-        if (cardPayment != null) {
-            tv_paymethod.setText(cardPayment);
-        } else Log.e("getPayMethod", "cardPayment is null");
+        String Payment = payMethod.getString("pay", "");
+        Log.e("getPayMethod", Payment + " " + Payment);
+        tv_paymethod.setText(Payment);
         if (getUsernameFromSharedPreferences() != null) {
             Api_service.service.get_account_byId(getUsernameFromSharedPreferences()).enqueue(new Callback<List<Account>>() {
                 @Override
@@ -172,8 +167,6 @@ public class Activity_order_room extends AppCompatActivity {
                         TypeRoom typeRoom = typeRooms.get(0);
                         tv_type_room.setText(typeRoom.getTenLoaiPhong());
                         tv_desc.setText(typeRoom.getMoTaLoaiPhong());
-//                        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-//                        tv_total.setText(formatter.format(typeRoom.getGiaLoaiPhong()));
                         Api_service.service.get_hotel_byId(typeRoom.getIdKhachSan()).enqueue(new Callback<List<Hotel>>() {
                             @Override
                             public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {

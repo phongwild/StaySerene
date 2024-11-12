@@ -53,13 +53,13 @@ public class Cancel extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                get_orderroom_by_status2();
+                get_orderroom_by_status3();
             }
         });
-        get_orderroom_by_status2();
+        get_orderroom_by_status3();
     }
-    public void get_orderroom_by_status2() {
-        Api_service.service.get_orderroom_status2(getCurrentUserId()).enqueue(new Callback<List<Order_Room>>() {
+    public void get_orderroom_by_status3() {
+        Api_service.service.get_orderroom_status3(getCurrentUserId()).enqueue(new Callback<List<Order_Room>>() {
             @Override
             public void onResponse(Call<List<Order_Room>> call, Response<List<Order_Room>> response) {
                 if (response.isSuccessful()) {

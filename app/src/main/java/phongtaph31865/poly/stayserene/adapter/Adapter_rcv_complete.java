@@ -1,22 +1,27 @@
 package phongtaph31865.poly.stayserene.adapter;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.Order_Room;
+import phongtaph31865.poly.stayserene.Model.PhanHoi;
 import phongtaph31865.poly.stayserene.Model.Room;
 import phongtaph31865.poly.stayserene.Model.TypeRoom;
 import phongtaph31865.poly.stayserene.R;
@@ -25,7 +30,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Adapter_rcv_complete extends RecyclerView.Adapter<Adapter_rcv_complete.ViewHolder> {
-    List<Order_Room> order_rooms;
+    private List<Order_Room> order_rooms;
+    private String Uid;
+
+    public String getUid() {
+        return Uid;
+    }
+
+    public void setUid(String uid) {
+        Uid = uid;
+    }
 
     public Adapter_rcv_complete(List<Order_Room> order_rooms) {
         this.order_rooms = order_rooms;
@@ -41,7 +55,35 @@ public class Adapter_rcv_complete extends RecyclerView.Adapter<Adapter_rcv_compl
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Order_Room orderRoom = order_rooms.get(position);
+        PhanHoi phanHoi = new PhanHoi();
+        handlePhanHoi(holder, phanHoi, orderRoom);
         loadRoomDetails(holder, orderRoom);
+    }
+    private void handlePhanHoi(ViewHolder holder, PhanHoi phanHoi, Order_Room orderRoom){
+        holder.btn_cmt.setOnClickListener(v -> {
+            LocalDateTime now = LocalDateTime.now();
+            String date = now.getHour() + ":" + now.getMinute() + ":" + now.getSecond() + "-" + now.getDayOfMonth() + "/" + now.getMonthValue() + "/" + now.getYear();
+            phanHoi.setNoiDung(holder.ed_txt.getText().toString());
+            phanHoi.setIdDatPhong(orderRoom.get_id());
+            phanHoi.setUid(getUid());
+            phanHoi.setThoiGian(date);
+            Api_service.service.phan_hoi(phanHoi).enqueue(new Callback<List<PhanHoi>>() {
+                @Override
+                public void onResponse(Call<List<PhanHoi>> call, Response<List<PhanHoi>> response) {
+                    if (response.isSuccessful()) {
+                        holder.ed_txt.setText(null);
+                        Toast.makeText(v.getContext(), "Phản hồi thành công", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Log.e("Error phan hoi", response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<PhanHoi>> call, Throwable throwable) {
+                    Log.e("Error phan hoi", throwable.getMessage());
+                }
+            });
+        });
     }
 
     private void loadRoomDetails(ViewHolder holder, Order_Room orderRoom) {
@@ -131,6 +173,8 @@ public class Adapter_rcv_complete extends RecyclerView.Adapter<Adapter_rcv_compl
         private final TextView ht_location;
         private final TextView status;
         private final ImageView img;
+        private ImageView btn_cmt;
+        private EditText ed_txt;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -138,6 +182,8 @@ public class Adapter_rcv_complete extends RecyclerView.Adapter<Adapter_rcv_compl
             ht_location = itemView.findViewById(R.id.hotel_location);
             status = itemView.findViewById(R.id.status);
             img = itemView.findViewById(R.id.hotel_image);
+            btn_cmt = itemView.findViewById(R.id.btn_cmt);
+            ed_txt = itemView.findViewById(R.id.ed_txt);
         }
     }
 }

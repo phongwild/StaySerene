@@ -30,9 +30,8 @@ public class Activity_payment_method extends AppCompatActivity {
         paytcheckin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = namepay1.getText().toString();
                 SharedPreferences preferences = getSharedPreferences("payment_method", MODE_PRIVATE);
-                preferences.edit().putString("pay_checkin", name).apply();
+                preferences.edit().putString("pay", "Pay at check in").apply();
                 finish();
             }
         });
@@ -40,9 +39,8 @@ public class Activity_payment_method extends AppCompatActivity {
         cardpayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = namecard2.getText().toString();
                 SharedPreferences preferences = getSharedPreferences("payment_method", MODE_PRIVATE);
-                preferences.edit().putString("pay_card", name).apply();
+                preferences.edit().putString("pay", "Card payment").apply();
                 finish();
             }
         });

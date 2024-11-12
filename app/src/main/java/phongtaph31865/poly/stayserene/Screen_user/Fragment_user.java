@@ -27,11 +27,12 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import phongtaph31865.poly.stayserene.Login_Register.Loginscreen;
 import phongtaph31865.poly.stayserene.R;
+import phongtaph31865.poly.stayserene.Screen_user.Activity.OrderRoom.Activity_payment_method;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.Setting.Information;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.Setting.Setting;
 
 public class Fragment_user extends Fragment {
-    private CardView btn_logout, btn_edit_profile, btn_setting;
+    private CardView btn_logout, btn_edit_profile, btn_setting, btn_payment, btn_fav;
     private CircleImageView iv_avt;
     private TextView tv_username, tv_email;
     private GoogleSignInOptions gso;
@@ -48,6 +49,8 @@ public class Fragment_user extends Fragment {
         btn_edit_profile = v.findViewById(R.id.btn_edit_profile_frm_user);
         btn_setting = v.findViewById(R.id.btn_setting_frm_user);
         iv_avt = v.findViewById(R.id.iv_avt_user);
+        btn_payment = v.findViewById(R.id.btn_payment_frm_user);
+        btn_fav = v.findViewById(R.id.btn_favorite_frm_user);
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(getActivity(), gso);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
@@ -88,6 +91,9 @@ public class Fragment_user extends Fragment {
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), Setting.class));
             }
+        });
+        btn_payment.setOnClickListener(v1 -> {
+            startActivity(new Intent(getActivity(), Activity_payment_method.class));
         });
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override

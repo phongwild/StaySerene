@@ -66,7 +66,8 @@
                     app:cardCornerRadius="12dp">
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:background="@drawable/custom_input">
                         <ImageView
                             android:id="@+id/iv_lens_front_id_card"
                             android:layout_width="50dp"
@@ -105,7 +106,8 @@
                     app:cardCornerRadius="12dp">
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:background="@drawable/custom_input">
                         <ImageView
                             android:id="@+id/iv_lens_back_id_card"
                             android:layout_width="50dp"

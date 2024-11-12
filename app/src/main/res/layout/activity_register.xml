@@ -31,7 +31,7 @@
             android:layout_margin="10dp"
             android:background="@drawable/custom_input"
             android:id="@+id/ed_fullname_register"
-            android:inputType="textPersonName"
+            android:inputType="textPersonName|textCapWords"
             android:hint="Full Name" />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
