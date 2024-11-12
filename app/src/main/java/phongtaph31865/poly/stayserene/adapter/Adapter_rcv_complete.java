@@ -61,6 +61,10 @@ public class Adapter_rcv_complete extends RecyclerView.Adapter<Adapter_rcv_compl
     }
     private void handlePhanHoi(ViewHolder holder, PhanHoi phanHoi, Order_Room orderRoom){
         holder.btn_cmt.setOnClickListener(v -> {
+            if(holder.ed_txt.getText().toString().isEmpty()){
+                Toast.makeText(v.getContext(), "Type your comment", Toast.LENGTH_SHORT).show();
+                return;
+            }
             LocalDateTime now = LocalDateTime.now();
             String date = now.getHour() + ":" + now.getMinute() + ":" + now.getSecond() + "-" + now.getDayOfMonth() + "/" + now.getMonthValue() + "/" + now.getYear();
             phanHoi.setNoiDung(holder.ed_txt.getText().toString());
