@@ -41,15 +41,25 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.Text;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 import com.saadahmedev.popupdialog.PopupDialog;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
@@ -76,7 +86,7 @@ public class Add_phoneNumber extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE_2 = 102;
     private static final String DEFAULT_GENDER = "";
     private static final String DEFAULT_NATIONALITY = "";
-    private static final int DEFAULT_CCCD = 0;
+    private static String DEFAULT_CCCD = "";
     private static final int DEFAULT_ROLE = 1;
 
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -150,7 +160,44 @@ public class Add_phoneNumber extends AppCompatActivity {
             open_camera(CAMERA_REQUEST_CODE_2);
         });
     }
+    private void recognizeTextFromImage(Bitmap bitmap){
+        // Chuyển đổi bitmap thành InputImage
+        InputImage image = InputImage.fromBitmap(bitmap, 0);
 
+        // Tạo TextRecognizer
+        TextRecognizerOptions options = new TextRecognizerOptions.Builder().build();
+        TextRecognizer recognizer = TextRecognition.getClient(options);
+
+        // Xử lý ảnh và nhận dạng văn bản
+        recognizer.process(image).addOnSuccessListener(new OnSuccessListener<Text>() {
+            @Override
+            public void onSuccess(Text text) {
+                String recognizedText = text.getText();
+                Log.d("RecognizedText", recognizedText);
+
+                String cccd = extractCCCD(recognizedText);
+                Log.d("CCCD", cccd);
+                DEFAULT_CCCD = cccd;
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("TextRecognition", "Error: " + e.getMessage());
+            }
+        });
+    }
+    private String extractCCCD(String recognizedText) {
+        String regex = "\\d{12}"; // Biểu thức chính quy tìm số CCCD 12 chữ số
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(recognizedText);
+
+        if (matcher.find()) {
+            return matcher.group();  // Trả về số CCCD tìm được
+        } else {
+            Toast.makeText(this, "Not found ID Card", Toast.LENGTH_SHORT).show();
+            return "Không tìm thấy CCCD";
+        }
+    }
     private void open_camera(int requestCode) {
         if (checkCameraPermission()) {
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -160,7 +207,6 @@ public class Add_phoneNumber extends AppCompatActivity {
             requestCameraPermission();
         }
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -187,6 +233,7 @@ public class Add_phoneNumber extends AppCompatActivity {
                         front_idCard_img.setImageBitmap(bitmap);
                         front_ImgUri = getImageUri(this, bitmap);
                         iv_lens_front.setVisibility(View.GONE);
+                        recognizeTextFromImage(bitmap);
                     } else if (requestCode == CAMERA_REQUEST_CODE_2) {
                         back_idCard_img.setImageBitmap(bitmap);
                         back_ImgUri = getImageUri(this, bitmap);

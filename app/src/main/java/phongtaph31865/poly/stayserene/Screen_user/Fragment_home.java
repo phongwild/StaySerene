@@ -208,7 +208,7 @@ public class Fragment_home extends Fragment {
         return sharedPreferences.getString("uid", null);
     }
 
-    private void saveUserIdToSharedPreferences(String Uid, String username, String sdt, String address, String email, int cccd, String gender, String birthday, String avatar, String quoctich) {
+    private void saveUserIdToSharedPreferences(String Uid, String username, String sdt, String address, String email, String cccd, String gender, String birthday, String avatar, String quoctich) {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("userdata", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("uid", Uid);

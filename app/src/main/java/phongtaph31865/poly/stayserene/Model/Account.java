@@ -1,11 +1,11 @@
 package phongtaph31865.poly.stayserene.Model;
 
 public class Account {
-    private String Uid, username, avt, email, gioiTinh, ngaySinh, password, quocTich, sdt, diaChi, _id, imgcccdtruoc, imgcccdsau;
-    private int role, cccd;
+    private String Uid, username, avt, email, gioiTinh, ngaySinh, password, quocTich, sdt, diaChi, _id, imgcccdtruoc, imgcccdsau, cccd;
+    private int role;
 
 
-    public Account(String uid, String username, String avt, String email, String gioiTinh, String ngaySinh, String password, String quocTich, String sdt, String diaChi, int role, int cccd, String _id, String imgcccdtruoc, String imgcccdsau) {
+    public Account(String uid, String username, String avt, String email, String gioiTinh, String ngaySinh, String password, String quocTich, String sdt, String diaChi, int role, String cccd, String _id, String imgcccdtruoc, String imgcccdsau) {
         Uid = uid;
         this._id = _id;
         this.username = username;
@@ -42,11 +42,11 @@ public class Account {
         this.imgcccdsau = imgcccdsau;
     }
 
-    public int getCccd() {
+    public String getCccd() {
         return cccd;
     }
 
-    public void setCccd(int cccd) {
+    public void setCccd(String cccd) {
         this.cccd = cccd;
     }
 

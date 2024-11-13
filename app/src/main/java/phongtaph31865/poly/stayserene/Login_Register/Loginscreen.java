@@ -297,7 +297,7 @@ public class Loginscreen extends AppCompatActivity {
         account.setQuocTich("");
         account.setRole(1);
         account.setAvt(photo);
-        account.setCccd(123456789);
+        account.setCccd("");
         Api_service.service.create_account(account).enqueue(new Callback<List<Account>>() {
             @Override
             public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
