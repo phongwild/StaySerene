@@ -230,15 +230,15 @@ public class Activity_order_room extends AppCompatActivity {
                 String timeOut = tv_time_out.getText().toString();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 try {
-                    Date dateIn = dateFormat.parse(timeIn.split(" - ")[1]);
-                    Date dateOut = dateFormat.parse(timeOut.split(" - ")[1]);
+                    Date dateIn = dateFormat.parse(timeIn.split(" ")[1]);
+                    Date dateOut = dateFormat.parse(timeOut.split(" ")[1]);
                     if (dateOut.before(dateIn)) {
                         Toast.makeText(Activity_order_room.this, "Time check out must be after time check in", Toast.LENGTH_SHORT).show();
                     } else {
                         LocalDateTime now = LocalDateTime.now();
                         long diffInMillis = dateOut.getTime() - dateIn.getTime();
                         int numDays = (int) (diffInMillis / (1000 * 60 * 60 * 24)) + 1; // Số ngày thuê phòng
-                        String date = now.getHour() + ":" + now.getMinute() + ":" + now.getSecond() + "-" + now.getDayOfMonth() + "/" + now.getMonthValue() + "/" + now.getYear();
+                        String date = now.getHour() + ":" + now.getMinute() + ":" + now.getSecond() + " " + now.getDayOfMonth() + "/" + now.getMonthValue() + "/" + now.getYear();
                         Order_Room orderRoom = new Order_Room();
                         orderRoom.setOrderTime(date);
                         orderRoom.setNote(ed_note.getText().toString());
@@ -395,8 +395,8 @@ public class Activity_order_room extends AppCompatActivity {
                 TimePickerDialog timePicker = new TimePickerDialog(Activity_order_room.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        int selectedSecond = Calendar.getInstance().get(Calendar.SECOND);
-                        String formattedDateTime = String.format("%02d:%02d:%02d - %02d/%02d/%04d",
+                        int selectedSecond = 00;
+                        String formattedDateTime = String.format("%02d:%02d:%02d %02d/%02d/%04d",
                                 hourOfDay, minute, selectedSecond, dayOfMonth, month + 1, year);
                         tv_time_in.setText(formattedDateTime);
                         updateTotalPrice(id_room);
@@ -421,8 +421,8 @@ public class Activity_order_room extends AppCompatActivity {
                 TimePickerDialog timePicker = new TimePickerDialog(Activity_order_room.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        int selectedSecond = Calendar.getInstance().get(Calendar.SECOND);
-                        String formattedDateTime = String.format("%02d:%02d:%02d - %02d/%02d/%04d",
+                        int selectedSecond = 00;
+                        String formattedDateTime = String.format("%02d:%02d:%02d %02d/%02d/%04d",
                                 hourOfDay, minute, selectedSecond, dayOfMonth, month + 1, year);
                         tv_time_out.setText(formattedDateTime);
                         updateTotalPrice(id_room);
@@ -438,7 +438,7 @@ public class Activity_order_room extends AppCompatActivity {
         String timeIn = tv_time_in.getText().toString();
         String timeOut = tv_time_out.getText().toString();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss - dd/MM/yyyy", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy", Locale.getDefault());
 
         try {
             Date dateIn = dateFormat.parse(timeIn);
