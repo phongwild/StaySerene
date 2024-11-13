@@ -211,7 +211,7 @@ public class Information extends AppCompatActivity {
         account.setSdt(phone);
         account.setDiaChi(address);
         account.setEmail(email);
-        account.setCccd(Integer.parseInt(cccd));
+        account.setCccd(cccd);
         account.setQuocTich(nationality);
         account.setNgaySinh(birthday);
         account.setGioiTinh(gender);

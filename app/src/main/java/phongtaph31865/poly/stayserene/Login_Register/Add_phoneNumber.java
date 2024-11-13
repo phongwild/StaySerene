@@ -36,12 +36,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.exifinterface.media.ExifInterface;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -86,7 +86,7 @@ public class Add_phoneNumber extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE_2 = 102;
     private static final String DEFAULT_GENDER = "";
     private static final String DEFAULT_NATIONALITY = "";
-    private static int DEFAULT_CCCD = 0;
+    private static String DEFAULT_CCCD = "";
     private static final int DEFAULT_ROLE = 1;
 
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -160,7 +160,6 @@ public class Add_phoneNumber extends AppCompatActivity {
             open_camera(CAMERA_REQUEST_CODE_2);
         });
     }
-
     private void recognizeTextFromImage(Bitmap bitmap){
         // Chuyển đổi bitmap thành InputImage
         InputImage image = InputImage.fromBitmap(bitmap, 0);
@@ -178,7 +177,7 @@ public class Add_phoneNumber extends AppCompatActivity {
 
                 String cccd = extractCCCD(recognizedText);
                 Log.d("CCCD", cccd);
-                DEFAULT_CCCD = Integer.parseInt(cccd);
+                DEFAULT_CCCD = cccd;
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -195,40 +194,10 @@ public class Add_phoneNumber extends AppCompatActivity {
         if (matcher.find()) {
             return matcher.group();  // Trả về số CCCD tìm được
         } else {
+            Toast.makeText(this, "Not found ID Card", Toast.LENGTH_SHORT).show();
             return "Không tìm thấy CCCD";
         }
     }
-    private int getRotationDegrees(Uri imageUri) {
-        int rotationDegrees = 0;
-
-        try {
-            // Lấy thông tin xoay từ EXIF của ảnh
-            InputStream inputStream = getContentResolver().openInputStream(imageUri);
-            ExifInterface exif = new ExifInterface(inputStream);
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    rotationDegrees = 90;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    rotationDegrees = 180;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    rotationDegrees = 270;
-                    break;
-                case ExifInterface.ORIENTATION_NORMAL:
-                default:
-                    rotationDegrees = 0;
-                    break;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return rotationDegrees;
-    }
-
     private void open_camera(int requestCode) {
         if (checkCameraPermission()) {
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -238,7 +207,6 @@ public class Add_phoneNumber extends AppCompatActivity {
             requestCameraPermission();
         }
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -261,7 +229,6 @@ public class Add_phoneNumber extends AppCompatActivity {
                 Bundle bundle = data.getExtras();
                 Bitmap bitmap = (Bitmap) bundle.get("data");
                 if (bitmap != null) {
-//                    int rotationDegrees = getRotationDegrees(ImgUri);
                     if (requestCode == CAMERA_REQUEST_CODE_1) {
                         front_idCard_img.setImageBitmap(bitmap);
                         front_ImgUri = getImageUri(this, bitmap);

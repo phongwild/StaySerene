@@ -79,4 +79,6 @@ dependencies {
     implementation ("com.hbb20:ccp:2.7.1")
     //nhận diện ảnh
     implementation ("androidx.exifinterface:exifinterface:1.3.7")
+    //Crop image
+//    implementation ("com.theartofdev.edmodo:android-image-cropper:2.8.0")
 }
