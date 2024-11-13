@@ -36,6 +36,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,11 +46,20 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.Text;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 import com.saadahmedev.popupdialog.PopupDialog;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
@@ -76,7 +86,7 @@ public class Add_phoneNumber extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE_2 = 102;
     private static final String DEFAULT_GENDER = "";
     private static final String DEFAULT_NATIONALITY = "";
-    private static final int DEFAULT_CCCD = 0;
+    private static int DEFAULT_CCCD = 0;
     private static final int DEFAULT_ROLE = 1;
 
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -151,6 +161,74 @@ public class Add_phoneNumber extends AppCompatActivity {
         });
     }
 
+    private void recognizeTextFromImage(Bitmap bitmap){
+        // Chuyển đổi bitmap thành InputImage
+        InputImage image = InputImage.fromBitmap(bitmap, 0);
+
+        // Tạo TextRecognizer
+        TextRecognizerOptions options = new TextRecognizerOptions.Builder().build();
+        TextRecognizer recognizer = TextRecognition.getClient(options);
+
+        // Xử lý ảnh và nhận dạng văn bản
+        recognizer.process(image).addOnSuccessListener(new OnSuccessListener<Text>() {
+            @Override
+            public void onSuccess(Text text) {
+                String recognizedText = text.getText();
+                Log.d("RecognizedText", recognizedText);
+
+                String cccd = extractCCCD(recognizedText);
+                Log.d("CCCD", cccd);
+                DEFAULT_CCCD = Integer.parseInt(cccd);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("TextRecognition", "Error: " + e.getMessage());
+            }
+        });
+    }
+    private String extractCCCD(String recognizedText) {
+        String regex = "\\d{12}"; // Biểu thức chính quy tìm số CCCD 12 chữ số
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(recognizedText);
+
+        if (matcher.find()) {
+            return matcher.group();  // Trả về số CCCD tìm được
+        } else {
+            return "Không tìm thấy CCCD";
+        }
+    }
+    private int getRotationDegrees(Uri imageUri) {
+        int rotationDegrees = 0;
+
+        try {
+            // Lấy thông tin xoay từ EXIF của ảnh
+            InputStream inputStream = getContentResolver().openInputStream(imageUri);
+            ExifInterface exif = new ExifInterface(inputStream);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotationDegrees = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotationDegrees = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotationDegrees = 270;
+                    break;
+                case ExifInterface.ORIENTATION_NORMAL:
+                default:
+                    rotationDegrees = 0;
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return rotationDegrees;
+    }
+
     private void open_camera(int requestCode) {
         if (checkCameraPermission()) {
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -183,10 +261,12 @@ public class Add_phoneNumber extends AppCompatActivity {
                 Bundle bundle = data.getExtras();
                 Bitmap bitmap = (Bitmap) bundle.get("data");
                 if (bitmap != null) {
+//                    int rotationDegrees = getRotationDegrees(ImgUri);
                     if (requestCode == CAMERA_REQUEST_CODE_1) {
                         front_idCard_img.setImageBitmap(bitmap);
                         front_ImgUri = getImageUri(this, bitmap);
                         iv_lens_front.setVisibility(View.GONE);
+                        recognizeTextFromImage(bitmap);
                     } else if (requestCode == CAMERA_REQUEST_CODE_2) {
                         back_idCard_img.setImageBitmap(bitmap);
                         back_ImgUri = getImageUri(this, bitmap);
