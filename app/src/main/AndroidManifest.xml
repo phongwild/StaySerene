@@ -54,7 +54,7 @@
             android:name=".Screen_user.Activity.OrderRoom.Activity_order_room"
             android:exported="true"
             android:label="Merchant Demo"
-            android:launchMode="singleTask">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

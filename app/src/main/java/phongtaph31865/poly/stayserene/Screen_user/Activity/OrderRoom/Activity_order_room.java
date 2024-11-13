@@ -329,7 +329,7 @@ public class Activity_order_room extends AppCompatActivity {
                                                     PopupDialog.getInstance(Activity_order_room.this)
                                                             .statusDialogBuilder()
                                                             .createErrorDialog()
-                                                            .setHeading("Payment-Canceled")
+                                                            .setHeading("Payment Canceled")
                                                             .setDescription("Please make the payment again")
                                                             .build(Dialog::dismiss)
                                                             .show();
@@ -340,8 +340,8 @@ public class Activity_order_room extends AppCompatActivity {
                                                     PopupDialog.getInstance(Activity_order_room.this)
                                                             .statusDialogBuilder()
                                                             .createErrorDialog()
-                                                            .setHeading("Payment-Error")
-                                                            .setDescription("The payment is encountering an issue somewhere.")
+                                                            .setHeading("Payment Error")
+                                                            .setDescription("The payment is encountering an issue.")
                                                             .build(Dialog::dismiss)
                                                             .show();
                                                 }
