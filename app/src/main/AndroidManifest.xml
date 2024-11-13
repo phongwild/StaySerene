@@ -52,7 +52,20 @@
             android:exported="false" />
         <activity
             android:name=".Screen_user.Activity.OrderRoom.Activity_order_room"
-            android:exported="false" />
+            android:exported="true"
+            android:label="Merchant Demo"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="app"
+                    android:scheme="demozpdk" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Screen_user.Activity.OrderRoom.Activity_detail_type_rooms"
             android:exported="false" />

@@ -43,12 +43,17 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(fileTree(mapOf(
+        "dir" to "E:\\DATN\\StaySerene\\app\\src\\main\\java\\phongtaph31865\\poly\\stayserene\\SDK_zalo",
+        "include" to listOf("*.aar", "*.jar"),
+        "exclude" to listOf("")
+    )))
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
     //Picasso
     implementation ("com.squareup.picasso:picasso:2.8")
-    //Circle image
     implementation ("de.hdodenhof:circleimageview:3.1.0")
     //Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
@@ -77,4 +82,6 @@ dependencies {
     implementation ("com.google.mlkit:text-recognition:16.0.1")
     //Country picker
     implementation ("com.hbb20:ccp:2.7.1")
+    implementation("com.squareup.okhttp3:okhttp:4.6.0")
+    implementation("commons-codec:commons-codec:1.14")
 }

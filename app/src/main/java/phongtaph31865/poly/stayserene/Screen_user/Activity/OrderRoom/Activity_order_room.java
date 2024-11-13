@@ -8,6 +8,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
@@ -27,6 +28,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.saadahmedev.popupdialog.PopupDialog;
 
+import org.json.JSONObject;
+
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,6 +39,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import phongtaph31865.poly.stayserene.Api.CreateOrder;
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.Model.Hotel;
@@ -47,6 +51,10 @@ import phongtaph31865.poly.stayserene.Screen_user.Activity.MainActivity_user;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import vn.zalopay.sdk.Environment;
+import vn.zalopay.sdk.ZaloPayError;
+import vn.zalopay.sdk.ZaloPaySDK;
+import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class Activity_order_room extends AppCompatActivity {
     private ImageView btn_back, btn_choose_payment;
@@ -85,6 +93,11 @@ public class Activity_order_room extends AppCompatActivity {
         ed_note = findViewById(R.id.ed_note_order_room);
         btn_choose_payment = findViewById(R.id.img_choose_payment_method_order_room);
         //Code logic
+        StrictMode.ThreadPolicy policy = new
+                StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        ZaloPaySDK.init(2553, Environment.SANDBOX);
+
         //Order room
         Intent intent = getIntent();
         String id_type_room = intent.getStringExtra("id_type_room");
@@ -212,6 +225,7 @@ public class Activity_order_room extends AppCompatActivity {
         btn_booking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CreateOrder orderApi = new CreateOrder();
                 String timeIn = tv_time_in.getText().toString();
                 String timeOut = tv_time_out.getText().toString();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -244,59 +258,100 @@ public class Activity_order_room extends AppCompatActivity {
                                     orderRoom.setIdPhong(room.get_id());
                                     orderRoom.setTotal(total);
                                     room.setTinhTrangPhong(1);
-                                    Api_service.service.order_room(orderRoom).enqueue(new Callback<List<Room>>() {
-                                        @Override
-                                        public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                                            if (response.isSuccessful()) {
-                                                Api_service.service.update_rooms(id_room, room).enqueue(new Callback<List<Room>>() {
-                                                    @SuppressLint("CommitPrefEdits")
-                                                    @Override
-                                                    public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                                                        if (response.isSuccessful()) {
-                                                            payMethod.edit().clear();
-                                                            PopupDialog.getInstance(Activity_order_room.this)
-                                                                    .statusDialogBuilder()
-                                                                    .createSuccessDialog()
-                                                                    .setHeading("Well Done")
-                                                                    .setDescription("Your booking is complete!")
-                                                                    .build(dialog1 -> startActivity(new Intent(Activity_order_room.this, MainActivity_user.class)))
-                                                                    .show();
-                                                        } else {
-                                                            payMethod.edit().clear();
-                                                            PopupDialog.getInstance(Activity_order_room.this)
-                                                                    .statusDialogBuilder()
-                                                                    .createErrorDialog()
-                                                                    .setHeading("Uh-Oh")
-                                                                    .setDescription("Unexpected error occurred." +
-                                                                            " Try again later.")
-                                                                    .build(Dialog::dismiss)
-                                                                    .show();
+                                    CreateOrder orderApi = new CreateOrder();
+                                    try {
+                                        float totalPay = total * 0.1f;
+                                        String totalPayString = String.format("%.0f", totalPay);
+                                        JSONObject data = orderApi.createOrder(totalPayString);
+                                        String code = data.getString("return_code");
+                                        if (code.equals("1")) {
+                                            String token = data.getString("zp_trans_token");
+                                            ZaloPaySDK.getInstance().payOrder(Activity_order_room.this, token, "demozpdk://app", new PayOrderListener() {
+                                                @Override
+                                                public void onPaymentSucceeded(String s, String s1, String s2) {
+                                                    Api_service.service.order_room(orderRoom).enqueue(new Callback<List<Room>>() {
+                                                        @Override
+                                                        public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                                                            if (response.isSuccessful()) {
+                                                                Api_service.service.update_rooms(id_room, room).enqueue(new Callback<List<Room>>() {
+                                                                    @SuppressLint("CommitPrefEdits")
+                                                                    @Override
+                                                                    public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                                                                        if (response.isSuccessful()) {
+                                                                            payMethod.edit().clear();
+                                                                            PopupDialog.getInstance(Activity_order_room.this)
+                                                                                    .statusDialogBuilder()
+                                                                                    .createSuccessDialog()
+                                                                                    .setHeading("Well Done")
+                                                                                    .setDescription("Your booking is complete!")
+                                                                                    .build(dialog1 -> startActivity(new Intent(Activity_order_room.this, MainActivity_user.class)))
+                                                                                    .show();
+                                                                        } else {
+                                                                            payMethod.edit().clear();
+                                                                            PopupDialog.getInstance(Activity_order_room.this)
+                                                                                    .statusDialogBuilder()
+                                                                                    .createErrorDialog()
+                                                                                    .setHeading("Uh-Oh")
+                                                                                    .setDescription("Unexpected error occurred." +
+                                                                                            " Try again later.")
+                                                                                    .build(Dialog::dismiss)
+                                                                                    .show();
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                                                                        Log.e("Failure update room", throwable.getMessage());
+                                                                    }
+                                                                });
+                                                            } else {
+                                                                PopupDialog.getInstance(Activity_order_room.this)
+                                                                        .statusDialogBuilder()
+                                                                        .createErrorDialog()
+                                                                        .setHeading("Uh-Oh")
+                                                                        .setDescription("Unexpected error occurred." +
+                                                                                " Try again later.")
+                                                                        .build(Dialog::dismiss)
+                                                                        .show();
+                                                                Log.e("Failure order room", response.message());
+                                                            }
                                                         }
-                                                    }
 
-                                                    @Override
-                                                    public void onFailure(Call<List<Room>> call, Throwable throwable) {
-                                                        Log.e("Failure update room", throwable.getMessage());
-                                                    }
-                                                });
-                                            } else {
-                                                PopupDialog.getInstance(Activity_order_room.this)
-                                                        .statusDialogBuilder()
-                                                        .createErrorDialog()
-                                                        .setHeading("Uh-Oh")
-                                                        .setDescription("Unexpected error occurred." +
-                                                                " Try again later.")
-                                                        .build(Dialog::dismiss)
-                                                        .show();
-                                                Log.e("Failure order room", response.message());
-                                            }
+                                                        @Override
+                                                        public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                                                            Log.e("Failure order room", throwable.getMessage());
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onPaymentCanceled(String s, String s1) {
+                                                    PopupDialog.getInstance(Activity_order_room.this)
+                                                            .statusDialogBuilder()
+                                                            .createErrorDialog()
+                                                            .setHeading("Payment-Canceled")
+                                                            .setDescription("Please make the payment again")
+                                                            .build(Dialog::dismiss)
+                                                            .show();
+                                                }
+
+                                                @Override
+                                                public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
+                                                    PopupDialog.getInstance(Activity_order_room.this)
+                                                            .statusDialogBuilder()
+                                                            .createErrorDialog()
+                                                            .setHeading("Payment-Error")
+                                                            .setDescription("The payment is encountering an issue somewhere.")
+                                                            .build(Dialog::dismiss)
+                                                            .show();
+                                                }
+                                            });
                                         }
 
-                                        @Override
-                                        public void onFailure(Call<List<Room>> call, Throwable throwable) {
-                                            Log.e("Failure order room", throwable.getMessage());
-                                        }
-                                    });
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
                                 } else {
                                     Log.e("Failure getRoomById", response.message());
                                 }
@@ -420,5 +475,10 @@ public class Activity_order_room extends AppCompatActivity {
             e.printStackTrace();
             Toast.makeText(Activity_order_room.this, "Please choose time check in and time check out", Toast.LENGTH_SHORT).show();
         }
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        ZaloPaySDK.getInstance().onResult(intent);
     }
 }
