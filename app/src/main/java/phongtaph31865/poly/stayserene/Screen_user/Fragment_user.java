@@ -30,6 +30,7 @@ import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.OrderRoom.Activity_payment_method;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.Setting.Information;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.Setting.Setting;
+import phongtaph31865.poly.stayserene.Screen_user.Messenger.Activiti_messenger_list_hotel;
 
 public class Fragment_user extends Fragment {
     private CardView btn_logout, btn_edit_profile, btn_setting, btn_payment, btn_fav;
@@ -84,6 +85,12 @@ public class Fragment_user extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), Information.class));
+            }
+        });
+        btn_fav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), Activiti_messenger_list_hotel.class));
             }
         });
         btn_setting.setOnClickListener(new View.OnClickListener() {
