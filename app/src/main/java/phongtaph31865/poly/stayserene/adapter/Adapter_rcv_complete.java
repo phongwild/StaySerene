@@ -66,7 +66,7 @@ public class Adapter_rcv_complete extends RecyclerView.Adapter<Adapter_rcv_compl
                 return;
             }
             LocalDateTime now = LocalDateTime.now();
-            String date = now.getHour() + ":" + now.getMinute() + ":" + now.getSecond() + "-" + now.getDayOfMonth() + "/" + now.getMonthValue() + "/" + now.getYear();
+            String date = now.getHour() + ":" + now.getMinute() + ":" + now.getSecond() + " " + now.getDayOfMonth() + "/" + now.getMonthValue() + "/" + now.getYear();
             phanHoi.setNoiDung(holder.ed_txt.getText().toString());
             phanHoi.setIdDatPhong(orderRoom.get_id());
             phanHoi.setUid(getUid());
