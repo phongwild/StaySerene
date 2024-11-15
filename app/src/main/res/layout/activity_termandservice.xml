@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".termandservice">
+
+    <!-- ImageView làm nút "Quay lại" nằm trên đầu màn hình -->
+    <ImageView
+        android:id="@+id/btn_back_termandservice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back"
+        android:contentDescription="Nút quay lại"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        /> <!-- Sự kiện quay lại -->
+
+    <!-- ScrollView để cuộn nội dung điều khoản nếu cần -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/btn_back_termandservice"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp">
+
+        <!-- TextView hiển thị điều khoản và dịch vụ -->
+        <TextView
+            android:id="@+id/termsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Điều khoản và Dịch vụ của StaySerene: \n\n
+            1. **Đặt phòng**: Mọi đặt phòng qua ứng dụng StaySerene đều được xác nhận ngay lập tức. Vui lòng kiểm tra kỹ thông tin phòng và dịch vụ trước khi xác nhận.\n\n
+            2. **Hủy phòng**: Chính sách hủy phòng sẽ được hiển thị rõ ràng khi bạn thực hiện đặt phòng. Phí hủy có thể áp dụng tùy theo quy định của khách sạn.\n\n
+            3. **Thanh toán**: StaySerene hỗ trợ thanh toán bằng các phương thức an toàn và bảo mật. Vui lòng đảm bảo rằng bạn đã hoàn tất thanh toán trước khi nhận phòng.\n\n
+            4. **Quyền lợi và trách nhiệm**: Khách hàng có trách nhiệm bảo vệ tài khoản cá nhân và tuân thủ các quy định của khách sạn trong suốt thời gian lưu trú.\n\n
+            5. **Thay đổi và cập nhật**: StaySerene có quyền thay đổi điều khoản và dịch vụ mà không cần thông báo trước. Vui lòng kiểm tra điều khoản thường xuyên để cập nhật."
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:lineSpacingExtra="8dp"
+            android:paddingBottom="16dp" />
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

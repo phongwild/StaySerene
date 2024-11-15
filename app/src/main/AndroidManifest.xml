@@ -8,7 +8,6 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -27,6 +26,9 @@
         android:theme="@style/Theme.StaySerene"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".termandservice"
+            android:exported="false" />
         <activity
             android:name=".Screen_user.Messenger.Activiti_messenger_list_hotel"
             android:exported="false" />
@@ -64,14 +66,15 @@
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="app"
                     android:scheme="demozpdk" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Screen_user.Activity.OrderRoom.Activity_detail_type_rooms"
             android:exported="false" />
@@ -111,7 +114,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
