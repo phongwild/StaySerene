@@ -43,6 +43,11 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(fileTree(mapOf(
+        "dir" to "E:\\DATN\\StaySerene\\app\\src\\main\\java\\phongtaph31865\\poly\\stayserene\\SDK_zalo",
+        "include" to listOf("*.aar", "*.jar"),
+        "exclude" to listOf("")
+    )))
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -79,4 +84,10 @@ dependencies {
     implementation ("com.hbb20:ccp:2.7.1")
     //nhận diện ảnh
     implementation ("androidx.exifinterface:exifinterface:1.3.7")
+    //Crop image
+//    implementation ("com.theartofdev.edmodo:android-image-cropper:2.8.0")
+    //zalopay
+    implementation("com.squareup.okhttp3:okhttp:4.6.0")
+    implementation("commons-codec:commons-codec:1.14")
+
 }

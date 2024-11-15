@@ -52,7 +52,7 @@ public class Adapter_schedule extends RecyclerView.Adapter<Adapter_schedule.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Order_Room orderRoom = orderRooms.get(position);
-        SimpleDateFormat originalFormat = new SimpleDateFormat("HH:mm:ss - dd/MM/yyyy"); // Note the spaces around the hyphen
+        SimpleDateFormat originalFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"); // Note the spaces around the hyphen
 
         // Định dạng mới chỉ để lấy dd/MM/yyyy
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");

@@ -8,6 +8,7 @@ import java.util.List;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.Model.ChangePassRequest;
 import phongtaph31865.poly.stayserene.Model.Hotel;
+import phongtaph31865.poly.stayserene.Model.Messenger;
 import phongtaph31865.poly.stayserene.Model.Order_Room;
 import phongtaph31865.poly.stayserene.Model.PhanHoi;
 import phongtaph31865.poly.stayserene.Model.Room;
@@ -89,4 +90,11 @@ public interface Api_service {
     //Phan hoi
     @POST("phanhoiuser")
     Call <List<PhanHoi>> phan_hoi(@Body PhanHoi ObjPhanHoi);
+    //messenger
+    @GET("messenger/{hotelId}/{Uid}")
+    Call<List<Messenger>> getMessengersForHotel(@Path("hotelId") String IdKhachSan, @Path("Uid") String Uid);
+    @POST("messenger")
+    Call<Messenger> createMessenger(@Body Messenger messenger);
+    @POST("messenger")
+    Call<Void> sendMessage(@Body Messenger messenger);
 }
