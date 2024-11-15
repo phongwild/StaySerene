@@ -27,8 +27,7 @@ public class termandservice extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Navigate to the Setting activity
-                Intent intent = new Intent(termandservice.this, Setting.class);
-                startActivity(intent);
+               finish();
             }
         });
     }
