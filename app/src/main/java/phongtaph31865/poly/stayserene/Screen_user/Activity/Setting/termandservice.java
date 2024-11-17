@@ -7,29 +7,18 @@ import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-
+import phongtaph31865.poly.stayserene.databinding.ActivityTermandserviceBinding;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.Setting.Setting;
 
 public class termandservice extends AppCompatActivity {
-    private ImageView btn_back_termandservice;
-
+    private ActivityTermandserviceBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_termandservice);
-
-        // Initialize the back button ImageView
-        btn_back_termandservice = findViewById(R.id.btn_back_termandservice);
-
-        // Set click listener for the back button to navigate to the Settings screen
-        btn_back_termandservice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Navigate to the Setting activity
-               finish();
-            }
-        });
+        binding = ActivityTermandserviceBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        binding.btnBackTermService.setOnClickListener(v -> finish());
     }
 }
