@@ -1,5 +1,6 @@
 package phongtaph31865.poly.stayserene.adapter;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -10,8 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import phongtaph31865.poly.stayserene.Api_service.Api_service;
+import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.Model.Country;
 import phongtaph31865.poly.stayserene.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Adapter_country extends RecyclerView.Adapter<Adapter_country.ViewHolder> {
     private List<Country> countryList;
@@ -44,7 +50,22 @@ public class Adapter_country extends RecyclerView.Adapter<Adapter_country.ViewHo
 
         });
     }
+    private void updateCountry(Country country) {
+        Account account = new Account();
+        account.setQuocTich(country.getName());
+        Api_service.service.update_account(getUid(), account).enqueue(new Callback<List<Account>>() {
+            @Override
+            public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                if (response.isSuccessful()) {
 
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                Log.e("onFailure", throwable.getMessage());
+            }
+        });
+    }
     @Override
     public int getItemCount() {
         if (countryList != null) {

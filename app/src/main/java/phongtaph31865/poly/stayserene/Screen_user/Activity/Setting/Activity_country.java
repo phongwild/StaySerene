@@ -1,5 +1,7 @@
 package phongtaph31865.poly.stayserene.Screen_user.Activity.Setting;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -38,11 +40,16 @@ public class Activity_country extends AppCompatActivity {
         countryList.add(new Country(getString(R.string.country_singapore), R.drawable.flag_singapore));
         countryList.add(new Country(getString(R.string.country_thailand), R.drawable.flag_thailand));
         countryList.add(new Country(getString(R.string.country_malaysia), R.drawable.flag_malaysia));
-        //
+        //Logic
         LinearLayoutManager llm = new LinearLayoutManager(this);
         binding.rcvCountry.setLayoutManager(llm);
         adapter = new Adapter_country(countryList);
+        adapter.setUid(getID());
         binding.rcvCountry.setAdapter(adapter);
-
+        binding.btnBackChangeCountry.setOnClickListener(v -> finish());
+    }
+    private String getID(){
+        SharedPreferences sharedPreferences = getSharedPreferences("userdata", Activity.MODE_PRIVATE);
+        return sharedPreferences.getString("uid", "");
     }
 }
