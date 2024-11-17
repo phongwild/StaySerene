@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,10 +20,15 @@ import com.saadahmedev.popupdialog.listener.StandardDialogActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import phongtaph31865.poly.stayserene.Api_service.Api_service;
+import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.Model.Country;
 import phongtaph31865.poly.stayserene.adapter.Adapter_country;
 import phongtaph31865.poly.stayserene.databinding.ActivityCountryBinding;
 import phongtaph31865.poly.stayserene.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Activity_country extends AppCompatActivity {
     private ActivityCountryBinding binding;
@@ -62,7 +69,7 @@ public class Activity_country extends AppCompatActivity {
                         .build(new StandardDialogActionListener() {
                             @Override
                             public void onPositiveButtonClicked(Dialog dialog) {
-
+                                updateCountry(country);
                                 dialog.dismiss();
                             }
 
@@ -76,6 +83,23 @@ public class Activity_country extends AppCompatActivity {
         });
         binding.btnBackChangeCountry.setOnClickListener(v -> finish());
 
+    }
+    private void updateCountry(Country country) {
+        Account account = new Account();
+        account.setQuocTich(country.getName());
+        Api_service.service.update_account(getID(), account).enqueue(new Callback<List<Account>>() {
+            @Override
+            public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(Activity_country.this, "Change country successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                Log.e("onFailure", throwable.getMessage());
+            }
+        });
     }
     private String getID(){
         SharedPreferences sharedPreferences = getSharedPreferences("userdata", Activity.MODE_PRIVATE);
