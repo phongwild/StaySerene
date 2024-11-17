@@ -2,16 +2,13 @@ package phongtaph31865.poly.stayserene.Screen_user.Activity.Setting;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.paging.TerminalSeparatorType;
 
 import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_changePass;
 import phongtaph31865.poly.stayserene.databinding.ActivitySettingBinding;
-import phongtaph31865.poly.stayserene.termandservice;
 
 public class Setting extends AppCompatActivity {
     private ActivitySettingBinding binding;
@@ -45,6 +42,9 @@ public class Setting extends AppCompatActivity {
         });
         binding.texttermanddservice.setOnClickListener(v -> {
             startActivity(new Intent(Setting.this, termandservice.class));
+        });
+        binding.btnCountryFrmUser.setOnClickListener(v -> {
+            startActivity(new Intent(Setting.this, Activity_country.class));
         });
     }
 }
