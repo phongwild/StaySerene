@@ -61,6 +61,7 @@ public class Adapter_country extends RecyclerView.Adapter<Adapter_country.ViewHo
                         @Override
                         public void onPositiveButtonClicked(Dialog dialog) {
                             updateCountry(country, holder);
+                            dialog.dismiss();
                         }
 
                         @Override
