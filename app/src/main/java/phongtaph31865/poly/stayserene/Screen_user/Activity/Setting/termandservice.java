@@ -19,5 +19,6 @@ public class termandservice extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityTermandserviceBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        binding.btnBackTermService.setOnClickListener(v -> finish());
     }
 }
