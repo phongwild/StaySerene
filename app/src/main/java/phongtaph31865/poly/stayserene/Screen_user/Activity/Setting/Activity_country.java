@@ -1,6 +1,7 @@
 package phongtaph31865.poly.stayserene.Screen_user.Activity.Setting;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -10,6 +11,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.saadahmedev.popupdialog.PopupDialog;
+import com.saadahmedev.popupdialog.listener.StandardDialogActionListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +50,32 @@ public class Activity_country extends AppCompatActivity {
         adapter = new Adapter_country(countryList);
         adapter.setUid(getID());
         binding.rcvCountry.setAdapter(adapter);
+        adapter.setOnItemClickListener(new Adapter_country.OnItemClickListener() {
+            @Override
+            public void onItemCLick(int position, Country country) {
+                PopupDialog.getInstance(Activity_country.this)
+                        .standardDialogBuilder()
+                        .createIOSDialog()
+                        .setHeading("Change Nationality")
+                        .setPositiveButtonText("Yes")
+                        .setDescription("Are you sure you want to choose this country?")
+                        .build(new StandardDialogActionListener() {
+                            @Override
+                            public void onPositiveButtonClicked(Dialog dialog) {
+
+                                dialog.dismiss();
+                            }
+
+                            @Override
+                            public void onNegativeButtonClicked(Dialog dialog) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        });
         binding.btnBackChangeCountry.setOnClickListener(v -> finish());
+
     }
     private String getID(){
         SharedPreferences sharedPreferences = getSharedPreferences("userdata", Activity.MODE_PRIVATE);

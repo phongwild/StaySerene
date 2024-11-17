@@ -27,7 +27,13 @@ import retrofit2.Response;
 public class Adapter_country extends RecyclerView.Adapter<Adapter_country.ViewHolder> {
     private List<Country> countryList;
     private String uid;
-
+    private OnItemClickListener onItemClickListener;
+    public interface OnItemClickListener{
+        void onItemCLick(int position, Country country);
+    }
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.onItemClickListener = listener;
+    }
     public String getUid() {
         return uid;
     }
@@ -52,40 +58,8 @@ public class Adapter_country extends RecyclerView.Adapter<Adapter_country.ViewHo
         holder.flag.setImageResource(country.getFlag_country());
         holder.name.setText(country.getName());
         holder.itemView.setOnClickListener(v -> {
-            PopupDialog.getInstance(holder.itemView.getContext())
-                    .standardDialogBuilder()
-                    .createIOSDialog()
-                    .setHeading("Change Nationality")
-                    .setPositiveButtonText("Yes")
-                    .setDescription("Are you sure you want to choose this country?")
-                    .build(new StandardDialogActionListener() {
-                        @Override
-                        public void onPositiveButtonClicked(Dialog dialog) {
-                            updateCountry(country, holder);
-                            dialog.dismiss();
-                        }
-
-                        @Override
-                        public void onNegativeButtonClicked(Dialog dialog) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .show();
-        });
-    }
-    private void updateCountry(Country country, ViewHolder holder) {
-        Account account = new Account();
-        account.setQuocTich(country.getName());
-        Api_service.service.update_account(getUid(), account).enqueue(new Callback<List<Account>>() {
-            @Override
-            public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(holder.itemView.getContext(), "Change country successfully", Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onFailure(Call<List<Account>> call, Throwable throwable) {
-                Log.e("onFailure", throwable.getMessage());
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemCLick(position, country);
             }
         });
     }
@@ -104,7 +78,6 @@ public class Adapter_country extends RecyclerView.Adapter<Adapter_country.ViewHo
             super(itemView);
             flag = itemView.findViewById(R.id.item_flag);
             name = itemView.findViewById(R.id.item_name_country);
-
         }
     }
 }
