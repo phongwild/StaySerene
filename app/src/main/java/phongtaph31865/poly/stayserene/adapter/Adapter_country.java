@@ -56,6 +56,7 @@ public class Adapter_country extends RecyclerView.Adapter<Adapter_country.ViewHo
                     .standardDialogBuilder()
                     .createIOSDialog()
                     .setHeading("Change Nationality")
+                    .setPositiveButtonText("Yes")
                     .setDescription("Are you sure you want to choose this country?")
                     .build(new StandardDialogActionListener() {
                         @Override
