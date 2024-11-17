@@ -1,13 +1,18 @@
 package phongtaph31865.poly.stayserene.adapter;
 
+import android.app.Dialog;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.saadahmedev.popupdialog.PopupDialog;
+import com.saadahmedev.popupdialog.listener.StandardDialogActionListener;
 
 import java.util.List;
 
@@ -47,17 +52,33 @@ public class Adapter_country extends RecyclerView.Adapter<Adapter_country.ViewHo
         holder.flag.setImageResource(country.getFlag_country());
         holder.name.setText(country.getName());
         holder.itemView.setOnClickListener(v -> {
+            PopupDialog.getInstance(holder.itemView.getContext())
+                    .standardDialogBuilder()
+                    .createIOSDialog()
+                    .setHeading("Change Nationality")
+                    .setDescription("Are you sure you want to choose this country?")
+                    .build(new StandardDialogActionListener() {
+                        @Override
+                        public void onPositiveButtonClicked(Dialog dialog) {
+                            updateCountry(country, holder);
+                        }
 
+                        @Override
+                        public void onNegativeButtonClicked(Dialog dialog) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
         });
     }
-    private void updateCountry(Country country) {
+    private void updateCountry(Country country, ViewHolder holder) {
         Account account = new Account();
         account.setQuocTich(country.getName());
         Api_service.service.update_account(getUid(), account).enqueue(new Callback<List<Account>>() {
             @Override
             public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
                 if (response.isSuccessful()) {
-
+                    Toast.makeText(holder.itemView.getContext(), "Change country successfully", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
