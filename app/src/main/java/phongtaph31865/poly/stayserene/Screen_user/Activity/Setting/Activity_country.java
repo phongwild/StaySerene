@@ -69,7 +69,7 @@ public class Activity_country extends AppCompatActivity {
                         .build(new StandardDialogActionListener() {
                             @Override
                             public void onPositiveButtonClicked(Dialog dialog) {
-
+                                updateCountry(country);
                                 dialog.dismiss();
                             }
 
