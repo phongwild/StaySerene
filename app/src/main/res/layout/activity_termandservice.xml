@@ -150,7 +150,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:text="1.Booking:"
+                        android:text="4.Rights and Responsibilities:"
                         android:textAlignment="textStart"
                         android:textColor="#000000"
                         android:textStyle="bold"
