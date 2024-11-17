@@ -187,7 +187,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:text="All bookings made through the StaySerene app are confirmed instantly. Please double-check your room and service details before confirming."
+                        android:text="StaySerene reserves the right to modify its terms and services without prior notice. Please review the terms regularly for updates."
                         android:textAlignment="textStart"
                         android:textColor="#000000"
                         android:textSize="14sp"/>
