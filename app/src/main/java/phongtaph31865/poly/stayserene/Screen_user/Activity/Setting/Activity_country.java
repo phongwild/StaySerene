@@ -65,7 +65,6 @@ public class Activity_country extends AppCompatActivity {
                         .createIOSDialog()
                         .setHeading("Change Nationality")
                         .setPositiveButtonText("Yes")
-                        .setDescription("Are you sure you want to choose this country?")
                         .build(new StandardDialogActionListener() {
                             @Override
                             public void onPositiveButtonClicked(Dialog dialog) {
