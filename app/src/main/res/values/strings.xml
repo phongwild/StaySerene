@@ -5,4 +5,15 @@
     <string name="facebook_app_id">556843803521307</string>
     <string name="fb_login_protocol_scheme">fb1234</string>
     <string name="facebook_client_token">4914bf62d4b4a2ff4d73649e533629c8</string>
+    <string name="country_brunei">Brunei</string>
+    <string name="country_cambodia">Cambodia</string>
+    <string name="country_indonesia">Indonesia</string>
+    <string name="country_laos">Laos</string>
+    <string name="country_malaysia">Malaysia</string>
+    <string name="country_myanmar">Myanmar</string>
+    <string name="country_philippines">Philippines</string>
+    <string name="country_singapore">Singapore</string>
+    <string name="country_thailand">Thailand</string>
+    <string name="country_vietnam">Vietnam</string>
+    <string name="country_timor_leste">Timor-Leste</string>
 </resources>
