@@ -17,11 +17,7 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:paddingHorizontal="10dp">
-            <ImageView
-                android:id="@+id/item_flag"
-                android:layout_width="100dp"
-                android:layout_height="45dp"
-                android:src="@drawable/flag_vietnam" />
+
             <TextView
                 android:id="@+id/item_name_country"
                 android:layout_width="0dp"
