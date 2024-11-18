@@ -48,6 +48,11 @@ dependencies {
         "include" to listOf("*.aar", "*.jar"),
         "exclude" to listOf("")
     )))
+    implementation(fileTree(mapOf(
+        "dir" to "C:\\Users\\phong.ta\\StudioProjects\\StaySerene\\app\\src\\main\\java\\phongtaph31865\\poly\\stayserene\\SDK_zalo",
+        "include" to listOf("*.aar", "*.jar"),
+        "exclude" to listOf("")
+    )))
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -84,10 +89,14 @@ dependencies {
     implementation ("com.hbb20:ccp:2.7.1")
     //nhận diện ảnh
     implementation ("androidx.exifinterface:exifinterface:1.3.7")
-    //Crop image
-//    implementation ("com.theartofdev.edmodo:android-image-cropper:2.8.0")
     //zalopay
     implementation("com.squareup.okhttp3:okhttp:4.6.0")
     implementation("commons-codec:commons-codec:1.14")
+    //api javamail
+    implementation ("com.sun.mail:android-mail:1.6.0")
+    implementation ("com.sun.mail:android-activation:1.6.0")
+    //pinview
+    implementation ("io.github.chaosleung:pinview:1.4.4")
+
 
 }

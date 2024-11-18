@@ -3,7 +3,9 @@ package phongtaph31865.poly.stayserene.Login_Register;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -39,6 +41,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -51,6 +54,8 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 import com.saadahmedev.popupdialog.PopupDialog;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -60,8 +65,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.R;
-import phongtaph31865.poly.stayserene.library.cropper.CropImage;
-import phongtaph31865.poly.stayserene.library.cropper.CropImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -222,36 +225,38 @@ public class Add_phoneNumber extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
-            if (data != null && data.getExtras() != null) {
+            if (data.getExtras() != null) {
                 Bundle bundle = data.getExtras();
                 Bitmap bitmap = (Bitmap) bundle.get("data");
                 if (bitmap != null) {
                     if (requestCode == CAMERA_REQUEST_CODE_1) {
+                        front_idCard_img.setImageBitmap(bitmap);
                         front_ImgUri = getImageUri(this, bitmap);
-                        front_idCard_img.setImageBitmap(bitmap); // Hiển thị ảnh vào ImageView
-                        iv_lens_front.setVisibility(View.GONE);  // Ẩn biểu tượng "lens" sau khi chụp
+                        iv_lens_front.setVisibility(View.GONE);
                         recognizeTextFromImage(bitmap);
                     } else if (requestCode == CAMERA_REQUEST_CODE_2) {
+                        back_idCard_img.setImageBitmap(bitmap);
                         back_ImgUri = getImageUri(this, bitmap);
-                        back_idCard_img.setImageBitmap(bitmap); // Hiển thị ảnh vào ImageView
-                        iv_lens_back.setVisibility(View.GONE);  // Ẩn biểu tượng "lens" sau khi chụp
+                        iv_lens_back.setVisibility(View.GONE);
                     }
                 } else {
                     Log.e(TAG, "Bitmap is null");
+                    Toast.makeText(this, "Failed to capture image", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Log.e(TAG, "Intent or bundle is null");
+                Toast.makeText(this, "No data received from camera", Toast.LENGTH_SHORT).show();
             }
 
         }
     }
-
-    private void handleCapturedImage(Uri uri) {
-        CropImage.activity(uri).setGuidelines(CropImageView.Guidelines.ON).start(this);
-    }
     private Uri getImageUri(Context context, Bitmap bitmap) {
         // Tạo một tên tệp tạm thời cho ảnh
         String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "temp_image", null);
+        if (path == null) {
+            Log.e(TAG, "Failed to save image to MediaStore.");
+            return null;  // Trả về null nếu không thể lưu ảnh
+        }
         return Uri.parse(path);
     }
 

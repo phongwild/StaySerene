@@ -11,6 +11,7 @@ import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.Messenger;
 import phongtaph31865.poly.stayserene.Model.Order_Room;
 import phongtaph31865.poly.stayserene.Model.PhanHoi;
+import phongtaph31865.poly.stayserene.Model.RecoveyPassRequest;
 import phongtaph31865.poly.stayserene.Model.Room;
 import phongtaph31865.poly.stayserene.Model.TypeRoom;
 import retrofit2.Call;
@@ -55,6 +56,8 @@ public interface Api_service {
     Call<Boolean> check_user_google(@Query("id") String id);
     @POST("change-pass")
     Call<ChangePassRequest> change_password(@Body ChangePassRequest ObjChangePassRequest);
+    @POST("recovery-pass")
+    Call<RecoveyPassRequest> recovery_password(@Body RecoveyPassRequest ObjRecoveyPassRequest);
     //Room
     @GET("rooms")
     Call<List<Room>> get_rooms();

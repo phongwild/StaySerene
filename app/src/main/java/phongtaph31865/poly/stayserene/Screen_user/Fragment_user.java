@@ -64,7 +64,7 @@ public class Fragment_user extends Fragment {
             tv_email.setText(email);
             if (avatar != null) {
                 Picasso.get().load(avatar).error(R.drawable.icon_user02).into(iv_avt);
-            }
+            }else Picasso.get().load(R.drawable.icon_user02).into(iv_avt);
         } else if (account != null) {
             String name = account.getDisplayName();
             String email = account.getEmail();
