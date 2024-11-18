@@ -282,14 +282,20 @@ public class Activity_order_room extends AppCompatActivity {
                                                                     @Override
                                                                     public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
                                                                         if (response.isSuccessful()) {
-                                                                            payMethod.edit().clear();
-                                                                            PopupDialog.getInstance(Activity_order_room.this)
+                                                                            PopupDialog popupDialog = PopupDialog.getInstance(Activity_order_room.this)
                                                                                     .statusDialogBuilder()
                                                                                     .createSuccessDialog()
                                                                                     .setHeading("Well Done")
                                                                                     .setDescription("Your booking is complete!")
-                                                                                    .build(dialog1 -> startActivity(new Intent(Activity_order_room.this, MainActivity_user.class)))
-                                                                                    .show();
+                                                                                    .build(dialog1 -> {
+                                                                                        startActivity(new Intent(Activity_order_room.this, MainActivity_user.class));
+                                                                                    });
+                                                                            popupDialog.getDialog().setOnDismissListener(dialog -> {
+                                                                                startActivity(new Intent(Activity_order_room.this, MainActivity_user.class));
+                                                                            });
+                                                                            popupDialog.getDialog().setCancelable(true);
+                                                                            popupDialog.show();
+
                                                                         } else {
                                                                             payMethod.edit().clear();
                                                                             PopupDialog.getInstance(Activity_order_room.this)

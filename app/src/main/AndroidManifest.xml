@@ -13,7 +13,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -38,6 +37,12 @@
         </provider>
         <activity
             android:name=".Login_Register.ForgotPass.Activity_updatePass"
+            android:exported="false" />
+        <activity
+            android:name=".Screen_user.Activity.Setting.Activity_country"
+            android:exported="false" />
+        <activity
+            android:name=".Screen_user.Activity.Setting.termandservice"
             android:exported="false" />
         <activity
             android:name=".Screen_user.Messenger.Activiti_messenger_list_hotel"
@@ -76,15 +81,14 @@
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:host="app"
                     android:scheme="demozpdk" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".Screen_user.Activity.OrderRoom.Activity_detail_type_rooms"
             android:exported="false" />

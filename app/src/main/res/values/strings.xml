@@ -16,4 +16,15 @@
     <string name="pick_image_intent_chooser_title">Select source</string>
 
     <string name="crop_image_activity_no_permissions">Cancelling, required permissions are not granted</string>
+    <string name="country_brunei">Brunei</string>
+    <string name="country_cambodia">Cambodia</string>
+    <string name="country_indonesia">Indonesia</string>
+    <string name="country_laos">Laos</string>
+    <string name="country_malaysia">Malaysia</string>
+    <string name="country_myanmar">Myanmar</string>
+    <string name="country_philippines">Philippines</string>
+    <string name="country_singapore">Singapore</string>
+    <string name="country_thailand">Thailand</string>
+    <string name="country_vietnam">Vietnam</string>
+    <string name="country_timor_leste">Timor-Leste</string>
 </resources>
