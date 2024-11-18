@@ -12,7 +12,6 @@ import phongtaph31865.poly.stayserene.databinding.ActivitySettingBinding;
 
 public class Setting extends AppCompatActivity {
     private ActivitySettingBinding binding;
-    private TextView texttermanddservice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
