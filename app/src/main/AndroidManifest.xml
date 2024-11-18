@@ -36,6 +36,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
         <activity
+            android:name=".Screen_user.Activity.OrderRoom.Activity_list_service"
+            android:exported="false" />
+        <activity
             android:name=".Login_Register.ForgotPass.Activity_updatePass"
             android:exported="false" />
         <activity
