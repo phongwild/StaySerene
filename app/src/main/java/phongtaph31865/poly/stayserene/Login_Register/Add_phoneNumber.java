@@ -3,27 +3,30 @@ package phongtaph31865.poly.stayserene.Login_Register;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -36,12 +39,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -54,8 +58,8 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 import com.saadahmedev.popupdialog.PopupDialog;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -63,8 +67,11 @@ import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
+import phongtaph31865.poly.stayserene.MailConfig.MailConfig;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.R;
+import phongtaph31865.poly.stayserene.library.cropper.CropImage;
+import phongtaph31865.poly.stayserene.library.cropper.CropImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -88,6 +95,8 @@ public class Add_phoneNumber extends AppCompatActivity {
     private static final String DEFAULT_NATIONALITY = "";
     private static String DEFAULT_CCCD = "";
     private static final int DEFAULT_ROLE = 1;
+    private String currentPhotoPath;
+    private String OTP;
 
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
@@ -151,7 +160,7 @@ public class Add_phoneNumber extends AppCompatActivity {
 
         btn_add_avt.setOnClickListener(v -> selectImage(launcher));
 
-        btn_create.setOnClickListener(v -> createAccount());
+        btn_create.setOnClickListener(v -> sendOTP());
 
         btn_front_idCard.setOnClickListener(v -> {
             open_camera(CAMERA_REQUEST_CODE_1);
@@ -159,6 +168,83 @@ public class Add_phoneNumber extends AppCompatActivity {
         btn_back_idCard.setOnClickListener(v -> {
             open_camera(CAMERA_REQUEST_CODE_2);
         });
+    }
+
+    private void sendOTP() {
+        OTP = MailConfig.generateOTP(4);
+        MailConfig.sendOtpEmail(email, OTP);
+        openBottomSheet();
+    }
+
+    private void openBottomSheet() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(Add_phoneNumber.this);
+        View v = LayoutInflater.from(Add_phoneNumber.this).inflate(R.layout.bottom_sheet_otp, null);
+        bottomSheetDialog.setContentView(v);
+        bottomSheetDialog.show();
+        addTextWatchers(v, bottomSheetDialog);
+    }
+
+    private void addTextWatchers(View v, BottomSheetDialog dialog) {
+        EditText edt1 = v.findViewById(R.id.edt_otp1_bottom_sheet);
+        EditText edt2 = v.findViewById(R.id.edt_otp2_bottom_sheet);
+        EditText edt3 = v.findViewById(R.id.edt_otp3_bottom_sheet);
+        EditText edt4 = v.findViewById(R.id.edt_otp4_bottom_sheet);
+        TextView emaill = v.findViewById(R.id.tv_email_otp_bottom_sheet);
+        CardView btnSubmit = v.findViewById(R.id.btn_submit_otp_bottom_sheet);
+        edt1.addTextChangedListener(new OTPTextWatcher(edt1, edt2, null));
+        edt2.addTextChangedListener(new OTPTextWatcher(edt2, edt3, edt1));
+        edt3.addTextChangedListener(new OTPTextWatcher(edt3, edt4, edt2));
+        edt4.addTextChangedListener(new OTPTextWatcher(edt4, null, edt3));
+        emaill.setText(email);
+        btnSubmit.setOnClickListener(t -> {
+            String otp = edt1.getText().toString() + edt2.getText().toString() + edt3.getText().toString() + edt4.getText().toString();
+            if(otp.equals(OTP)){
+                createAccount();
+                dialog.dismiss();
+            }else Toast.makeText(this, "OTP is incorrect, please try again", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private class OTPTextWatcher implements TextWatcher {
+        private EditText currentEDT;
+        private EditText nextEDT;
+        private EditText prevEDT;
+
+
+        public OTPTextWatcher(EditText currentEDT, EditText nextEDT, EditText prevEDT) {
+            this.currentEDT = currentEDT;
+            this.nextEDT = nextEDT;
+            this.prevEDT = prevEDT;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // Nếu người dùng nhập 1 ký tự, chuyển sang trường tiếp theo
+            if (s.length() == 1 && nextEDT != null) {
+                nextEDT.requestFocus();
+            }
+            // Nếu người dùng xóa ký tự
+            else if (s.length() == 0) {
+                // Trường hợp xóa ký tự ở edtOtp1 (không có trường trước, không làm gì)
+                if (prevEDT != null) {
+                    prevEDT.requestFocus(); // Chuyển focus về trường trước nếu có
+                }
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+
+        private void validateOTP(String otp) {
+
+        }
     }
     private void recognizeTextFromImage(Bitmap bitmap){
         // Chuyển đổi bitmap thành InputImage
@@ -201,9 +287,31 @@ public class Add_phoneNumber extends AppCompatActivity {
     private void open_camera(int requestCode) {
         if (checkCameraPermission()) {
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent, requestCode);
+
+            // Kiểm tra nếu có thể mở camera
+            if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                File photoFile = null;
+                try {
+                    // Tạo file để lưu ảnh chụp
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    // Xử lý lỗi tạo file
+                    ex.printStackTrace();
+                    Log.e(TAG, "Error occurred while creating the file", ex);
+                    return;
+                }
+
+                if (photoFile != null) {
+                    // Lấy Uri của file ảnh vừa tạo
+                    Uri photoURI = FileProvider.getUriForFile(this,
+                            "phongtaph31865.poly.stayserene.fileprovider", photoFile);
+
+                    // Truyền Uri vào Intent để lưu ảnh
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(cameraIntent, requestCode);
+                }
+            }
         } else {
-            // Nếu chưa có quyền, yêu cầu quyền camera
             requestCameraPermission();
         }
     }
@@ -224,32 +332,64 @@ public class Add_phoneNumber extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && data != null) {
-            if (data.getExtras() != null) {
-                Bundle bundle = data.getExtras();
-                Bitmap bitmap = (Bitmap) bundle.get("data");
-                if (bitmap != null) {
-                    if (requestCode == CAMERA_REQUEST_CODE_1) {
-                        front_idCard_img.setImageBitmap(bitmap);
-                        front_ImgUri = getImageUri(this, bitmap);
-                        iv_lens_front.setVisibility(View.GONE);
-                        recognizeTextFromImage(bitmap);
-                    } else if (requestCode == CAMERA_REQUEST_CODE_2) {
-                        back_idCard_img.setImageBitmap(bitmap);
-                        back_ImgUri = getImageUri(this, bitmap);
-                        iv_lens_back.setVisibility(View.GONE);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == CAMERA_REQUEST_CODE_1 || requestCode == CAMERA_REQUEST_CODE_2) {
+                // Kiểm tra nếu đường dẫn ảnh không null và file tồn tại
+                File file = new File(currentPhotoPath);  // Lấy file ảnh từ đường dẫn đã lưu
+                if (file.exists()) {
+//                    Uri uri = Uri.fromFile(file);
+//                    cropImage(uri);
+                    Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());  // Đọc ảnh từ file
+                    if (bitmap != null) {
+                        // Hiển thị ảnh lên ImageView
+                        if (requestCode == CAMERA_REQUEST_CODE_1) {
+                            front_idCard_img.setImageBitmap(bitmap);
+                            front_ImgUri = Uri.fromFile(file);  // Lưu URI của ảnh
+                            recognizeTextFromImage(bitmap);
+                            iv_lens_front.setVisibility(View.INVISIBLE);
+                        } else if (requestCode == CAMERA_REQUEST_CODE_2) {
+                            back_idCard_img.setImageBitmap(bitmap);
+                            back_ImgUri = Uri.fromFile(file);  // Lưu URI của ảnh
+                            iv_lens_back.setVisibility(View.INVISIBLE);
+                        }
+                    } else {
+                        Log.e("onActivityResult", "Bitmap is null");
+                        Toast.makeText(this, "Failed to decode image", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Log.e(TAG, "Bitmap is null");
-                    Toast.makeText(this, "Failed to capture image", Toast.LENGTH_SHORT).show();
+                    Log.e("onActivityResult", "File does not exist: " + currentPhotoPath);
+                    Toast.makeText(this, "File not found", Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                Log.e(TAG, "Intent or bundle is null");
-                Toast.makeText(this, "No data received from camera", Toast.LENGTH_SHORT).show();
             }
-
         }
     }
+
+    private void cropImage(Uri imageUri) {
+        CropImage.activity(imageUri)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setAspectRatio(3, 2)
+                .start(this);
+    }
+
+    private File createImageFile() throws IOException {
+        // Tạo tên file ảnh tạm
+        String timeStamp = String.valueOf(System.currentTimeMillis());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        // Tạo file ảnh mới trong bộ nhớ
+        File image = File.createTempFile(
+                imageFileName, // Tên file
+                ".jpg", // Đuôi file
+                storageDir // Thư mục lưu
+        );
+
+        // Lưu Uri của file để lấy sau
+        currentPhotoPath = image.getAbsolutePath();
+        Log.d("CreateImageFile", "Image path: " + currentPhotoPath);  // In ra đường dẫn để debug
+        return image;
+    }
+
     private Uri getImageUri(Context context, Bitmap bitmap) {
         // Tạo một tên tệp tạm thời cho ảnh
         String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "temp_image", null);
