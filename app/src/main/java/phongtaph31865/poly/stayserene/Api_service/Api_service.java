@@ -13,6 +13,7 @@ import phongtaph31865.poly.stayserene.Model.Order_Room;
 import phongtaph31865.poly.stayserene.Model.PhanHoi;
 import phongtaph31865.poly.stayserene.Model.RecoveyPassRequest;
 import phongtaph31865.poly.stayserene.Model.Room;
+import phongtaph31865.poly.stayserene.Model.Service;
 import phongtaph31865.poly.stayserene.Model.TypeRoom;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -100,4 +101,7 @@ public interface Api_service {
     Call<Messenger> createMessenger(@Body Messenger messenger);
     @POST("messenger")
     Call<Void> sendMessage(@Body Messenger messenger);
+    //service
+    @GET("dichvu")
+    Call<List<Service>> get_service();
 }

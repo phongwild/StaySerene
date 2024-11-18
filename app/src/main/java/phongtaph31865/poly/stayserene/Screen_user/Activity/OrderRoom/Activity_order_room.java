@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
@@ -58,7 +60,7 @@ import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class Activity_order_room extends AppCompatActivity {
     private ImageView btn_back, btn_choose_payment;
-    private TextView tv_name_hotel, tv_type_room, tv_number_room, tv_floor, tv_desc, tv_fullName, tv_phone, tv_total, tv_time_in, tv_time_out, tv_paymethod;
+    private TextView tv_name_hotel, tv_type_room, tv_number_room, tv_floor, tv_desc, tv_fullName, tv_phone, tv_total, tv_time_in, tv_time_out, tv_paymethod,tv_id_service,tv_price_service;
     private EditText ed_note;
     private RelativeLayout btn_time_in, btn_time_out;
     private CardView btn_booking;
@@ -87,6 +89,8 @@ public class Activity_order_room extends AppCompatActivity {
         tv_paymethod = findViewById(R.id.tv_payment_method_order_room);
         tv_time_in = findViewById(R.id.tv_time_check_in_order_room);
         tv_time_out = findViewById(R.id.tv_time_check_out_order_room);
+        tv_id_service = findViewById(R.id.tv_id_service);
+        tv_price_service = findViewById(R.id.tv_price_service);
         btn_booking = findViewById(R.id.btn_booking_order_room);
         btn_time_in = findViewById(R.id.btn_time_check_in_order_room);
         btn_time_out = findViewById(R.id.btn_time_check_out_order_room);
@@ -102,12 +106,15 @@ public class Activity_order_room extends AppCompatActivity {
         Intent intent = getIntent();
         String id_type_room = intent.getStringExtra("id_type_room");
         String id_room = intent.getStringExtra("id_room");
+        tv_paymethod.setText("No service required");
+        tv_id_service.setText("6707ed79df6d7c9585d8eb99");
+        tv_price_service.setText("0");
+
         btn_choose_payment.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("CommitPrefEdits")
             @Override
             public void onClick(View v) {
-                payMethod.edit().clear();
-                startActivity(new Intent(Activity_order_room.this, Activity_payment_method.class));
+                Intent intent = new Intent(Activity_order_room.this, Activity_list_service.class);
+                startActivityForResult(intent, 1);
             }
         });
         btn_back.setOnClickListener(new View.OnClickListener() {
@@ -128,11 +135,20 @@ public class Activity_order_room extends AppCompatActivity {
                 choose_TimeOUT(id_room);
             }
         });
+        tv_price_service.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+            }
 
-        //Get payment method
-        String Payment = payMethod.getString("pay", "");
-        Log.e("getPayMethod", Payment + " " + Payment);
-        tv_paymethod.setText(Payment);
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                updateTotalPrice(id_room);
+            }
+        });
         if (getUsernameFromSharedPreferences() != null) {
             Api_service.service.get_account_byId(getUsernameFromSharedPreferences()).enqueue(new Callback<List<Account>>() {
                 @Override
@@ -225,7 +241,6 @@ public class Activity_order_room extends AppCompatActivity {
         btn_booking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CreateOrder orderApi = new CreateOrder();
                 String timeIn = tv_time_in.getText().toString();
                 String timeOut = tv_time_out.getText().toString();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -242,12 +257,13 @@ public class Activity_order_room extends AppCompatActivity {
                         Toast.makeText(Activity_order_room.this, "Time check out must be after time check in", Toast.LENGTH_SHORT).show();
                     } else {
                         long diffInMillis = dateOut.getTime() - dateIn.getTime();
-                        int numDays = (int) (diffInMillis / (1000 * 60 * 60 * 24)) + 1; // Số ngày thuê phòng
-                        Order_Room orderRoom = new Order_Room();
+                        double roundedNumDays = (double) diffInMillis / (1000 * 60 * 60 * 24);
+                        int numDays = (int) Math.ceil(roundedNumDays);                        Order_Room orderRoom = new Order_Room();
                         orderRoom.setOrderTime(date);
                         orderRoom.setNote(ed_note.getText().toString());
                         orderRoom.setTimeGet(tv_time_in.getText().toString());
                         orderRoom.setTimeCheckout(tv_time_out.getText().toString());
+                        orderRoom.setIdDichVu(tv_id_service.getText().toString());
                         if (getUsernameFromSharedPreferences() != null) {
                             orderRoom.setUid(getUsernameFromSharedPreferences());
                         }
@@ -257,7 +273,10 @@ public class Activity_order_room extends AppCompatActivity {
                                 if (response.isSuccessful()) {
                                     List<Room> rooms = response.body();
                                     Room room = rooms.get(0);
-                                    float total = room.getGiaPhong() * numDays;
+                                    String priceString = tv_price_service.getText().toString();
+                                    priceString = priceString.replaceAll("[^\\d.]", "");
+                                    float priceService = Float.parseFloat(priceString);
+                                    float total = room.getGiaPhong() * numDays + priceService;
                                     orderRoom.setImg(room.getAnhPhong());
                                     orderRoom.setIdPhong(room.get_id());
                                     orderRoom.setTotal(total);
@@ -447,6 +466,9 @@ public class Activity_order_room extends AppCompatActivity {
     private void updateTotalPrice(String id_room) {
         String timeIn = tv_time_in.getText().toString();
         String timeOut = tv_time_out.getText().toString();
+        String priceString = tv_price_service.getText().toString();
+        priceString = priceString.replaceAll("[^\\d.]", "");
+        float priceService = Float.parseFloat(priceString);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy", Locale.getDefault());
 
@@ -460,8 +482,8 @@ public class Activity_order_room extends AppCompatActivity {
             } else {
                 // Tính số ngày thuê phòng
                 long diffInMillis = dateOut.getTime() - dateIn.getTime();
-                int numDays = (int) (diffInMillis / (1000 * 60 * 60 * 24)) + 1; // Số ngày thuê phòng
-
+                double roundedNumDays = (double) diffInMillis / (1000 * 60 * 60 * 24);
+                int numDays = (int) Math.ceil(roundedNumDays);
                 Api_service.service.get_rooms_byId(id_room).enqueue(new Callback<List<Room>>() {
                     @Override
                     public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
@@ -469,7 +491,7 @@ public class Activity_order_room extends AppCompatActivity {
                             List<Room> rooms = response.body();
                             Room room = rooms.get(0);
                             // Tính tổng tiền
-                            float total = room.getGiaPhong() * numDays;
+                            float total = room.getGiaPhong() * numDays + priceService;
                             NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
                             tv_total.setText(String.format(formatter.format(total))); // Cập nhật tổng tiền
                         }
@@ -491,4 +513,30 @@ public class Activity_order_room extends AppCompatActivity {
         super.onNewIntent(intent);
         ZaloPaySDK.getInstance().onResult(intent);
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            String serviceName = data.getStringExtra("service_name");
+            String serviceId = data.getStringExtra("service_id");
+            String servicePrice = data.getStringExtra("service_price");
+            if (serviceName != null && !serviceName.isEmpty()) {
+                tv_paymethod.setText(serviceName);
+            } else {
+                tv_paymethod.setText("No service required");
+            }
+            if (serviceId != null && !serviceId.isEmpty()) {
+                tv_id_service.setText(serviceId);
+            } else {
+                tv_id_service.setText("6707ed79df6d7c9585d8eb99");
+            }
+
+            if (servicePrice != null && !servicePrice.isEmpty()) {
+                tv_price_service.setText(servicePrice);
+            } else {
+                tv_price_service.setText("0");
+            }
+        }
+    }
+
 }

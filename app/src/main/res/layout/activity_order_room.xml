@@ -51,20 +51,12 @@
             android:layout_weight="1"
             android:scrollbars="none"
             android:fadeScrollbars="true"
-            android:layout_marginBottom="120dp">
+            android:layout_marginBottom="180dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="DETAIL PAYMENT"
-                    android:textStyle="bold"
-                    android:textColor="#555555"
-                    android:textSize="18sp"/>
+
                 <LinearLayout
                     android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
@@ -228,6 +220,16 @@
                             android:textStyle="bold"
                             android:textSize="16sp"/>
                     </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_id_service"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0px"
+                        />
+                    <TextView
+                        android:id="@+id/tv_price_service"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0px"
+                        />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -367,7 +369,7 @@
                             android:layout_weight="1"
                             android:gravity="start"
                             android:layout_height="wrap_content"
-                            android:text="Payment method"
+                            android:text="Service"
                             android:textColor="#838383"
                             android:textSize="16sp"/>
                         <LinearLayout
@@ -383,7 +385,7 @@
                                 android:textAlignment="textEnd"
                                 android:layout_gravity="end"
                                 android:layout_height="wrap_content"
-                                android:text="Pay at check-in"
+                                android:text="Choose service"
                                 android:textColor="#0F0F10"
                                 android:textStyle="bold"
                                 android:textSize="16sp"
@@ -405,7 +407,7 @@
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         app:cardBackgroundColor="#ffffff"
-        android:layout_height="120dp">
+        android:layout_height="140dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -415,26 +417,39 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:gravity="start"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Total"
-                    android:textColor="#000000"
-                    android:textSize="16sp"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:layout_height="wrap_content"
+                        android:text="Total"
+                        android:textColor="#000000"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_total_order_room"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:layout_height="wrap_content"
+                        android:text="10.000đ"
+                        android:textColor="#000000"
+                        android:textStyle="bold"
+                        android:textSize="20sp"/>
+                </LinearLayout>
                 <TextView
-                    android:id="@+id/tv_total_order_room"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
                     android:gravity="end"
                     android:layout_height="wrap_content"
-                    android:text="10.000đ"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
-                    android:textSize="20sp"/>
+                    android:text="You need to pay 10% of the total."
+                    android:textColor="#4C4DDC"
+                    android:textSize="16sp"/>
             </LinearLayout>
             <androidx.cardview.widget.CardView
                 android:id="@+id/btn_booking_order_room"
@@ -459,4 +474,5 @@
             </androidx.cardview.widget.CardView>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
+
 </RelativeLayout>
