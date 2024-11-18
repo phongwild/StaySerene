@@ -30,7 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@drawable/custom_input"
-            android:text="aaaa"
             android:id="@+id/ed_fullname_register"
             android:inputType="textPersonName|textCapWords"
             android:hint="Full Name" />
@@ -48,7 +47,6 @@
             android:id="@+id/ed_email_register"
             android:background="@drawable/custom_input"
             android:layout_margin="10dp"
-            android:text="a@a.c"
             android:inputType="textEmailAddress"
             android:hint="Your Email" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -68,7 +66,6 @@
             android:background="@drawable/custom_input"
             android:inputType="textPassword"
             android:layout_margin="10dp"
-            android:text="123456"
             android:hint="Pass Word" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -86,7 +83,6 @@
             android:background="@drawable/custom_input"
             android:inputType="textPassword"
             android:layout_margin="10dp"
-            android:text="123456"
             android:hint="Confirm PassWord" />
     </com.google.android.material.textfield.TextInputLayout>
 

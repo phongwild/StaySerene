@@ -148,6 +148,8 @@ public class Register extends AppCompatActivity {
                         }
                     }
                     proceedToPhoneNumber();
+                }else {
+                    proceedToPhoneNumber();
                 }
             }
 
