@@ -2,6 +2,7 @@ package phongtaph31865.poly.stayserene.Screen_user;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,7 @@ import java.util.List;
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Order_Room;
 import phongtaph31865.poly.stayserene.R;
+import phongtaph31865.poly.stayserene.Screen_user.Activity.OrderRoom.Activity_List_of_booked_rooms;
 import phongtaph31865.poly.stayserene.adapter.Adapter_schedule;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,7 +51,9 @@ public class Fragment_calendar extends Fragment {
         rcv = view.findViewById(R.id.rcv_calendar);
         btn_see_all = view.findViewById(R.id.btn_see_all_calendar);
         refreshLayout = view.findViewById(R.id.refresh_calendar);
-
+        btn_see_all.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), Activity_List_of_booked_rooms.class));
+        });
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
