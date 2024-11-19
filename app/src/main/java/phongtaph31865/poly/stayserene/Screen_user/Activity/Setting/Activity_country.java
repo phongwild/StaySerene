@@ -51,6 +51,15 @@ public class Activity_country extends AppCompatActivity {
         countryList.add(new Country(getString(R.string.country_singapore), R.drawable.flag_singapore));
         countryList.add(new Country(getString(R.string.country_thailand), R.drawable.flag_thailand));
         countryList.add(new Country(getString(R.string.country_malaysia), R.drawable.flag_malaysia));
+
+
+
+        
+
+
+
+
+
         //Logic
         LinearLayoutManager llm = new LinearLayoutManager(this);
         binding.rcvCountry.setLayoutManager(llm);
