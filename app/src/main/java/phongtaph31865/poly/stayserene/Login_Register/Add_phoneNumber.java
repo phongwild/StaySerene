@@ -197,9 +197,14 @@ public class Add_phoneNumber extends AppCompatActivity {
     private void sendOTP() {
         OTP = MailConfig.generateOTP(4);
         MailConfig.sendOtpEmail(email, OTP);
-        //openBottomSheet();
         Dialog_OTP dialogOtp = Dialog_OTP.newInstance(email, OTP);
         dialogOtp.show(getSupportFragmentManager(), "Dialog_OTP");
+        dialogOtp.setOtpSubmitCallback(new Dialog_OTP.OtpSubmitCallback() {
+            @Override
+            public void onOtpSubmit(String otp) {
+                createAccount();
+            }
+        });
     }
     private void recognizeTextFromImage(Bitmap bitmap){
         // Chuyển đổi bitmap thành InputImage

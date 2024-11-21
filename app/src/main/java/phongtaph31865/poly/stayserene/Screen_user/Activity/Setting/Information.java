@@ -36,6 +36,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
+import phongtaph31865.poly.stayserene.BottomSheet.Dialog_OTP;
+import phongtaph31865.poly.stayserene.MailConfig.MailConfig;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.databinding.ActivityInformationBinding;
 import retrofit2.Call;
@@ -44,8 +46,9 @@ import retrofit2.Response;
 
 public class Information extends AppCompatActivity {
     private ActivityInformationBinding binding;
-    private Uri ImgUri;
+    private Uri imgUri;
     private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    private String OTP, EMAIL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,227 +56,184 @@ public class Information extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityInformationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        loadUserData();
+        setUpListeners();
+    }
+
+    private void loadUserData() {
         SharedPreferences sharedPreferences = getSharedPreferences("userdata", Activity.MODE_PRIVATE);
-        String uid = sharedPreferences.getString("uid", "");
-        String username = sharedPreferences.getString("username", "");
-        String sdt = sharedPreferences.getString("sdt", "");
-        String address = sharedPreferences.getString("address", "");
-        String email = sharedPreferences.getString("email", "");
-        String cccd = sharedPreferences.getString("cccd", "");
+        EMAIL = sharedPreferences.getString("email", "");
+
+        binding.edFullNameInfo.setText(sharedPreferences.getString("username", ""));
+        binding.edPhoneNumberInfo.setText(sharedPreferences.getString("sdt", ""));
+        binding.edAddressInfo.setText(sharedPreferences.getString("address", ""));
+        binding.edEmailInfo.setText(EMAIL);
+        binding.edCccdInfo.setText(sharedPreferences.getString("cccd", ""));
+        binding.edNationalInfo.setText(sharedPreferences.getString("quoctich", ""));
+        binding.edDateBirthInfo.setText(sharedPreferences.getString("birthday", ""));
+
         String gender = sharedPreferences.getString("gender", "");
-        String birthday = sharedPreferences.getString("birthday", "");
+        binding.rbtnMaleInfo.setChecked("Male".equals(gender));
+        binding.rbtnFemaleInfo.setChecked("Female".equals(gender));
+
         String avatar = sharedPreferences.getString("avatar", "");
-        String quoctich = sharedPreferences.getString("quoctich", "");
-        Log.e("img", avatar);
-        binding.btnBackAccountInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        if (username != null) {
-            binding.edFullNameInfo.setText(username);
-        }
-        if (sdt != null) {
-            binding.edPhoneNumberInfo.setText(sdt);
-        }
-        if (address != null) {
-            binding.edAddressInfo.setText(address);
-        }
-        if (email != null) {
-            binding.edEmailInfo.setText(email);
-        }
-        if (cccd != null) {
-            binding.edCccdInfo.setText(cccd);
-        }
         if (avatar != null && !avatar.isEmpty()) {
             Picasso.get().load(avatar).into(binding.ivAddAvtInfo);
             binding.imgInfo.setVisibility(View.GONE);
-        }else {
+        } else {
             binding.imgInfo.setVisibility(View.VISIBLE);
             binding.ivAddAvtInfo.setVisibility(View.GONE);
         }
-        if (quoctich != null) {
-            binding.edNationalInfo.setText(quoctich);
-        }
-        if (birthday != null) {
-            binding.edDateBirthInfo.setText(birthday);
-        }
-        if (gender != null) {
-            if (gender.equals("Male")) {
-                binding.rbtnMaleInfo.setChecked(true);
-            } else {
-                binding.rbtnFemaleInfo.setChecked(true);
-            }
-        }
+    }
+
+    private void setUpListeners() {
+        binding.btnBackAccountInfo.setOnClickListener(v -> finish());
+
         ActivityResultLauncher<Intent> launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult o) {
-                        if (o.getResultCode() == Activity.RESULT_OK) {
-                            Intent data = o.getData();
-                            ImgUri = data.getData();
-                            Picasso.get().load(ImgUri).resize(140, 140).centerCrop().into(binding.ivAddAvtInfo);
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            imgUri = data.getData();
+                            Picasso.get().load(imgUri).resize(140, 140).centerCrop().into(binding.ivAddAvtInfo);
                             binding.imgInfo.setVisibility(View.GONE);
-                        } else {
-                            Toast.makeText(Information.this, "No image selected", Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        showToast("No image selected");
                     }
                 }
         );
-        binding.btnAddAvtInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent photoPicker = new Intent();
-                photoPicker.setType("image/*");
-                photoPicker.setAction(Intent.ACTION_GET_CONTENT);
-                launcher.launch(photoPicker);
-            }
+
+        binding.btnAddAvtInfo.setOnClickListener(v -> {
+            Intent photoPicker = new Intent();
+            photoPicker.setType("image/*");
+            photoPicker.setAction(Intent.ACTION_GET_CONTENT);
+            launcher.launch(photoPicker);
         });
-        binding.btnChooseDateInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                open_Date_Time();
-            }
+
+        binding.btnChooseDateInfo.setOnClickListener(v -> openDatePicker());
+
+        binding.btnSaveInfo.setOnClickListener(v -> {
+            PopupDialog.getInstance(Information.this)
+                    .standardDialogBuilder()
+                    .createIOSDialog()
+                    .setHeading("Update information")
+                    .setDescription("Are you sure to change information?")
+                    .setPositiveButtonText("Yes")
+                    .build(new StandardDialogActionListener() {
+                        @Override
+                        public void onPositiveButtonClicked(Dialog dialog) {
+                            dialog.dismiss();
+                            sendOTP();
+                        }
+
+                        @Override
+                        public void onNegativeButtonClicked(Dialog dialog) {
+                            dialog.dismiss();
+                        }
+                    }).show();
         });
-        binding.btnSaveInfo.setOnClickListener(new View.OnClickListener() {
+    }
+    private void sendOTP() {
+        OTP = MailConfig.generateOTP(4);
+        MailConfig.sendOtpEmail(EMAIL, OTP);
+        Dialog_OTP dialogOtp = Dialog_OTP.newInstance(EMAIL, OTP);
+        dialogOtp.show(getSupportFragmentManager(), "Dialog_OTP");
+        dialogOtp.setOtpSubmitCallback(new Dialog_OTP.OtpSubmitCallback() {
             @Override
-            public void onClick(View v) {
-                PopupDialog.getInstance(Information.this)
-                        .standardDialogBuilder()
-                        .createIOSDialog()
-                        .setHeading("Update information")
-                        .setDescription("Are you sure to change to information?")
-                        .setPositiveButtonText("Yes")
-                        .build(new StandardDialogActionListener() {
-                            @Override
-                            public void onPositiveButtonClicked(Dialog dialog) {
-                                dialog.dismiss();
-                                if (ImgUri != null) {
-                                    StorageReference imgRef = storageRef.child(System.currentTimeMillis() + "." + getFileExtension(ImgUri));
-                                    imgRef.putFile(ImgUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                        @Override
-                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                            imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                @Override
-                                                public void onSuccess(Uri uri) {
-
-                                                    String newAvt = uri.toString();
-                                                    updateAccountInfo(uid, newAvt);
-//                                                    binding.progressBarAddAvtInfo.setVisibility(View.INVISIBLE);
-                                                }
-                                            });
-                                        }
-                                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                                        @Override
-                                        public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                                            binding.progressBarAddAvtInfo.setVisibility(View.VISIBLE);
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            binding.progressBarAddAvtInfo.setVisibility(View.INVISIBLE);
-                                            dialog.dismiss();
-                                            Toast.makeText(Information.this, "Upload avatar failed", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                } else {
-                                    updateAccountInfo(uid, null);
-                                }
-
-                            }
-
-                            @Override
-                            public void onNegativeButtonClicked(Dialog dialog) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .show();
+            public void onOtpSubmit(String otp) {
+                if (imgUri != null) {
+                    uploadAvatarAndSaveInfo();
+                } else {
+                    saveAccountInfo(null);
+                }
             }
         });
     }
+    private void uploadAvatarAndSaveInfo() {
+        StorageReference imgRef = storageRef.child(System.currentTimeMillis() + "." + getFileExtension(imgUri));
+        imgRef.putFile(imgUri).addOnSuccessListener(taskSnapshot ->
+                        imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            saveAccountInfo(uri.toString());
+                        })
+                ).addOnProgressListener(snapshot -> binding.progressBarAddAvtInfo.setVisibility(View.VISIBLE))
+                .addOnFailureListener(e -> {
+                    binding.progressBarAddAvtInfo.setVisibility(View.GONE);
+                    showToast("Upload avatar failed");
+                });
+    }
 
-    private void updateAccountInfo(String uid, String avatarUrl) {
-        // Lấy các giá trị từ form nhập liệu
-        String username = binding.edFullNameInfo.getText().toString();
-        String phone = binding.edPhoneNumberInfo.getText().toString();
-        String address = binding.edAddressInfo.getText().toString();
-        String email = binding.edEmailInfo.getText().toString();
-        String cccd = binding.edCccdInfo.getText().toString();
-        String nationality = binding.edNationalInfo.getText().toString();
-        String birthday = binding.edDateBirthInfo.getText().toString();
-        String gender = binding.rbtnMaleInfo.isChecked() ? "Male" : "Female";
+    private void saveAccountInfo(String avatarUrl) {
+        SharedPreferences sharedPreferences = getSharedPreferences("userdata", Activity.MODE_PRIVATE);
+        String uid = sharedPreferences.getString("uid", "");
 
-        // Khởi tạo đối tượng Account và cập nhật thông tin
+        // Tạo đối tượng Account từ dữ liệu người dùng
         Account account = new Account();
-        account.setUsername(username);
-        account.setSdt(phone);
-        account.setDiaChi(address);
-        account.setEmail(email);
-        account.setCccd(cccd);
-        account.setQuocTich(nationality);
-        account.setNgaySinh(birthday);
-        account.setGioiTinh(gender);
+        account.setUsername(binding.edFullNameInfo.getText().toString());
+        account.setSdt(binding.edPhoneNumberInfo.getText().toString());
+        account.setDiaChi(binding.edAddressInfo.getText().toString());
+        account.setEmail(binding.edEmailInfo.getText().toString());
+        account.setCccd(binding.edCccdInfo.getText().toString());
+        account.setQuocTich(binding.edNationalInfo.getText().toString());
+        account.setNgaySinh(binding.edDateBirthInfo.getText().toString());
+        account.setGioiTinh(binding.rbtnMaleInfo.isChecked() ? "Male" : "Female");
         account.setRole(1);
-        if (avatarUrl != null) {
-            account.setAvt(avatarUrl);
-        }
+        if (avatarUrl != null) account.setAvt(avatarUrl);
 
-        // Gọi API để cập nhật tài khoản
+        // Gọi API cập nhật thông tin
         Api_service.service.update_account(uid, account).enqueue(new Callback<List<Account>>() {
             @Override
             public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
                 if (response.isSuccessful()) {
-                    saveUserIdToSharedPreferences(uid, username, phone, address, email, Integer.parseInt(cccd), gender, birthday, avatarUrl, nationality);
-                    Toast.makeText(Information.this, "Account updated successfully", Toast.LENGTH_SHORT).show();
+                    saveUserDataToPreferences(uid, account, avatarUrl);
+                    showToast("Account updated successfully");
                     finish();
                 } else {
-                    Toast.makeText(Information.this, "Failed to update account", Toast.LENGTH_SHORT).show();
-                    finish();
+                    showToast("Failed to update account");
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Account>> call, Throwable throwable) {
-                Log.e("update info", throwable.getMessage());
+            public void onFailure(Call<List<Account>> call, Throwable t) {
+                Log.e("Update Info", t.getMessage());
+                showToast("Failed to update account");
             }
         });
     }
 
-    private String getFileExtension(Uri fileUri) {
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mine = MimeTypeMap.getSingleton();
-        return mine.getExtensionFromMimeType(contentResolver.getType(fileUri));
-    }
-
-    private void open_Date_Time() {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH) + 1;
-        DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                binding.edDateBirthInfo.setText(String.format("%02d/%02d/%04d", day, month + 1, year));
-            }
-        }, year, month, day);
-        dialog.show();
-    }
-
-    private void saveUserIdToSharedPreferences(String Uid, String username, String sdt, String address, String email, int cccd, String gender, String birthday, String avatar, String quoctich) {
+    private void saveUserDataToPreferences(String uid, Account account, String avatarUrl) {
         SharedPreferences sharedPreferences = getSharedPreferences("userdata", Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("uid", Uid);
-        editor.putString("username", username);
-        editor.putString("sdt", sdt);
-        editor.putString("address", address);
-        editor.putString("email", email);
-        editor.putString("cccd", String.valueOf(cccd));
-        editor.putString("gender", gender);
-        editor.putString("birthday", birthday);
-        editor.putString("avatar", avatar);
-        editor.putString("quoctich", quoctich);
+        editor.putString("uid", uid);
+        editor.putString("username", account.getUsername());
+        editor.putString("sdt", account.getSdt());
+        editor.putString("address", account.getDiaChi());
+        editor.putString("email", account.getEmail());
+        editor.putString("cccd", account.getCccd());
+        editor.putString("gender", account.getGioiTinh());
+        editor.putString("birthday", account.getNgaySinh());
+        editor.putString("avatar", avatarUrl);
+        editor.putString("quoctich", account.getQuocTich());
         editor.apply();
+    }
+
+    private String getFileExtension(Uri fileUri) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(contentResolver.getType(fileUri));
+    }
+
+    private void openDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        new DatePickerDialog(this, (view, year, month, dayOfMonth) ->
+                binding.edDateBirthInfo.setText(String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year)),
+                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
+        ).show();
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
