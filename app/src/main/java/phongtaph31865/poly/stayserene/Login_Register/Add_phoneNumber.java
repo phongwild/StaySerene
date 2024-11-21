@@ -67,6 +67,7 @@ import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
+import phongtaph31865.poly.stayserene.BottomSheet.Dialog_OTP;
 import phongtaph31865.poly.stayserene.MailConfig.MailConfig;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.R;
@@ -196,78 +197,9 @@ public class Add_phoneNumber extends AppCompatActivity {
     private void sendOTP() {
         OTP = MailConfig.generateOTP(4);
         MailConfig.sendOtpEmail(email, OTP);
-        openBottomSheet();
-    }
-
-    private void openBottomSheet() {
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(Add_phoneNumber.this);
-        View v = LayoutInflater.from(Add_phoneNumber.this).inflate(R.layout.bottom_sheet_otp, null);
-        bottomSheetDialog.setContentView(v);
-        bottomSheetDialog.show();
-        addTextWatchers(v, bottomSheetDialog);
-    }
-
-    private void addTextWatchers(View v, BottomSheetDialog dialog) {
-        EditText edt1 = v.findViewById(R.id.edt_otp1_bottom_sheet);
-        EditText edt2 = v.findViewById(R.id.edt_otp2_bottom_sheet);
-        EditText edt3 = v.findViewById(R.id.edt_otp3_bottom_sheet);
-        EditText edt4 = v.findViewById(R.id.edt_otp4_bottom_sheet);
-        TextView emaill = v.findViewById(R.id.tv_email_otp_bottom_sheet);
-        CardView btnSubmit = v.findViewById(R.id.btn_submit_otp_bottom_sheet);
-        edt1.addTextChangedListener(new OTPTextWatcher(edt1, edt2, null));
-        edt2.addTextChangedListener(new OTPTextWatcher(edt2, edt3, edt1));
-        edt3.addTextChangedListener(new OTPTextWatcher(edt3, edt4, edt2));
-        edt4.addTextChangedListener(new OTPTextWatcher(edt4, null, edt3));
-        emaill.setText(email);
-        btnSubmit.setOnClickListener(t -> {
-            String otp = edt1.getText().toString() + edt2.getText().toString() + edt3.getText().toString() + edt4.getText().toString();
-            if(otp.equals(OTP)){
-                createAccount();
-                dialog.dismiss();
-            }else Toast.makeText(this, "OTP is incorrect, please try again", Toast.LENGTH_SHORT).show();
-        });
-    }
-
-    private class OTPTextWatcher implements TextWatcher {
-        private EditText currentEDT;
-        private EditText nextEDT;
-        private EditText prevEDT;
-
-
-        public OTPTextWatcher(EditText currentEDT, EditText nextEDT, EditText prevEDT) {
-            this.currentEDT = currentEDT;
-            this.nextEDT = nextEDT;
-            this.prevEDT = prevEDT;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            // Nếu người dùng nhập 1 ký tự, chuyển sang trường tiếp theo
-            if (s.length() == 1 && nextEDT != null) {
-                nextEDT.requestFocus();
-            }
-            // Nếu người dùng xóa ký tự
-            else if (s.length() == 0) {
-                // Trường hợp xóa ký tự ở edtOtp1 (không có trường trước, không làm gì)
-                if (prevEDT != null) {
-                    prevEDT.requestFocus(); // Chuyển focus về trường trước nếu có
-                }
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-
-        private void validateOTP(String otp) {
-
-        }
+        //openBottomSheet();
+        Dialog_OTP dialogOtp = Dialog_OTP.newInstance(email, OTP);
+        dialogOtp.show(getSupportFragmentManager(), "Dialog_OTP");
     }
     private void recognizeTextFromImage(Bitmap bitmap){
         // Chuyển đổi bitmap thành InputImage
