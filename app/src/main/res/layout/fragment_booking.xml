@@ -27,12 +27,15 @@
         app:tabBackground="@drawable/custom_tab_booking_selecter"
         app:tabIndicator="@drawable/custom_tab_booking"
         app:tabTextColor="#4C4DDC"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+
+        >
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabOngoing"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="Ongoing" />
+            android:text="Ongoing"
+            />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabComplete"
