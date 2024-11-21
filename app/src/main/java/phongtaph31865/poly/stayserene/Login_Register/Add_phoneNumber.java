@@ -160,7 +160,30 @@ public class Add_phoneNumber extends AppCompatActivity {
 
         btn_add_avt.setOnClickListener(v -> selectImage(launcher));
 
-        btn_create.setOnClickListener(v -> sendOTP());
+        btn_create.setOnClickListener(v -> {
+            String phoneNumber = edt_phoneNumber.getText().toString();
+            String address = edt_address.getText().toString();
+            String date = edt_date.getText().toString();
+            // Kiểm tra nếu chưa có ảnh nào trong 3 ảnh yêu cầu
+            if (ImgUri == null && front_ImgUri == null && back_ImgUri == null) {
+                Toast.makeText(this, "Please select all images", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (ImgUri == null) {
+                Toast.makeText(this, "Please select avatar image", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (front_ImgUri == null) {
+                Toast.makeText(this, "Please capture front image", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (back_ImgUri == null) {
+                Toast.makeText(this, "Please capture back image", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!validateFields(phoneNumber, address, date)) return;
+            sendOTP();
+        });
 
         btn_front_idCard.setOnClickListener(v -> {
             open_camera(CAMERA_REQUEST_CODE_1);
@@ -281,7 +304,7 @@ public class Add_phoneNumber extends AppCompatActivity {
             return matcher.group();  // Trả về số CCCD tìm được
         } else {
             Toast.makeText(this, "Not found ID Card", Toast.LENGTH_SHORT).show();
-            return "Không tìm thấy CCCD";
+            return "0";
         }
     }
     private void open_camera(int requestCode) {
