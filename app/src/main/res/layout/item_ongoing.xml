@@ -37,7 +37,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:text="Sofitel Legend Metropole"
                 android:textColor="#000" />
 
             <TextView
@@ -46,7 +45,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10sp"
                 android:textSize="14sp"
-                android:text="15 Ngo Quyen, Quận Hoàn Kiếm, Hà Nội, Việt Nam"
                 android:textColor="#666" />
 
             <TextView
