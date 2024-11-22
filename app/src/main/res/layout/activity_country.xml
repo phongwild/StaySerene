@@ -46,7 +46,24 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
+
+
+
+
         </LinearLayout>
+
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:queryHint="Search country"
+            android:iconifiedByDefault="false"
+            android:background="@color/black_10"
+            android:textColorHint="#FFFFFF" /> 
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -103,6 +103,41 @@
     <string name="country_andorra">Andorra</string>
     <string name="country_albania">Albania</string>
 
-
+    <string name="country_cyprus">Cyprus</string>
+    <string name="country_seychelles">Seychelles</string>
+    <string name="country_tchad">Tchad</string>
+    <string name="country_tunisia">Tunisia</string>
+    <string name="country_tonga">Tonga</string>
+    <string name="country_north_korea">North Korea</string>
+    <string name="country_turkmenistan">Turkmenistan</string>
+    <string name="country_ukraine">Ukraine</string>
+    <string name="country_uruguay">Uruguay</string>
+    <string name="country_uzbekistan">Uzbekistan</string>
+    <string name="country_vanuatu">Vanuatu</string>
+    <string name="country_vatican">Vatican City</string>
+    <string name="country_venezuela">Venezuela</string>
+    <string name="country_italy">Italy</string>
+    <string name="country_yemen">Yemen</string>
+    <string name="country_zambia">Zambia</string>
+    <string name="country_zimbabwe">Zimbabwe</string>
+    <string name="country_abkhazia">Abkhazia</string>
+    <string name="country_aruba">Aruba</string>
+    <string name="country_greenland">Greenland</string>
+    <string name="country_kosovo">Kosovo</string>
+    <string name="country_niue">Niue</string>
+    <string name="country_scotland">Scotland</string>
+    <string name="country_somaliland">Somaliland</string>
+    <string name="country_south_ossetia">South Ossetia</string>
+    <string name="country_transnistria">Transnistria</string>
+    <string name="country_wales">Wales</string>
+    <string name="country_honduras">Honduras</string>
+    <string name="country_georgia">Georgia</string>
+    <string name="country_grenada">Grenada</string>
+    <string name="country_cape_verde">Cape Verde</string>
+    <string name="country_burkina_faso">Burkina Faso</string>
+    <string name="country_portugal">Portugal</string>
+    <string name="country_barbados">Barbados</string>
+    <string name="country_taliban">Taliban</string>
+    <string name="country_azerbaijan">Azerbaijan</string>
 
 </resources>
