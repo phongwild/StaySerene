@@ -66,6 +66,8 @@
                     android:paddingRight="16dp">
 
                     <ImageView
+                        android:id="@+id/btn_notification"
+                        android:labelFor="@+id/btn_notification"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"

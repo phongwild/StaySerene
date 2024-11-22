@@ -46,11 +46,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-/**
- * @noinspection ALL
- */
 public class Fragment_home extends Fragment {
-    String API_KEY_LOCATION = "1131ca2e24684123bca828e5717c9792";
     private RecyclerView rcv1, rcv2;
     private TextView tv_more_ht, tv_more_room, tv_location;
     private Adapter_rcv1_home adapter_1;

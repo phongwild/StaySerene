@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -102,12 +103,29 @@ public class Activity_detail_type_rooms extends AppCompatActivity {
 
                     if (availableRoom.isPresent()) {
                         Room room = availableRoom.get();
-                        Intent intent = new Intent(Activity_detail_type_rooms.this, Activity_order_room.class);
-                        intent.putExtra("id_type_room", id_type_room);
-                        intent.putExtra("id_room", room.get_id());
-                        intent.putExtra("img", room.getAnhPhong());
-                        intent.putExtra("total", room.getGiaPhong());
-                        startActivity(intent);
+                        room.setTinhTrangPhong(1);
+                        Api_service.service.update_rooms(room.get_id(), room).enqueue(new Callback<List<Room>>() {
+                            @Override
+                            public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                                if (response.isSuccessful()) {
+                                    Intent intent = new Intent(Activity_detail_type_rooms.this, Activity_order_room.class);
+                                    intent.putExtra("id_type_room", id_type_room);
+                                    intent.putExtra("id_room", room.get_id());
+                                    intent.putExtra("img", room.getAnhPhong());
+                                    intent.putExtra("total", room.getGiaPhong());
+                                    Toast.makeText(Activity_detail_type_rooms.this, "You have 10 minutes to complete the payment", Toast.LENGTH_SHORT).show();
+                                    startActivity(intent);
+                                }else{
+                                    Log.e("Response error", response.message());
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                                Log.e("Failure updateRoom", throwable.getMessage());
+                            }
+                        });
+
                     } else {
                         showFullyBookedDialog();
                     }
