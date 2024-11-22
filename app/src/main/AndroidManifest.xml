@@ -39,7 +39,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
         <activity
             android:name=".Screen_user.Activity.OrderRoom.Activity_list_service"
             android:exported="false" />
