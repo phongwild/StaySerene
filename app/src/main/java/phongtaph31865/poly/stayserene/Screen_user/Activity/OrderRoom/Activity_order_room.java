@@ -42,6 +42,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import phongtaph31865.poly.stayserene.Api.CreateOrder;
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
@@ -70,6 +72,8 @@ public class Activity_order_room extends AppCompatActivity {
     private GoogleSignInClient gsc;
     private int REQUEST_CODE_METHOD = 0;
     private String ID_ROOM, ID_TYPE_ROOM;
+    private int TIME_LEFT = 0;
+    private Timer timer;
 
     @SuppressLint({"WrongViewCast", "MissingInflatedId"})
     @Override
@@ -81,7 +85,7 @@ public class Activity_order_room extends AppCompatActivity {
         gsc = GoogleSignIn.getClient(Activity_order_room.this, gso);
         //Anh xa
         initView();
-
+        countDownTimer();
         //Code logic
         StrictMode.ThreadPolicy policy = new
                 StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -110,6 +114,8 @@ public class Activity_order_room extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getRoomById();
+                timer.cancel();
                 finish();
             }
         });
@@ -496,6 +502,61 @@ public class Activity_order_room extends AppCompatActivity {
             tv_paymethod.setText("Card payment");
             Log.e("REQUEST_CODE_METHOD", String.valueOf(REQUEST_CODE_METHOD));
             dialog.dismiss();
+        });
+    }
+    private void countDownTimer() {
+        if (timer != null) {
+            timer.cancel(); // Cancel any existing timer
+        }
+
+        TIME_LEFT = 600;  // Reset time
+        timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (TIME_LEFT > 0) {
+                    TIME_LEFT--;
+                    Log.e("TIME_LEFT", String.valueOf(TIME_LEFT));
+                } else {
+                    timer.cancel();  // Stop the timer once time is up
+                    getRoomById();
+                    startActivity(new Intent(Activity_order_room.this, MainActivity_user.class));
+                }
+            }
+        };
+        timer.schedule(task, 0, 1000);  // Run every second
+    }
+    private void getRoomById(){
+        Api_service.service.get_rooms_byId(ID_ROOM).enqueue(new Callback<List<Room>>() {
+            @Override
+            public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                if (response.isSuccessful()) {
+                    List<Room> rooms = response.body();
+                    Room room = rooms.get(0);
+                    room.setTinhTrangPhong(0);
+                    updateStatusRoom(room);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                Log.e("Failure get room", throwable.getMessage());
+            }
+        });
+    }
+    private void updateStatusRoom(Room room) {
+        Api_service.service.update_rooms(ID_ROOM, room).enqueue(new Callback<List<Room>>() {
+            @Override
+            public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(Activity_order_room.this, "End time", Toast.LENGTH_SHORT).show();
+                }else Log.e("Failure update room", response.message());
+            }
+
+            @Override
+            public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                Log.e("Failure update room", throwable.getMessage());
+            }
         });
     }
     private String getUserGoogleFromSharedPreferences() {
