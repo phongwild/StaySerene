@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -28,6 +29,7 @@ import androidx.cardview.widget.CardView;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.saadahmedev.popupdialog.PopupDialog;
 
 import org.json.JSONObject;
@@ -59,43 +61,27 @@ import vn.zalopay.sdk.ZaloPaySDK;
 import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class Activity_order_room extends AppCompatActivity {
-    private ImageView btn_back, btn_choose_payment;
-    private TextView tv_name_hotel, tv_type_room, tv_number_room, tv_floor, tv_desc, tv_fullName, tv_phone, tv_total, tv_time_in, tv_time_out, tv_paymethod,tv_id_service,tv_price_service;
+    private ImageView btn_back, btn_choose_payment, btn_service;
+    private TextView tv_name_hotel, tv_type_room, tv_number_room, tv_floor, tv_desc, tv_fullName, tv_phone, tv_total, tv_time_in, tv_time_out, tv_paymethod, tv_id_service, tv_price_service, tv_service;
     private EditText ed_note;
     private RelativeLayout btn_time_in, btn_time_out;
     private CardView btn_booking;
     private GoogleSignInOptions gso;
     private GoogleSignInClient gsc;
+    private int REQUEST_CODE_METHOD = 0;
+    private String ID_ROOM, ID_TYPE_ROOM;
 
-    @SuppressLint("WrongViewCast")
+    @SuppressLint({"WrongViewCast", "MissingInflatedId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_order_room);
-        SharedPreferences payMethod = getSharedPreferences("payment_method", MODE_PRIVATE);
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(Activity_order_room.this, gso);
         //Anh xa
-        btn_back = findViewById(R.id.btn_back_order_room);
-        tv_name_hotel = findViewById(R.id.tv_hotelName_order_room);
-        tv_type_room = findViewById(R.id.tv_name_type_room_order_room);
-        tv_number_room = findViewById(R.id.tv_number_room_order_room);
-        tv_floor = findViewById(R.id.tv_floor_order_room);
-        tv_desc = findViewById(R.id.tv_desc_order_room);
-        tv_fullName = findViewById(R.id.tv_full_name_order_room);
-        tv_phone = findViewById(R.id.tv_phone_number_order_room);
-        tv_total = findViewById(R.id.tv_total_order_room);
-        tv_paymethod = findViewById(R.id.tv_payment_method_order_room);
-        tv_time_in = findViewById(R.id.tv_time_check_in_order_room);
-        tv_time_out = findViewById(R.id.tv_time_check_out_order_room);
-        tv_id_service = findViewById(R.id.tv_id_service);
-        tv_price_service = findViewById(R.id.tv_price_service);
-        btn_booking = findViewById(R.id.btn_booking_order_room);
-        btn_time_in = findViewById(R.id.btn_time_check_in_order_room);
-        btn_time_out = findViewById(R.id.btn_time_check_out_order_room);
-        ed_note = findViewById(R.id.ed_note_order_room);
-        btn_choose_payment = findViewById(R.id.img_choose_payment_method_order_room);
+        initView();
+
         //Code logic
         StrictMode.ThreadPolicy policy = new
                 StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -104,19 +90,23 @@ public class Activity_order_room extends AppCompatActivity {
 
         //Order room
         Intent intent = getIntent();
-        String id_type_room = intent.getStringExtra("id_type_room");
-        String id_room = intent.getStringExtra("id_room");
-        tv_paymethod.setText("No service required");
+        ID_TYPE_ROOM = intent.getStringExtra("id_type_room");
+        ID_ROOM = intent.getStringExtra("id_room");
+        tv_service.setText("No service required");
         tv_id_service.setText("6707ed79df6d7c9585d8eb99");
         tv_price_service.setText("0");
 
-        btn_choose_payment.setOnClickListener(new View.OnClickListener() {
+        btn_service.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Activity_order_room.this, Activity_list_service.class);
                 startActivityForResult(intent, 1);
             }
         });
+        btn_choose_payment.setOnClickListener(v -> {
+            showPaymentMethod();
+        });
+        txtPayment();
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,13 +116,13 @@ public class Activity_order_room extends AppCompatActivity {
         btn_time_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                choose_TimeIN(id_room);
+                choose_TimeIN(ID_ROOM);
             }
         });
         btn_time_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                choose_TimeOUT(id_room);
+                choose_TimeOUT(ID_ROOM);
             }
         });
         tv_price_service.addTextChangedListener(new TextWatcher() {
@@ -146,7 +136,7 @@ public class Activity_order_room extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                updateTotalPrice(id_room);
+                updateTotalPrice(ID_ROOM);
             }
         });
         if (getUsernameFromSharedPreferences() != null) {
@@ -169,8 +159,8 @@ public class Activity_order_room extends AppCompatActivity {
         } else if (getUserGoogleFromSharedPreferences() != null) {
             tv_fullName.setText(getUserGoogleFromSharedPreferences());
         }
-        if (id_type_room != null) {
-            Api_service.service.get_rooms_byId_typeRoom(id_type_room).enqueue(new Callback<List<Room>>() {
+        if (ID_TYPE_ROOM != null) {
+            Api_service.service.get_rooms_byId_typeRoom(ID_TYPE_ROOM).enqueue(new Callback<List<Room>>() {
                 @Override
                 public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
                     if (response.isSuccessful()) {
@@ -188,7 +178,7 @@ public class Activity_order_room extends AppCompatActivity {
                     Log.e("Failure get room", throwable.getMessage());
                 }
             });
-            Api_service.service.get_typeroom_byId(id_type_room).enqueue(new Callback<List<TypeRoom>>() {
+            Api_service.service.get_typeroom_byId(ID_TYPE_ROOM).enqueue(new Callback<List<TypeRoom>>() {
                 @Override
                 public void onResponse(Call<List<TypeRoom>> call, Response<List<TypeRoom>> response) {
                     if (response.isSuccessful()) {
@@ -220,8 +210,8 @@ public class Activity_order_room extends AppCompatActivity {
                 }
             });
         }
-        if (id_room != null) {
-            Api_service.service.get_rooms_byId(id_room).enqueue(new Callback<List<Room>>() {
+        if (ID_ROOM != null) {
+            Api_service.service.get_rooms_byId(ID_ROOM).enqueue(new Callback<List<Room>>() {
                 @Override
                 public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
                     if (response.isSuccessful()) {
@@ -258,7 +248,8 @@ public class Activity_order_room extends AppCompatActivity {
                     } else {
                         long diffInMillis = dateOut.getTime() - dateIn.getTime();
                         double roundedNumDays = (double) diffInMillis / (1000 * 60 * 60 * 24);
-                        int numDays = (int) Math.ceil(roundedNumDays);                        Order_Room orderRoom = new Order_Room();
+                        int numDays = (int) Math.ceil(roundedNumDays);
+                        Order_Room orderRoom = new Order_Room();
                         orderRoom.setOrderTime(date);
                         orderRoom.setNote(ed_note.getText().toString());
                         orderRoom.setTimeGet(tv_time_in.getText().toString());
@@ -267,7 +258,7 @@ public class Activity_order_room extends AppCompatActivity {
                         if (getUsernameFromSharedPreferences() != null) {
                             orderRoom.setUid(getUsernameFromSharedPreferences());
                         }
-                        Api_service.service.get_rooms_byId(id_room).enqueue(new Callback<List<Room>>() {
+                        Api_service.service.get_rooms_byId(ID_ROOM).enqueue(new Callback<List<Room>>() {
                             @Override
                             public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
                                 if (response.isSuccessful()) {
@@ -281,104 +272,10 @@ public class Activity_order_room extends AppCompatActivity {
                                     orderRoom.setIdPhong(room.get_id());
                                     orderRoom.setTotal(total);
                                     room.setTinhTrangPhong(1);
-                                    CreateOrder orderApi = new CreateOrder();
-                                    try {
-                                        float totalPay = total * 0.1f;
-                                        String totalPayString = String.format("%.0f", totalPay);
-                                        JSONObject data = orderApi.createOrder(totalPayString);
-                                        String code = data.getString("return_code");
-                                        if (code.equals("1")) {
-                                            String token = data.getString("zp_trans_token");
-                                            ZaloPaySDK.getInstance().payOrder(Activity_order_room.this, token, "demozpdk://app", new PayOrderListener() {
-                                                @Override
-                                                public void onPaymentSucceeded(String s, String s1, String s2) {
-                                                    Api_service.service.order_room(orderRoom).enqueue(new Callback<List<Room>>() {
-                                                        @Override
-                                                        public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                                                            if (response.isSuccessful()) {
-                                                                Api_service.service.update_rooms(id_room, room).enqueue(new Callback<List<Room>>() {
-                                                                    @SuppressLint("CommitPrefEdits")
-                                                                    @Override
-                                                                    public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                                                                        if (response.isSuccessful()) {
-                                                                            PopupDialog popupDialog = PopupDialog.getInstance(Activity_order_room.this)
-                                                                                    .statusDialogBuilder()
-                                                                                    .createSuccessDialog()
-                                                                                    .setHeading("Well Done")
-                                                                                    .setDescription("Your booking is complete!")
-                                                                                    .build(dialog1 -> {
-                                                                                        startActivity(new Intent(Activity_order_room.this, MainActivity_user.class));
-                                                                                    });
-                                                                            popupDialog.getDialog().setOnDismissListener(dialog -> {
-                                                                                startActivity(new Intent(Activity_order_room.this, MainActivity_user.class));
-                                                                            });
-                                                                            popupDialog.getDialog().setCancelable(true);
-                                                                            popupDialog.show();
-
-                                                                        } else {
-                                                                            payMethod.edit().clear();
-                                                                            PopupDialog.getInstance(Activity_order_room.this)
-                                                                                    .statusDialogBuilder()
-                                                                                    .createErrorDialog()
-                                                                                    .setHeading("Uh-Oh")
-                                                                                    .setDescription("Unexpected error occurred." +
-                                                                                            " Try again later.")
-                                                                                    .build(Dialog::dismiss)
-                                                                                    .show();
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onFailure(Call<List<Room>> call, Throwable throwable) {
-                                                                        Log.e("Failure update room", throwable.getMessage());
-                                                                    }
-                                                                });
-                                                            } else {
-                                                                PopupDialog.getInstance(Activity_order_room.this)
-                                                                        .statusDialogBuilder()
-                                                                        .createErrorDialog()
-                                                                        .setHeading("Uh-Oh")
-                                                                        .setDescription("Unexpected error occurred." +
-                                                                                " Try again later.")
-                                                                        .build(Dialog::dismiss)
-                                                                        .show();
-                                                                Log.e("Failure order room", response.message());
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onFailure(Call<List<Room>> call, Throwable throwable) {
-                                                            Log.e("Failure order room", throwable.getMessage());
-                                                        }
-                                                    });
-                                                }
-
-                                                @Override
-                                                public void onPaymentCanceled(String s, String s1) {
-                                                    PopupDialog.getInstance(Activity_order_room.this)
-                                                            .statusDialogBuilder()
-                                                            .createErrorDialog()
-                                                            .setHeading("Payment Canceled")
-                                                            .setDescription("Please make the payment again")
-                                                            .build(Dialog::dismiss)
-                                                            .show();
-                                                }
-
-                                                @Override
-                                                public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
-                                                    PopupDialog.getInstance(Activity_order_room.this)
-                                                            .statusDialogBuilder()
-                                                            .createErrorDialog()
-                                                            .setHeading("Payment Error")
-                                                            .setDescription("The payment is encountering an issue.")
-                                                            .build(Dialog::dismiss)
-                                                            .show();
-                                                }
-                                            });
-                                        }
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                                    if (REQUEST_CODE_METHOD == 0) {
+                                        payAtCheckIn(orderRoom, room);
+                                    } else if (REQUEST_CODE_METHOD == 1) {
+                                        cardPayment(orderRoom, room, total);
                                     }
 
                                 } else {
@@ -401,6 +298,206 @@ public class Activity_order_room extends AppCompatActivity {
         });
     }
 
+    private void initView() {
+        btn_back = findViewById(R.id.btn_back_order_room);
+        tv_name_hotel = findViewById(R.id.tv_hotelName_order_room);
+        tv_type_room = findViewById(R.id.tv_name_type_room_order_room);
+        tv_number_room = findViewById(R.id.tv_number_room_order_room);
+        tv_floor = findViewById(R.id.tv_floor_order_room);
+        tv_desc = findViewById(R.id.tv_desc_order_room);
+        tv_fullName = findViewById(R.id.tv_full_name_order_room);
+        tv_phone = findViewById(R.id.tv_phone_number_order_room);
+        tv_total = findViewById(R.id.tv_total_order_room);
+        tv_paymethod = findViewById(R.id.tv_payment_method_order_room);
+        tv_time_in = findViewById(R.id.tv_time_check_in_order_room);
+        tv_time_out = findViewById(R.id.tv_time_check_out_order_room);
+        tv_id_service = findViewById(R.id.tv_id_service);
+        tv_price_service = findViewById(R.id.tv_price_service);
+        btn_booking = findViewById(R.id.btn_booking_order_room);
+        btn_time_in = findViewById(R.id.btn_time_check_in_order_room);
+        btn_time_out = findViewById(R.id.btn_time_check_out_order_room);
+        ed_note = findViewById(R.id.ed_note_order_room);
+        btn_choose_payment = findViewById(R.id.img_choose_payment_method_order_room);
+        btn_service = findViewById(R.id.img_choose_service_order_room);
+        tv_service = findViewById(R.id.tv_service_order_room);
+    }
+
+    private void txtPayment() {
+        if (REQUEST_CODE_METHOD == 0) {
+            tv_paymethod.setText("Pay at check in");
+        } else if (REQUEST_CODE_METHOD == 1) {
+            tv_paymethod.setText("Card payment");
+        }
+
+    }
+    private void cardPayment(Order_Room orderRoom, Room room, float total) {
+        orderRoom.setStatus(1);
+        CreateOrder orderApi = new CreateOrder();
+        try {
+            float totalPay = total * 0.1f;
+            String totalPayString = String.format("%.0f", totalPay);
+            JSONObject data = orderApi.createOrder(totalPayString);
+            String code = data.getString("return_code");
+            if (code.equals("1")) {
+                String token = data.getString("zp_trans_token");
+                ZaloPaySDK.getInstance().payOrder(Activity_order_room.this, token, "demozpdk://app", new PayOrderListener() {
+                    @Override
+                    public void onPaymentSucceeded(String s, String s1, String s2) {
+                        Api_service.service.order_room(orderRoom).enqueue(new Callback<List<Room>>() {
+                            @Override
+                            public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                                if (response.isSuccessful()) {
+                                    Api_service.service.update_rooms(ID_ROOM, room).enqueue(new Callback<List<Room>>() {
+                                        @SuppressLint("CommitPrefEdits")
+                                        @Override
+                                        public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                                            if (response.isSuccessful()) {
+                                                PopupDialog popupDialog = PopupDialog.getInstance(Activity_order_room.this)
+                                                        .statusDialogBuilder()
+                                                        .createSuccessDialog()
+                                                        .setHeading("Well Done")
+                                                        .setDescription("Your booking is complete!")
+                                                        .build(dialog1 -> {
+                                                            startActivity(new Intent(Activity_order_room.this, MainActivity_user.class));
+                                                        });
+                                                popupDialog.getDialog().setOnDismissListener(dialog -> {
+                                                    startActivity(new Intent(Activity_order_room.this, MainActivity_user.class));
+                                                });
+                                                popupDialog.getDialog().setCancelable(true);
+                                                popupDialog.show();
+
+                                            } else {
+                                                PopupDialog.getInstance(Activity_order_room.this)
+                                                        .statusDialogBuilder()
+                                                        .createErrorDialog()
+                                                        .setHeading("Uh-Oh")
+                                                        .setDescription("Unexpected error occurred." +
+                                                                " Try again later.")
+                                                        .build(Dialog::dismiss)
+                                                        .show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                                            Log.e("Failure update room", throwable.getMessage());
+                                        }
+                                    });
+                                } else {
+                                    PopupDialog.getInstance(Activity_order_room.this)
+                                            .statusDialogBuilder()
+                                            .createErrorDialog()
+                                            .setHeading("Uh-Oh")
+                                            .setDescription("Unexpected error occurred." +
+                                                    " Try again later.")
+                                            .build(Dialog::dismiss)
+                                            .show();
+                                    Log.e("Failure order room", response.message());
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                                Log.e("Failure order room", throwable.getMessage());
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onPaymentCanceled(String s, String s1) {
+                        PopupDialog.getInstance(Activity_order_room.this)
+                                .statusDialogBuilder()
+                                .createErrorDialog()
+                                .setHeading("Payment Canceled")
+                                .setDescription("Please make the payment again")
+                                .build(Dialog::dismiss)
+                                .show();
+                    }
+
+                    @Override
+                    public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
+                        PopupDialog.getInstance(Activity_order_room.this)
+                                .statusDialogBuilder()
+                                .createErrorDialog()
+                                .setHeading("Payment Error")
+                                .setDescription("The payment is encountering an issue.")
+                                .build(Dialog::dismiss)
+                                .show();
+                    }
+                });
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void payAtCheckIn(Order_Room orderRoom, Room room) {
+        orderRoom.setStatus(0);
+        Api_service.service.order_room(orderRoom).enqueue(new Callback<List<Room>>() {
+            @Override
+            public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                if (response.isSuccessful()) {
+                    Api_service.service.update_rooms(ID_ROOM, room).enqueue(new Callback<List<Room>>() {
+                        @Override
+                        public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
+                            if (response.isSuccessful()) {
+                                PopupDialog.getInstance(Activity_order_room.this)
+                                        .statusDialogBuilder()
+                                        .createSuccessDialog()
+                                        .setHeading("Well Done")
+                                        .setDescription("Your booking is complete!")
+                                        .build(dialog1 -> startActivity(new Intent(Activity_order_room.this, MainActivity_user.class)))
+                                        .show();
+                            } else {
+                                PopupDialog.getInstance(Activity_order_room.this)
+                                        .statusDialogBuilder()
+                                        .createErrorDialog()
+                                        .setHeading("Uh-Oh")
+                                        .setDescription("Unexpected error occurred." +
+                                                " Try again later.")
+                                        .build(Dialog::dismiss)
+                                        .show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                            Log.e("Failure update room", throwable.getMessage());
+                        }
+                    });
+                } else {
+                    Log.e("Failure order room", response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                Log.e("Failure order room", throwable.getMessage());
+            }
+        });
+    }
+    private void showPaymentMethod() {
+        BottomSheetDialog dialog = new BottomSheetDialog(Activity_order_room.this);
+        View view = getLayoutInflater().inflate(R.layout.bottom_sheet_payment_method, null);
+        dialog.setContentView(view);
+        dialog.show();
+        //Anh xa
+        LinearLayout btn_pay_at_check_in = view.findViewById(R.id.btn_pay_at_check_in);
+        LinearLayout btn_card_payment = view.findViewById(R.id.btn_card_payment);
+
+        btn_pay_at_check_in.setOnClickListener(v -> {
+            REQUEST_CODE_METHOD = 0;
+            tv_paymethod.setText("Pay at check in");
+            Log.e("REQUEST_CODE_METHOD", String.valueOf(REQUEST_CODE_METHOD));
+            dialog.dismiss();
+        });
+        btn_card_payment.setOnClickListener(v -> {
+            REQUEST_CODE_METHOD = 1;
+            tv_paymethod.setText("Card payment");
+            Log.e("REQUEST_CODE_METHOD", String.valueOf(REQUEST_CODE_METHOD));
+            dialog.dismiss();
+        });
+    }
     private String getUserGoogleFromSharedPreferences() {
         SharedPreferences sharedPreferences = this.getSharedPreferences("user_google", Activity.MODE_PRIVATE);
         return sharedPreferences.getString("uid", "");
