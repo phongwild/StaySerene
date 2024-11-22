@@ -161,7 +161,7 @@ public class Adapter_rcv_ongoing extends RecyclerView.Adapter<Adapter_rcv_ongoin
                 .build(new StandardDialogActionListener() {
                     @Override
                     public void onPositiveButtonClicked(Dialog dialog) {
-                        cancelBooking(orderRoom, position, dialog);
+                        cancelBooking(orderRoom, position, dialog, context);
                     }
 
                     @Override
@@ -172,41 +172,53 @@ public class Adapter_rcv_ongoing extends RecyclerView.Adapter<Adapter_rcv_ongoin
                 .show();
     }
 
-    private void cancelBooking(Order_Room orderRoom, int position, Dialog dialog) {
-        Room room = new Room();
-        room.setTinhTrangPhong(0);
-        Api_service.service.update_rooms(orderRoom.getIdPhong(), room).enqueue(new Callback<List<Room>>() {
+    private void cancelBooking(Order_Room orderRoom, int position, Dialog dialog, Context context) {
+        Api_service.service.get_rooms_byId(orderRoom.getIdPhong()).enqueue(new Callback<List<Room>>() {
             @Override
             public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
                 if (response.isSuccessful()) {
-                    orderRoom.setStatus(3);
-                    Api_service.service.update_orderroom(orderRoom.get_id(), orderRoom).enqueue(new Callback<List<Order_Room>>() {
+                    Room room = response.body().get(0);
+                    room.setTinhTrangPhong(0);
+                    Api_service.service.update_rooms(orderRoom.getIdPhong(), room).enqueue(new Callback<List<Room>>() {
                         @Override
-                        public void onResponse(Call<List<Order_Room>> call, Response<List<Order_Room>> response) {
+                        public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
                             if (response.isSuccessful()) {
-                                Toast.makeText(dialog.getContext(), "Cancel booking successfully", Toast.LENGTH_SHORT).show();
-                                order_rooms.set(position, orderRoom); // Cập nhật lại dữ liệu trong list
-                                notifyItemChanged(position); // Cập nhật lại item trong RecyclerView
-                                dialog.dismiss();
+                                orderRoom.setStatus(3);
+                                Api_service.service.update_orderroom(orderRoom.get_id(), orderRoom).enqueue(new Callback<List<Order_Room>>() {
+                                    @Override
+                                    public void onResponse(Call<List<Order_Room>> call, Response<List<Order_Room>> response) {
+                                        if (response.isSuccessful()) {
+                                            Log.d("Context Test", context.toString()); // Kiểm tra Context
+                                            Toast.makeText(context, "Cancel booking successfully", Toast.LENGTH_SHORT).show();
+                                            order_rooms.set(position, orderRoom); // Cập nhật lại dữ liệu trong list
+                                            notifyItemChanged(position); // Cập nhật lại item trong RecyclerView
+                                            dialog.dismiss();
+                                        } else {
+                                            Log.e("Error update order room", response.message());
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<List<Order_Room>> call, Throwable throwable) {
+                                        Log.e("Error update order room", throwable.getMessage());
+                                        dialog.dismiss();
+                                    }
+                                });
                             } else {
-                                Log.e("Error update order room", response.message());
+                                Log.e("Error update room", response.message());
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<List<Order_Room>> call, Throwable throwable) {
-                            Log.e("Error update order room", throwable.getMessage());
-                            dialog.dismiss();
+                        public void onFailure(Call<List<Room>> call, Throwable throwable) {
+                            Log.e("Error update room", throwable.getMessage());
                         }
                     });
-                } else {
-                    Log.e("Error update room", response.message());
                 }
             }
-
             @Override
             public void onFailure(Call<List<Room>> call, Throwable throwable) {
-                Log.e("Error update room", throwable.getMessage());
+
             }
         });
     }

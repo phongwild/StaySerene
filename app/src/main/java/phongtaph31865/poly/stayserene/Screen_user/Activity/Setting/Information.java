@@ -153,7 +153,7 @@ public class Information extends AppCompatActivity {
         });
     }
     private void uploadAvatarAndSaveInfo() {
-        StorageReference imgRef = storageRef.child(System.currentTimeMillis() + "." + getFileExtension(imgUri));
+        StorageReference imgRef = storageRef.child("images/" + "_avatar." + System.currentTimeMillis() + "." + getFileExtension(imgUri));
         imgRef.putFile(imgUri).addOnSuccessListener(taskSnapshot ->
                         imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
                             saveAccountInfo(uri.toString());

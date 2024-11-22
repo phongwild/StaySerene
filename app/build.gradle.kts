@@ -95,6 +95,8 @@ dependencies {
     implementation ("com.firebaseui:firebase-ui-storage:8.0.2")
     implementation ("com.google.android.gms:play-services-location:21.3.0")
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-messaging")
+
     //Facebook
     //implementation ("com.facebook.android:facebook-android-sdk:[4,5)")
     //Retrofit
