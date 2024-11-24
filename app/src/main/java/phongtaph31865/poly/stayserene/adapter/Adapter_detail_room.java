@@ -92,7 +92,14 @@ public class Adapter_detail_room extends RecyclerView.Adapter<Adapter_detail_roo
             e.printStackTrace();
         }
         holder.tv_price.setText(formatter.format(room.getGiaPhong()));
-        Picasso.get().load(room.getAnhPhong()).into(holder.img);
+        if (room.getAnhPhong() != null){
+            Picasso.get()
+                    .load(room.getAnhPhong())
+                    .resize(180, 120)
+                    .error(R.drawable.room_image1)
+                    .into(holder.img);
+        }
+
         holder.btn_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,6 +126,7 @@ public class Adapter_detail_room extends RecyclerView.Adapter<Adapter_detail_roo
         intent.putExtra("status", room.getTinhTrangPhong());
         intent.putExtra("floor", room.getSoTang());
         intent.putExtra("desc", room.getMoTaPhong());
+        intent.putExtra("numberroom", room.getSoPhong());
         v.getContext().startActivity(intent);
     }
 

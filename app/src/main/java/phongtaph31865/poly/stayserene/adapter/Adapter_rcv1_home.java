@@ -22,14 +22,7 @@ import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_list_type_room;
 
 public class Adapter_rcv1_home extends RecyclerView.Adapter<Adapter_rcv1_home.ViewHolder> {
-    String Uid;
     private List<Hotel> hotels;
-    public String getUid() {
-        return Uid;
-    }
-    public void setUid(String uid) {
-        Uid = uid;
-    }
     public Adapter_rcv1_home(List<Hotel> hotels) {
         this.hotels = hotels;
     }
@@ -47,16 +40,14 @@ public class Adapter_rcv1_home extends RecyclerView.Adapter<Adapter_rcv1_home.Vi
         viewHolder.tv_rate.setText(String.valueOf(hotel.getDanhGia()));
         viewHolder.tv_address.setText(hotel.getDiaChi());
         if(hotel.getAnhKhachSan() != null){
-            Picasso.get().load(hotel.getAnhKhachSan()).into(viewHolder.img);
+            Picasso picasso = Picasso.get();
+            picasso.setIndicatorsEnabled(true);
+            picasso.load(hotel.getAnhKhachSan()).into(viewHolder.img);
         }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), Activity_list_type_room.class);
-                intent.putExtra("id", hotel.get_id());
-                intent.putExtra("name", hotel.getTenKhachSan());
-                intent.putExtra("Uid", getUid());
-                v.getContext().startActivity(intent);
+                IntentClick(v, hotel);
             }
         });
     }
@@ -68,7 +59,12 @@ public class Adapter_rcv1_home extends RecyclerView.Adapter<Adapter_rcv1_home.Vi
         }
         return 0;
     }
-
+    private void IntentClick(View v, Hotel hotel){
+        Intent intent = new Intent(v.getContext(), Activity_list_type_room.class);
+        intent.putExtra("id", hotel.get_id());
+        intent.putExtra("name", hotel.getTenKhachSan());
+        v.getContext().startActivity(intent);
+    }
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tv_name, tv_rate, tv_address;
         private ImageView img;

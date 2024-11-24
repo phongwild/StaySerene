@@ -1,0 +1,224 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="#ffffff"
+    tools:context=".Screen_user.Activity.Setting.termandservice">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/btn_back_term_service"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_back" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/headerText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:text="Term &amp; service"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="20dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="5dp"
+                        android:text="1.Booking:"
+                        android:textAlignment="textStart"
+                        android:textColor="#000000"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="The StaySerene App refers to the online platform, available via the StaySerene mobile application or website, that allows users to search for, book, and access hotel accommodations and additional services. These users may be individuals or entities utilizing the app to make bookings or take advantage of various services offered by the hotels listed on the platform. Hotels are the establishments providing accommodations and related services available for booking through StaySerene. A booking is defined as the process in which a user completes the necessary steps and makes payment to confirm a reservation at a hotel through the StaySerene platform. Additional services may include spa treatments, restaurant bookings, guided tours, transportation, and other related services offered by the hotels."
+                        android:textAlignment="textStart"
+                        android:textColor="#000000"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="2.Cancellation:"
+                        android:textAlignment="textStart"
+                        android:textColor="#000000"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="5dp"
+                        android:textSize="14sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="The cancellation policy for each hotel will be clearly displayed during the booking process. Each hotel may have its own cancellation policy, including fees and deadlines for canceling without penalty. Users are responsible for reviewing and understanding these policies before completing their booking. In the event of cancellation after the allowable period or failure to comply with the hotel's cancellation terms, users may be charged cancellation fees. In special cases such as emergencies (e.g., natural disasters, health crises), StaySerene will work with the hotel to provide flexible solutions, but users should be aware that any refunds or waivers of fees are at the hotel's discretion."
+                        android:textAlignment="textStart"
+                        android:textColor="#000000"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="3.Payment:"
+                        android:textAlignment="textStart"
+                        android:textColor="#000000"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="5dp"
+                        android:textSize="14sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="StaySerene supports various secure payment methods, including credit cards, debit cards, bank transfers, and online payment gateways. Users must complete full payment before checking in. If payment fails or is incomplete, StaySerene reserves the right to refuse accommodation at the hotel. In some cases, hotels may require direct payment upon arrival, particularly for special promotions or specific packages. All taxes, service charges, and additional fees (e.g., resort fees, parking) will be displayed during the booking process and are the responsibility of the user. StaySerene is not responsible for changes in fees imposed by the hotel after the booking is made."
+                        android:textAlignment="textStart"
+                        android:textColor="#000000"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="4.Rights and Responsibilities:"
+                        android:textAlignment="textStart"
+                        android:textColor="#000000"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="5dp"
+                        android:textSize="14sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="StaySerene acts solely as an intermediary platform, connecting users with hotels and providing access to accommodation and additional services. StaySerene is not responsible for the quality of the services or accommodations provided by the hotels. While StaySerene strives to provide accurate and up-to-date information about hotel listings and availability, we cannot guarantee that all details are error-free or that changes to pricing or availability will not occur after a booking is made. StaySerene reserves the right to update or remove any services, listings, or features without prior notice, and users should review the platform's terms and policies regularly to stay informed of any updates. StaySerene also ensures the privacy and protection of user data in accordance with our privacy policy, and we employ industry-standard security measures to safeguard personal information."
+                        android:textAlignment="textStart"
+                        android:textColor="#000000"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="5.Changes and Updates:"
+                        android:textAlignment="textStart"
+                        android:textColor="#000000"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="5dp"
+                        android:textSize="14sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="StaySerene reserves the right to modify its terms and services without prior notice. Please review the terms regularly for updates."
+                        android:textAlignment="textStart"
+                        android:textColor="#000000"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="6.General Terms:"
+                        android:textAlignment="textStart"
+                        android:textColor="#000000"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="5dp"
+                        android:textSize="14sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="By using StaySerene’s services, users acknowledge and accept these terms and conditions in their entirety. StaySerene may modify or update these terms at any time, with changes taking effect upon their posting on the StaySerene platform (website or app). Users are encouraged to periodically review these terms to stay informed about any updates or changes. If a user does not agree with the revised terms, they should discontinue the use of StaySerene services. StaySerene reserves the right to suspend or terminate access to the app for users who violate these terms."
+                        android:textAlignment="textStart"
+                        android:textColor="#000000"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</RelativeLayout>

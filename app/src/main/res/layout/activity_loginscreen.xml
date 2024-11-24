@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingHorizontal="20dp"
     android:background="#ffffff"
     tools:context=".Login_Register.Loginscreen">
 
@@ -21,6 +20,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_email_login"
         android:layout_width="match_parent"
+        android:layout_marginHorizontal="12dp"
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -30,6 +30,7 @@
             android:layout_margin="10dp"
             android:background="@drawable/custom_input"
             android:inputType="textEmailAddress"
+            android:lineBreakStyle="none"
             android:hint="Your Email" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -37,6 +38,7 @@
         android:id="@+id/layout_password_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
         app:endIconMode="password_toggle">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -55,6 +57,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
         android:background="@drawable/custom_btn"
+        android:layout_marginHorizontal="20dp"
         android:backgroundTint="#4C4DDC"
         android:gravity="center">
 
@@ -73,6 +76,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="horizontal"
+        android:paddingHorizontal="11dp"
         android:paddingVertical="10dp">
 
         <LinearLayout
@@ -99,6 +103,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="center"
+        android:layout_marginHorizontal="20dp"
+
         android:background="@drawable/custom_btn"
         android:backgroundTint="#4C4DDC"
         android:gravity="center"
@@ -125,6 +131,8 @@
         android:layout_gravity="center"
         android:layout_marginTop="15dp"
         android:background="@drawable/custom_btn"
+        android:layout_marginHorizontal="20dp"
+
         android:backgroundTint="#4C4DDC"
         android:gravity="center"
         android:orientation="horizontal">

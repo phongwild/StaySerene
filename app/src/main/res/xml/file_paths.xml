@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Chia sẻ thư mục external của ứng dụng -->
+    <external-path
+        name="external_files"
+        path="." />
+
+    <!-- Hoặc bạn có thể chia sẻ các thư mục cụ thể như sau -->
+    <!-- <files-path name="my_images" path="images/" /> -->
+</paths>

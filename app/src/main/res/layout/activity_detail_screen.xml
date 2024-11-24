@@ -141,7 +141,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#101010"
-                        android:text="ID room: "
+                        android:text="Number room: "
                         android:textSize="16sp"
                         android:textStyle="bold"/>
                     <TextView

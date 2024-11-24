@@ -1,15 +1,15 @@
 package phongtaph31865.poly.stayserene.Model;
 
 public class Hotel {
-    private String _id, anhKhachSan, diaChi, emailKhachSan, moTaKhachSan, sdt, tenKhachSan;
+    private String _id, anhKhachSan, diaChi, email, moTaKhachSan, sdt, tenKhachSan;
     private int status;
     private float danhGia;
 
-    public Hotel(String _id, String anhKhachSan, String diaChi, String emailKhachSan, String moTaKhachSan, String sdt, String tenKhachSan, int status, float danhGia) {
+    public Hotel(String _id, String anhKhachSan, String diaChi, String email, String moTaKhachSan, String sdt, String tenKhachSan, int status, float danhGia) {
         this._id = _id;
         this.anhKhachSan = anhKhachSan;
         this.diaChi = diaChi;
-        this.emailKhachSan = emailKhachSan;
+        this.email = email;
         this.moTaKhachSan = moTaKhachSan;
         this.sdt = sdt;
         this.tenKhachSan = tenKhachSan;
@@ -44,12 +44,12 @@ public class Hotel {
         this.diaChi = diaChi;
     }
 
-    public String getEmailKhachSan() {
-        return emailKhachSan;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmailKhachSan(String emailKhachSan) {
-        this.emailKhachSan = emailKhachSan;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getMoTaKhachSan() {

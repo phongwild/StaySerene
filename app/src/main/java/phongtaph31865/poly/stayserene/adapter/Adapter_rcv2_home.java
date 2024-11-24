@@ -66,9 +66,9 @@ public class Adapter_rcv2_home extends RecyclerView.Adapter<Adapter_rcv2_home.Vi
             NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
             int status = room.getTinhTrangPhong();
             if (status == 0) {
-                holder.tv_name.setText("Open");
+                holder.tv_address.setText("Open");
             } else if (status == 1) {
-                holder.tv_name.setText("Close");
+                holder.tv_address.setText("Close");
             }
             String idType = room.getIdLoaiPhong();
             try {
@@ -78,7 +78,8 @@ public class Adapter_rcv2_home extends RecyclerView.Adapter<Adapter_rcv2_home.Vi
                         if (response.isSuccessful()){
                             for (TypeRoom typeRoom : response.body()){
                                 if (typeRoom.get_id().equals(idType)){
-                                    holder.tv_address.setText(typeRoom.getTenLoaiPhong());
+                                    holder.tv_name.setText(typeRoom.getTenLoaiPhong());
+                                    holder.tv_price.setText(formatter.format(typeRoom.getGiaLoaiPhong()));
                                 }
                             }
                         }else Log.e("rcv2", "False: Khong lay duoc id loai phong");
@@ -92,8 +93,10 @@ public class Adapter_rcv2_home extends RecyclerView.Adapter<Adapter_rcv2_home.Vi
             }catch (Exception e){
                 e.printStackTrace();
             }
-            holder.tv_price.setText(formatter.format(room.getGiaPhong()));
-            Picasso.get().load(room.getAnhPhong()).into(holder.img);
+            if(room.getAnhPhong() != null){
+                Picasso.get().load(room.getAnhPhong()).error(R.drawable.room_image1).fit().centerCrop().into(holder.img);
+            }
+
             holder.btn_detail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -134,6 +137,7 @@ public class Adapter_rcv2_home extends RecyclerView.Adapter<Adapter_rcv2_home.Vi
         intent.putExtra("status", room.getTinhTrangPhong());
         intent.putExtra("floor", room.getSoTang());
         intent.putExtra("desc", room.getMoTaPhong());
+        intent.putExtra("numberroom", room.getSoPhong());
         v.getContext().startActivity(intent);
     }
 }
