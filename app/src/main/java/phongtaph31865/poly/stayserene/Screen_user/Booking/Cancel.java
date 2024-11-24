@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class Cancel extends Fragment {
     private RecyclerView recyclerView;
     private Adapter_rcv_cancel adapter;
     List<Order_Room> order_rooms;
+    private ProgressBar progressBar;
     private SwipeRefreshLayout refreshLayout;
 
     public Cancel() {
@@ -50,15 +52,12 @@ public class Cancel extends Fragment {
         recyclerView = view.findViewById(R.id.rcv_cancel);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         refreshLayout = view.findViewById(R.id.swipe_refresh_cancel);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                get_orderroom_by_status3();
-            }
-        });
+        progressBar = view.findViewById(R.id.progressBar_cancel);
+        refreshLayout.setOnRefreshListener(this::get_orderroom_by_status3);
         get_orderroom_by_status3();
     }
     public void get_orderroom_by_status3() {
+        progressBar.setVisibility(View.VISIBLE);
         Api_service.service.get_orderroom_status3(getCurrentUserId()).enqueue(new Callback<List<Order_Room>>() {
             @Override
             public void onResponse(Call<List<Order_Room>> call, Response<List<Order_Room>> response) {
@@ -70,6 +69,7 @@ public class Cancel extends Fragment {
                     }
                 }
                 refreshLayout.setRefreshing(false);
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override

@@ -61,15 +61,7 @@
                     android:id="@+id/img_room_detail"
                     android:layout_width="300dp"
                     android:layout_height="200dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hotel_popular_image" />
-                <ImageView
-                    android:id="@+id/heart_icon"
-                    android:layout_width="40dp"
-                    android:src="@drawable/ic_heart"
-                    android:layout_height="40dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_margin="8dp" />
+                    android:scaleType="centerCrop"/>
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
@@ -141,7 +133,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#101010"
-                        android:text="Number room: "
+                        android:text="Room: "
                         android:textSize="16sp"
                         android:textStyle="bold"/>
                     <TextView

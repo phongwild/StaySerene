@@ -21,8 +21,7 @@
                 android:id="@+id/item_iv_detail_room"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/img_beach" />
+                android:scaleType="centerCrop" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -33,7 +32,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="8dp"
-                    android:text="The Aston Vill Hotel"
                     android:textColor="#101010"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -43,7 +41,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:layout_marginTop="7dp"
-                    android:text="Alice Springs NT 0870, Australia"
                     android:textColor="#939393"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -62,7 +59,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="4dp"
-                android:text="$200.7"
                 android:textColor="#4C4DDC"
                 android:textSize="14sp"
                 android:textStyle="bold" />

@@ -62,15 +62,7 @@
                     android:id="@+id/img_detail_type_room"
                     android:layout_width="300dp"
                     android:layout_height="200dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/hotel_popular_image" />
-                <ImageView
-                    android:id="@+id/heart_icon"
-                    android:layout_width="40dp"
-                    android:src="@drawable/ic_heart"
-                    android:layout_height="40dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_margin="8dp" />
+                    android:scaleType="centerCrop" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
@@ -202,7 +194,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#101010"
-                android:text="10"
                 android:textSize="14sp" />
         </LinearLayout>
         <LinearLayout
@@ -235,31 +226,6 @@
                     android:textColor="#101010"
                     android:textSize="14sp" />
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="end">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Area: "
-                    android:textColor="#101010"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_dienTich_detail_type_room"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="10"
-                    android:textColor="#101010"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout
@@ -281,7 +247,6 @@
                 android:layout_height="70dp"
                 android:scrollbars="vertical"
                 android:scrollbarStyle="insideOverlay"
-                android:text="Aston Hotel, Alice Springs NT 0870, Australia is a modern hotel, elegant 5 star hotel overlooking the sea. Perfect for a romantic, charming experience."
                 android:textSize="12sp"
                 android:paddingTop="8dp"
                 android:paddingBottom="16dp" />

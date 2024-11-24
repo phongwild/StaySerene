@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class Complete extends Fragment {
     private Adapter_rcv_complete adapter;
     List<Order_Room> order_rooms;
     private SwipeRefreshLayout refreshLayout;
+    private ProgressBar progressBar;
 
     public Complete() {
     }
@@ -48,15 +50,12 @@ public class Complete extends Fragment {
         recyclerView = view.findViewById(R.id.rcv_complete);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         refreshLayout = view.findViewById(R.id.swipe_refresh_complete);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                get_orderroom_by_status2();
-            }
-        });
+        progressBar = view.findViewById(R.id.progressBar_complete);
+        refreshLayout.setOnRefreshListener(this::get_orderroom_by_status2);
         get_orderroom_by_status2();
     }
     public void get_orderroom_by_status2() {
+        progressBar.setVisibility(View.VISIBLE);
         Api_service.service.get_orderroom_status2(getCurrentUserId()).enqueue(new Callback<List<Order_Room>>() {
             @Override
             public void onResponse(Call<List<Order_Room>> call, Response<List<Order_Room>> response) {
@@ -69,6 +68,7 @@ public class Complete extends Fragment {
                     }
                 }
                 refreshLayout.setRefreshing(false);
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override

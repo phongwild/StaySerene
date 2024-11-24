@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
+import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.TypeRoom;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.OrderRoom.Activity_detail_type_rooms;
@@ -59,7 +60,6 @@ public class Detail_room_screen extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(Detail_room_screen.this, MainActivity_user.class));
                 finish();
             }
         });
@@ -87,22 +87,7 @@ public class Detail_room_screen extends AppCompatActivity {
             tv_status.setText("Close");
         }
         Intent intent1 = new Intent(Detail_room_screen.this, Activity_order_room.class);
-        Api_service.service.get_typeroom_byId(IdTypeRoom).enqueue(new Callback<List<TypeRoom>>() {
-            @Override
-            public void onResponse(Call<List<TypeRoom>> call, Response<List<TypeRoom>> response) {
-                if (response.isSuccessful()){
-                    for (TypeRoom typeRoom : response.body()){
-                        tv_type.setText(typeRoom.getTenLoaiPhong());
-                        intent1.putExtra("total", typeRoom.getGiaLoaiPhong());
-                    }
-                }else Log.e("Response error", "Response is not successful");
-            }
-
-            @Override
-            public void onFailure(Call<List<TypeRoom>> call, Throwable throwable) {
-                Log.e("Failure getTypeRoom", throwable.getMessage());
-            }
-        });
+        getTypeRoom(IdTypeRoom, intent1);
         btn_booking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,6 +105,7 @@ public class Detail_room_screen extends AppCompatActivity {
                                 intent1.putExtra("id_type_room", IdTypeRoom);
                                 intent1.putExtra("id_room", IdRoom);
                                 intent1.putExtra("img", img);
+                                dialog.dismiss();
                                 startActivity(intent1);
                             }
 
@@ -129,6 +115,44 @@ public class Detail_room_screen extends AppCompatActivity {
                             }
                         }).show();
 
+            }
+        });
+    }
+    private void getTypeRoom(String id, Intent intent1){
+        Api_service.service.get_typeroom_byId(id).enqueue(new Callback<List<TypeRoom>>() {
+            @Override
+            public void onResponse(Call<List<TypeRoom>> call, Response<List<TypeRoom>> response) {
+                if (response.isSuccessful()){
+                    for (TypeRoom typeRoom : response.body()){
+                        tv_type.setText(typeRoom.getTenLoaiPhong());
+                        String idHT = typeRoom.getIdKhachSan();
+                        intent1.putExtra("total", typeRoom.getGiaLoaiPhong());
+                        getLocation(idHT);
+                    }
+                }else Log.e("Response error", "Response is not successful");
+            }
+
+            @Override
+            public void onFailure(Call<List<TypeRoom>> call, Throwable throwable) {
+                Log.e("Failure getTypeRoom", throwable.getMessage());
+            }
+        });
+    }
+    private void getLocation(String id){
+        Api_service.service.get_hotel_byId(id).enqueue(new Callback<List<Hotel>>() {
+            @Override
+            public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
+                if (response.isSuccessful()){
+                    for (Hotel hotel : response.body()){
+                        tv_location.setText(hotel.getDiaChi());
+                    }
+
+                }else Log.e("Response error", response.message());
+            }
+
+            @Override
+            public void onFailure(Call<List<Hotel>> call, Throwable throwable) {
+                Log.e("Failure getLocation", throwable.getMessage());
             }
         });
     }

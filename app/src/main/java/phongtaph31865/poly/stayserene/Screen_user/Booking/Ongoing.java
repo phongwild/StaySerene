@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +30,8 @@ public class Ongoing extends Fragment {
     private RecyclerView recyclerView;
     private Adapter_rcv_ongoing adapter;
     private SwipeRefreshLayout refreshLayout;
-    List<Order_Room> order_rooms;
+    private ProgressBar progressBar;
+    private List<Order_Room> order_rooms;
 
     public Ongoing() {
     }
@@ -46,41 +48,43 @@ public class Ongoing extends Fragment {
         recyclerView = view.findViewById(R.id.rcv_ongoing);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         refreshLayout = view.findViewById(R.id.swipe_refresh_ongoing);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                get_orderroom_by_status01();
-            }
-        });
+        progressBar = view.findViewById(R.id.progressBar_ongoing);
 
+        // Thiết lập hành động cho SwipeRefreshLayout
+        refreshLayout.setOnRefreshListener(this::get_orderroom_by_status01);
+
+        // Tải dữ liệu ban đầu
         get_orderroom_by_status01();
     }
 
     public void get_orderroom_by_status01() {
+        // Hiển thị trạng thái loading khi gọi API
+        progressBar.setVisibility(View.VISIBLE);
         Api_service.service.get_orderroom_status01(getCurrentUserId()).enqueue(new Callback<List<Order_Room>>() {
             @Override
             public void onResponse(Call<List<Order_Room>> call, Response<List<Order_Room>> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        order_rooms = response.body();
-                        adapter = new Adapter_rcv_ongoing(order_rooms);
-                        recyclerView.setAdapter(adapter);
-                    }
+                if (response.isSuccessful() && response.body() != null) {
+                    order_rooms = response.body();
+                    // Luôn khởi tạo lại adapter mỗi lần có dữ liệu mới
+                    adapter = new Adapter_rcv_ongoing(order_rooms);
+                    recyclerView.setAdapter(adapter);
                 }
                 refreshLayout.setRefreshing(false);
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<List<Order_Room>> call, Throwable throwable) {
                 Log.e("Error get order room by status", throwable.getMessage());
+                // Tắt trạng thái loading của SwipeRefreshLayout
                 refreshLayout.setRefreshing(false);
             }
         });
     }
 
+
     private String getCurrentUserId() {
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_data", getContext().MODE_PRIVATE);
         return sharedPreferences.getString("uid", "");
     }
-
 }

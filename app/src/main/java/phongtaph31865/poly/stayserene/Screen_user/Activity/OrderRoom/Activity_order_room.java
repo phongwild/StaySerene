@@ -447,6 +447,7 @@ public class Activity_order_room extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
                             if (response.isSuccessful()) {
+                                timer.cancel();
                                 PopupDialog.getInstance(Activity_order_room.this)
                                         .statusDialogBuilder()
                                         .createSuccessDialog()

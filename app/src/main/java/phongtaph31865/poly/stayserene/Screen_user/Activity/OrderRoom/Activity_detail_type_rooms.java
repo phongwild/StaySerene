@@ -34,7 +34,7 @@ import retrofit2.Response;
 
 public class Activity_detail_type_rooms extends AppCompatActivity {
     private ImageView btn_back_detail_type_room, img_detail_type_room;
-    private TextView tv_name_detail_type_room, tv_name, tv_location_detail_type_room, tv_price_detail_type_room, tv_so_luong_phong_detail_type_room, tv_tienNghi_detail_type_room, tv_dienTich_detail_type_room, tv_description_detail_type_room;
+    private TextView tv_name_detail_type_room, tv_name, tv_location_detail_type_room, tv_price_detail_type_room, tv_so_luong_phong_detail_type_room, tv_tienNghi_detail_type_room, tv_description_detail_type_room;
     private LinearLayout btn_booking;
 
     @SuppressLint("MissingInflatedId")
@@ -63,7 +63,6 @@ public class Activity_detail_type_rooms extends AppCompatActivity {
         tv_price_detail_type_room = findViewById(R.id.tv_price_detail_type_room);
         tv_so_luong_phong_detail_type_room = findViewById(R.id.tv_so_luong_phong_detail_type_room);
         tv_tienNghi_detail_type_room = findViewById(R.id.tv_tienNghi_detail_type_room);
-        tv_dienTich_detail_type_room = findViewById(R.id.tv_dienTich_detail_type_room);
         tv_description_detail_type_room = findViewById(R.id.tv_description_detail_type_room);
         tv_name = findViewById(R.id.tv_name2_detail_type_room);
         btn_booking = findViewById(R.id.btn_booking_detail_type_room);

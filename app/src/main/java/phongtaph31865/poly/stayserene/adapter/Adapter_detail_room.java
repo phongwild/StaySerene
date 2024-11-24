@@ -64,9 +64,9 @@ public class Adapter_detail_room extends RecyclerView.Adapter<Adapter_detail_roo
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         int status = room.getTinhTrangPhong();
         if (status == 0) {
-            holder.tv_name.setText("Open");
+            holder.tv_address.setText("Open");
         } else if (status == 1) {
-            holder.tv_name.setText("Close");
+            holder.tv_address.setText("Close");
         }
         String idType = room.getIdLoaiPhong();
         try {
@@ -76,7 +76,7 @@ public class Adapter_detail_room extends RecyclerView.Adapter<Adapter_detail_roo
                     if (response.isSuccessful()){
                         for (TypeRoom typeRoom : response.body()){
                             if (typeRoom.get_id().equals(idType)){
-                                holder.tv_address.setText(typeRoom.getTenLoaiPhong());
+                                holder.tv_name.setText(typeRoom.getTenLoaiPhong());
                             }
                         }
                     }else Log.e("Detail Room", "False: Khong lay duoc id loai phong");
@@ -95,7 +95,7 @@ public class Adapter_detail_room extends RecyclerView.Adapter<Adapter_detail_roo
         if (room.getAnhPhong() != null){
             Picasso.get()
                     .load(room.getAnhPhong())
-                    .resize(180, 120)
+                    .fit().centerCrop()
                     .error(R.drawable.room_image1)
                     .into(holder.img);
         }
