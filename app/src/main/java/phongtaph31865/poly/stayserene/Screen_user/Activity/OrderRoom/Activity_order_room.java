@@ -680,9 +680,9 @@ public class Activity_order_room extends AppCompatActivity {
             String serviceId = data.getStringExtra("service_id");
             String servicePrice = data.getStringExtra("service_price");
             if (serviceName != null && !serviceName.isEmpty()) {
-                tv_paymethod.setText(serviceName);
+                tv_service.setText(serviceName);
             } else {
-                tv_paymethod.setText("No service required");
+                tv_service.setText("No service required");
             }
             if (serviceId != null && !serviceId.isEmpty()) {
                 tv_id_service.setText(serviceId);
