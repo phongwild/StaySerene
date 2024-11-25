@@ -151,6 +151,11 @@ public class Information extends AppCompatActivity {
                 }
             }
         });
+        dialogOtp.setOtpResendCallback(email -> {
+            OTP = MailConfig.generateOTP(4);
+            Toast.makeText(this, "Send OTP email successfully to " + email, Toast.LENGTH_SHORT).show();
+            MailConfig.sendOtpEmail(email, OTP);
+        });
     }
     private void uploadAvatarAndSaveInfo() {
         StorageReference imgRef = storageRef.child("images/" + "_avatar." + System.currentTimeMillis() + "." + getFileExtension(imgUri));

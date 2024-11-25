@@ -84,8 +84,7 @@ public class Activity_updatePass extends AppCompatActivity {
                             .statusDialogBuilder()
                             .createSuccessDialog()
                             .setHeading("Well Done")
-                            .setDescription("You have successfully" +
-                                    " completed the task")
+                            .setDescription("Update password successfully")
                             .build(dialog -> startActivity(new Intent(Activity_updatePass.this, Loginscreen.class)))
                             .show();
                 }else {
@@ -93,7 +92,7 @@ public class Activity_updatePass extends AppCompatActivity {
                             .statusDialogBuilder()
                             .createErrorDialog()
                             .setHeading("Uh-Oh")
-                            .setDescription("Wrong email or password!" + " Please try again")
+                            .setDescription("Update password failed")
                             .setActionButtonText("Try again")
                             .build(Dialog::dismiss)
                             .show();

@@ -47,7 +47,6 @@ public class Activity_show_detail_booking extends AppCompatActivity {
         binding.tvFullNameDetailBooking.setText(username);
         binding.tvPhoneNumberDetailBooking.setText(sdt);
         if (intent != null) {
-            String name_hotel = intent.getStringExtra("name_hotel");
             String id_room = intent.getStringExtra("id_room");
             String time_checkin = intent.getStringExtra("time_checkin");
             String time_checkout = intent.getStringExtra("time_checkout");
@@ -55,8 +54,8 @@ public class Activity_show_detail_booking extends AppCompatActivity {
             String img = intent.getStringExtra("img");
             String note = intent.getStringExtra("note");
             String price = formatter.format(total);
-            Log.d("GetIntent", "onCreate: " + name_hotel + " " + id_room + " " + time_checkin + " " + time_checkout + " " + total + " " + img + " " + note);
-            binding.tvHotelNameDetailBooking.setText(name_hotel);
+            Log.d("GetIntent", "onCreate: " + id_room + " " + time_checkin + " " + time_checkout + " " + total + " " + img + " " + note);
+
             binding.tvTimeCheckinDetailBooking.setText(time_checkin);
             binding.tvTimeCheckoutDetailBooking.setText(time_checkout);
             binding.tvTotalDetailBooking.setText(price);
@@ -89,7 +88,7 @@ public class Activity_show_detail_booking extends AppCompatActivity {
                                                 binding.tvHotelPhoneDetailBooking.setText(hotel.getSdt());
                                                 binding.tvEmailDetailBooking.setText(hotel.getEmail());
                                                 binding.tvDescHotelDetailBooking.setText(hotel.getMoTaKhachSan());
-
+                                                binding.tvHotelNameDetailBooking.setText(hotel.getTenKhachSan());
                                             }
                                         }
 

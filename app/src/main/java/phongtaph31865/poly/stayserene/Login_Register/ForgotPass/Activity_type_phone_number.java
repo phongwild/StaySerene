@@ -9,14 +9,10 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.PhoneAuthProvider;
-
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
+import phongtaph31865.poly.stayserene.BottomSheet.Dialog_OTP;
 import phongtaph31865.poly.stayserene.MailConfig.MailConfig;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.databinding.ActivityTypePhoneNumberBinding;
@@ -26,8 +22,7 @@ import retrofit2.Response;
 
 public class Activity_type_phone_number extends AppCompatActivity {
     private ActivityTypePhoneNumberBinding binding;
-    private Timer timer;
-    private int timeLeft = 0;
+    private String EMAIL, OTP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,17 +37,13 @@ public class Activity_type_phone_number extends AppCompatActivity {
     }
 
     private void getOtp() {
-        if (timeLeft > 0) {
-            showToast("Please wait " + timeLeft + " seconds before requesting again");
-            return;
-        }
-        String email = binding.edEmailTypePhone.getText().toString().trim();
-        if (TextUtils.isEmpty(email)) {
+        EMAIL = binding.edEmailTypePhone.getText().toString().trim();
+        if (TextUtils.isEmpty(EMAIL)) {
             showToast("Please enter your email");
             return;
         }
-        checkExistEmail(email);
 
+        checkExistEmail(EMAIL);
     }
 
     private void checkExistEmail(String email) {
@@ -60,30 +51,21 @@ public class Activity_type_phone_number extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
                 if (response.isSuccessful()) {
-                    List<Account> accounts = response.body();
                     boolean emailExists = false;
 
-                    for (Account account : accounts) {
+                    // Check if the email exists in the response
+                    for (Account account : response.body()) {
                         if (account.getEmail().equals(email)) {
                             emailExists = true;
                             break;
                         }
                     }
 
-                    if (!emailExists) {
-                        showToast("Email does not exist");
+                    if (emailExists) {
+                        sendOTP();
                     } else {
-                        // Proceed to send OTP email
-                        String otp = MailConfig.generateOTP(4);
-                        MailConfig.sendOtpEmail(email, otp);
-                        Toast.makeText(Activity_type_phone_number.this, "Send OTP email successfully to " + email, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Activity_type_phone_number.this, Activity_otp_authen.class);
-                        intent.putExtra("email", email);
-                        intent.putExtra("otp", otp);
-                        startActivity(intent);
-                        startOtpTimer();
+                        showToast("Email does not exist");
                     }
-
                 } else {
                     showToast("Error: " + response.message());
                 }
@@ -97,26 +79,23 @@ public class Activity_type_phone_number extends AppCompatActivity {
         });
     }
 
-    private void startOtpTimer() {
-        if (timer != null) {
-            timer.cancel(); // Cancel any existing timer
-        }
+    private void sendOTP() {
+        OTP = MailConfig.generateOTP(4);
+        MailConfig.sendOtpEmail(EMAIL, OTP);
 
-        timeLeft = 60;  // Reset time
-        timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                if (timeLeft > 0) {
-                    timeLeft--;
-                    runOnUiThread(() -> binding.tvCounterTimeTypePhone.setText(String.valueOf(timeLeft)));
-                } else {
-                    runOnUiThread(() -> binding.tvCounterTimeTypePhone.setText("0"));
-                    timer.cancel();  // Stop the timer once time is up
-                }
-            }
-        };
-        timer.schedule(task, 0, 1000);  // Run every second
+        Dialog_OTP dialogOtp = Dialog_OTP.newInstance(EMAIL, OTP);
+        dialogOtp.show(getSupportFragmentManager(), "Dialog_OTP");
+
+        dialogOtp.setOtpSubmitCallback(otp -> {
+            Intent intent = new Intent(Activity_type_phone_number.this, Activity_updatePass.class);
+            intent.putExtra("email", EMAIL);
+            startActivity(intent);
+        });
+
+        dialogOtp.setOtpResendCallback(email -> {
+            OTP = MailConfig.generateOTP(4);
+            MailConfig.sendOtpEmail(email, OTP);
+        });
     }
 
     private void showToast(String message) {

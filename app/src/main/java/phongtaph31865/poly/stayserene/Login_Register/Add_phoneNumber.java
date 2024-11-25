@@ -206,6 +206,10 @@ public class Add_phoneNumber extends AppCompatActivity {
                 createAccount();
             }
         });
+        dialogOtp.setOtpResendCallback(email -> {
+            OTP = MailConfig.generateOTP(4);
+            MailConfig.sendOtpEmail(email, OTP);
+        });
     }
     private void recognizeTextFromImage(Bitmap bitmap){
         // Chuyển đổi bitmap thành InputImage

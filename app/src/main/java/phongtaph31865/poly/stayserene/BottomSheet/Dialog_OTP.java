@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +18,25 @@ import androidx.cardview.widget.CardView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import phongtaph31865.poly.stayserene.R;
 
 public class Dialog_OTP extends BottomSheetDialogFragment {
     private String email;
     private String correctOTP;
     private OtpSubmitCallback otpSubmitCallback;
+    private OtpResendCallback otpResendCallback;
+    private Timer timer;
+    private int timeLeft = 0;
 
     // Interface để gửi OTP về Activity/Fragment
     public interface OtpSubmitCallback {
         void onOtpSubmit(String otp);
+    }
+    public interface OtpResendCallback {
+        void onOtpResend(String email);
     }
 
     // Phương thức để tạo Bottom Sheet với tham số
@@ -62,6 +72,8 @@ public class Dialog_OTP extends BottomSheetDialogFragment {
         EditText edt4 = view.findViewById(R.id.edt_otp4_bottom_sheet);
         TextView tvEmail = view.findViewById(R.id.tv_email_otp_bottom_sheet);
         CardView btnSubmit = view.findViewById(R.id.btn_submit_otp_bottom_sheet);
+        TextView btn_resend = view.findViewById(R.id.btn_resendCode_bottom_sheet);
+        TextView tv_counter_time = view.findViewById(R.id.tv_counter_time_bottom_sheet_otp);
 
         // Hiển thị email lên TextView
         tvEmail.setText(email);
@@ -88,6 +100,49 @@ public class Dialog_OTP extends BottomSheetDialogFragment {
                 Toast.makeText(getContext(), "Please enter OTP", Toast.LENGTH_SHORT).show();
             }
         });
+        btn_resend.setOnClickListener(v -> {
+            if(otpResendCallback != null){
+                otpResendCallback.onOtpResend(email);
+                startTimer(btn_resend, tv_counter_time);
+            }
+        });
+        startTimer(btn_resend, tv_counter_time);
+    }
+
+    // Phương thức bắt đầu đếm ngược với Timer
+    private void startTimer(TextView btnResend, TextView tvCounterTime) {
+        if (timer != null) {
+            timer.cancel(); // Dừng timer cũ nếu có
+        }
+
+        timeLeft = 60; // Đặt lại thời gian
+        btnResend.setEnabled(false); // Vô hiệu hóa nút resend
+
+        // Tạo TimerTask để thực hiện đếm ngược
+        timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if(getActivity() != null && !getActivity().isFinishing() && !isDetached()){
+                    getActivity().runOnUiThread(() -> {
+                        timeLeft--;
+                        Log.d("Timer", "Time left: " + timeLeft);
+                        tvCounterTime.setText(String.format("Resend in %d seconds", timeLeft));
+                        // Nếu thời gian đã hết
+                        if (timeLeft <= 0) {
+                            timer.cancel(); // Dừng timer
+                            btnResend.setEnabled(true); // Cho phép nút resend
+                        }
+                    });
+                }
+            }
+        };
+        timer.schedule(task, 0, 1000);
+    }
+
+    // Gắn callback để gửi OTP lại
+    public void setOtpResendCallback(OtpResendCallback callback) {
+        this.otpResendCallback = callback;
     }
 
     // Gắn callback để nhận kết quả OTP

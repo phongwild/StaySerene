@@ -66,9 +66,6 @@
             android:name=".Screen_user.Messenger.Activiti_list_messenger"
             android:exported="false" />
         <activity
-            android:name=".Login_Register.ForgotPass.Activity_otp_authen"
-            android:exported="false" />
-        <activity
             android:name=".Login_Register.ForgotPass.Activity_type_phone_number"
             android:exported="false" />
         <activity
