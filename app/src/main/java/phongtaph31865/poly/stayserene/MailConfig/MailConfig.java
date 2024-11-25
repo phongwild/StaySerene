@@ -16,7 +16,7 @@ import java.util.Properties;
 public class MailConfig {
     public static final String EMAIL = "stayserene.otp@gmail.com"; // your email
 
-    public static final String PASSWORD = "verg llyy mgmw zwvz"; // your password
+    public static final String PASSWORD = "vkpa zaze kizc bifo"; // your password
 
     public static String generateOTP(int length) {
         String otp = "";

@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -434,11 +435,40 @@ public class Add_phoneNumber extends AppCompatActivity {
         String phoneNumber = edt_phoneNumber.getText().toString();
         String address = edt_address.getText().toString();
         String date = edt_date.getText().toString();
-
         if (!validateFields(phoneNumber, address, date)) return;
+        if (!checkExistID()) return;
         uploadImages(phoneNumber, address, date);
     }
+    private boolean checkExistID(){
+        final boolean[] checkCccd = {false};
+        Api_service.service.get_account().enqueue(new Callback<List<Account>>() {
+            @Override
+            public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                if (response.isSuccessful()) {
+                    List<Account> accounts = response.body();
+                    for (Account account : accounts) {
+                        if (account.getCccd().equals(DEFAULT_CCCD)) {
+                            PopupDialog.getInstance(Add_phoneNumber.this)
+                                    .statusDialogBuilder()
+                                    .createWarningDialog()
+                                    .setHeading("ID Card")
+                                    .setDescription("Your ID Card is already exist")
+                                    .build(Dialog::dismiss)
+                                    .show();
+                            checkCccd[0] = true;
+                            break;
+                        }
+                    }
+                }else Log.e("cccd", response.message());
+            }
 
+            @Override
+            public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                Log.e("cccd", "onFailure: " + throwable.getMessage());
+            }
+        });
+        return checkCccd[0];
+    }
     private boolean validateFields(String phoneNumber, String address, String date) {
         boolean isValid = true;
         if (phoneNumber.isEmpty()) {
