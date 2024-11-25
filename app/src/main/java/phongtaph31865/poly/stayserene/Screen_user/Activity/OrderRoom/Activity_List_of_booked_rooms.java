@@ -8,26 +8,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Order_Room;
-import phongtaph31865.poly.stayserene.Model.Room;
-import phongtaph31865.poly.stayserene.Model.TypeRoom;
 import phongtaph31865.poly.stayserene.R;
-import phongtaph31865.poly.stayserene.adapter.Adapter_List_of_booked_rooms;
-import phongtaph31865.poly.stayserene.adapter.Adapter_detail_room;
-import phongtaph31865.poly.stayserene.adapter.Adapter_type_rooms;
+import phongtaph31865.poly.stayserene.Adapter.Adapter_List_of_booked_rooms;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

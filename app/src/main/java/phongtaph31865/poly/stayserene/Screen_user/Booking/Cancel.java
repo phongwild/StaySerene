@@ -15,15 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import java.util.List;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Order_Room;
 import phongtaph31865.poly.stayserene.R;
-import phongtaph31865.poly.stayserene.adapter.Adapter_rcv_cancel;
-import phongtaph31865.poly.stayserene.adapter.Adapter_rcv_ongoing;
+import phongtaph31865.poly.stayserene.Adapter.Adapter_rcv_cancel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

@@ -60,7 +60,8 @@
             android:layout_marginHorizontal="10dp"
             android:queryHint="Search country"
             android:iconifiedByDefault="false"
-            android:background="@color/black_10"
+            android:background="@drawable/custom_input"
+            android:layout_marginBottom="10dp"
             android:textColorHint="#FFFFFF" /> 
 
 

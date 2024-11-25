@@ -1,4 +1,4 @@
-package phongtaph31865.poly.stayserene.adapter;
+package phongtaph31865.poly.stayserene.Adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;

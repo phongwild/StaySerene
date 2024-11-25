@@ -5,9 +5,6 @@ import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.ArrayList;
@@ -15,9 +12,8 @@ import java.util.List;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Hotel;
-import phongtaph31865.poly.stayserene.adapter.Adapter_more_hotel;
+import phongtaph31865.poly.stayserene.Adapter.Adapter_more_hotel;
 import phongtaph31865.poly.stayserene.databinding.ActivityMoreHotelBinding;
-import phongtaph31865.poly.stayserene.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

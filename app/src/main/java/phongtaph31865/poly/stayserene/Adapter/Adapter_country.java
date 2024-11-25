@@ -84,7 +84,7 @@
 
 
 
-package phongtaph31865.poly.stayserene.adapter;
+package phongtaph31865.poly.stayserene.Adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

@@ -1,4 +1,4 @@
-package phongtaph31865.poly.stayserene.adapter;
+package phongtaph31865.poly.stayserene.Adapter;
 
 import android.content.Intent;
 import android.view.LayoutInflater;

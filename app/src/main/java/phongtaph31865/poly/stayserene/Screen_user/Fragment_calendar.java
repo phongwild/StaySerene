@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,7 +20,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +27,7 @@ import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Order_Room;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.OrderRoom.Activity_List_of_booked_rooms;
-import phongtaph31865.poly.stayserene.adapter.Adapter_schedule;
+import phongtaph31865.poly.stayserene.Adapter.Adapter_schedule;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

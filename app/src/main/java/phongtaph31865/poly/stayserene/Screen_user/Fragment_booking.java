@@ -10,13 +10,12 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import phongtaph31865.poly.stayserene.R;
-import phongtaph31865.poly.stayserene.adapter.Menu_Booking_Adapter;
+import phongtaph31865.poly.stayserene.Adapter.Menu_Booking_Adapter;
 
 
 public class Fragment_booking extends Fragment {

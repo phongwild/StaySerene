@@ -1,7 +1,6 @@
 package phongtaph31865.poly.stayserene.Screen_user.Activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -9,27 +8,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import phongtaph31865.poly.stayserene.Api_service.Api_service;
-import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Screen_user.Fragment_booking;
 import phongtaph31865.poly.stayserene.Screen_user.Fragment_calendar;
 import phongtaph31865.poly.stayserene.Screen_user.Fragment_home;
 import phongtaph31865.poly.stayserene.Screen_user.Fragment_user;
-import phongtaph31865.poly.stayserene.adapter.Menu_User_Adapter;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import phongtaph31865.poly.stayserene.Adapter.Menu_User_Adapter;
 
 public class MainActivity_user extends AppCompatActivity {
     BottomNavigationView view;

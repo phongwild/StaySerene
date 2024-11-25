@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,11 +16,10 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
-import phongtaph31865.poly.stayserene.adapter.Adapter_list_messenger;
+import phongtaph31865.poly.stayserene.Adapter.Adapter_list_messenger;
 import phongtaph31865.poly.stayserene.Model.Messenger;  // Import Messenger model
 import phongtaph31865.poly.stayserene.R;
 import retrofit2.Call;

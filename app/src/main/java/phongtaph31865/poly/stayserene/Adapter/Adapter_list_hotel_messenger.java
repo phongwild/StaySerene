@@ -1,4 +1,4 @@
-package phongtaph31865.poly.stayserene.adapter;
+package phongtaph31865.poly.stayserene.Adapter;
 
 import android.content.Context;
 import android.content.Intent;

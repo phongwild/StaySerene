@@ -1,16 +1,13 @@
-package phongtaph31865.poly.stayserene.adapter;
+package phongtaph31865.poly.stayserene.Adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import java.util.ArrayList;
-
 import phongtaph31865.poly.stayserene.Screen_user.Booking.Cancel;
 import phongtaph31865.poly.stayserene.Screen_user.Booking.Complete;
 import phongtaph31865.poly.stayserene.Screen_user.Booking.Ongoing;
-import phongtaph31865.poly.stayserene.Screen_user.Fragment_booking;
 
 public class Menu_Booking_Adapter extends FragmentStateAdapter {
     public Menu_Booking_Adapter(@NonNull FragmentActivity fragmentActivity) {
