@@ -35,7 +35,7 @@ public interface Api_service {
     //Xem phòng đặt theo Uid: http://localhost:3000/api/orderroom/{Uid}
     //Thêm + xem khách sạn: http://localhost:3000/api/hotel
     //String BASE_URL = "http://192.168.10.103:3000/api/";
-    String BASE_URL = "http://192.168.1.17:3000/api/";
+    String BASE_URL = "http://192.168.0.107:3000/api/";
     Gson gson = new GsonBuilder().create();
     Api_service service = new Retrofit.Builder()
             .baseUrl(BASE_URL)

@@ -26,6 +26,7 @@ import retrofit2.Response;
 
 public class Adapter_country extends RecyclerView.Adapter<Adapter_country.ViewHolder> {
     private List<Country> countryList;
+    // dsfsdfsdfsd
     private String uid;
     private OnItemClickListener onItemClickListener;
     public interface OnItemClickListener{
