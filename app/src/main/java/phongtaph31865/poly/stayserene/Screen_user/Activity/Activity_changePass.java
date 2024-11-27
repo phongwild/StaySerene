@@ -18,8 +18,10 @@ import androidx.core.view.WindowInsetsCompat;
 import com.saadahmedev.popupdialog.PopupDialog;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
+import phongtaph31865.poly.stayserene.BottomSheet.Dialog_OTP;
 import phongtaph31865.poly.stayserene.Login_Register.Add_phoneNumber;
 import phongtaph31865.poly.stayserene.Login_Register.Loginscreen;
+import phongtaph31865.poly.stayserene.MailConfig.MailConfig;
 import phongtaph31865.poly.stayserene.Model.ChangePassRequest;
 import phongtaph31865.poly.stayserene.databinding.ActivityChangePassBinding;
 import phongtaph31865.poly.stayserene.R;
@@ -29,6 +31,7 @@ import retrofit2.Response;
 
 public class Activity_changePass extends AppCompatActivity {
     private ActivityChangePassBinding binding;
+    private String OTP;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,8 +66,29 @@ public class Activity_changePass extends AppCompatActivity {
                     Toast.makeText(Activity_changePass.this, "New password cannot be the same as the confirm password", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (newPassword.length() < 6) {
+                    Toast.makeText(Activity_changePass.this, "New password must be at least 6 characters long", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+               sendOTP(oldPassword, newPassword);
+            }
+        });
+    }
+    private void sendOTP(String oldPassword, String newPassword) {
+        OTP = MailConfig.generateOTP(4);
+        MailConfig.sendOtpEmail(getEmailFromSharedPreferences(), OTP);
+        Dialog_OTP dialogOtp = Dialog_OTP.newInstance(getEmailFromSharedPreferences(), OTP);
+        dialogOtp.show(getSupportFragmentManager(), "Dialog_OTP");
+        dialogOtp.setOtpSubmitCallback(new Dialog_OTP.OtpSubmitCallback() {
+            @Override
+            public void onOtpSubmit(String otp) {
                 ChangePassword(getEmailFromSharedPreferences(), oldPassword, newPassword);
             }
+        });
+        dialogOtp.setOtpResendCallback(email -> {
+            OTP = MailConfig.generateOTP(4);
+            Toast.makeText(this, "Send OTP email successfully to " + email, Toast.LENGTH_SHORT).show();
+            MailConfig.sendOtpEmail(email, OTP);
         });
     }
     private void ChangePassword(String email, String oldPassword, String newPassword) {
@@ -79,7 +103,10 @@ public class Activity_changePass extends AppCompatActivity {
                             .setHeading("Well Done")
                             .setDescription("You have successfully" +
                                     " completed the task")
-                            .build(dialog -> finish())
+                            .build(dialog -> {
+                                dialog.dismiss();
+                                finish();
+                            })
                             .show();
                 }else {
                     PopupDialog.getInstance(Activity_changePass.this)

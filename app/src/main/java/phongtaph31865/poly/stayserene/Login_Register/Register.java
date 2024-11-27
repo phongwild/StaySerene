@@ -1,7 +1,9 @@
 package phongtaph31865.poly.stayserene.Login_Register;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,8 +14,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -22,6 +31,7 @@ import java.util.List;
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.R;
+import phongtaph31865.poly.stayserene.Screen_user.Activity.MainActivity_user;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,6 +41,9 @@ public class Register extends AppCompatActivity {
     private String fullName, email, password, confirmPassword;
     private TextInputLayout layout_fullName, layout_email, layout_password, layout_confirmPassword;
     private TextInputEditText ed_fullName, ed_email, ed_password, ed_confirmPassword;
+    private LinearLayout btn_gg;
+    private GoogleSignInOptions gso;
+    private GoogleSignInClient gsc;
     private final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
     @Override
@@ -55,13 +68,19 @@ public class Register extends AppCompatActivity {
         ed_email = findViewById(R.id.ed_email_register);
         ed_password = findViewById(R.id.ed_password_register);
         ed_confirmPassword = findViewById(R.id.ed_confirmPassword_register);
-
+        btn_gg = findViewById(R.id.btn_signUp_Google);
         TextView btnregisterlogin = findViewById(R.id.btn_register_login);
         LinearLayout btnsingup = findViewById(R.id.btn_SignUp);
 
         // Button to go back to login screen
         btnregisterlogin.setOnClickListener(v -> finish());
-
+        //Google
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        gsc = GoogleSignIn.getClient(this, gso);
+        btn_gg.setOnClickListener(v -> {
+            Intent signInIntent = gsc.getSignInIntent();
+            startActivityForResult(signInIntent, 1000);
+        });
         // Signup button
         btnsingup.setOnClickListener(v -> handleSignUp());
     }
@@ -72,7 +91,100 @@ public class Register extends AppCompatActivity {
         ed_password.addTextChangedListener(createTextWatcher(layout_password, "Please enter your password"));
         ed_confirmPassword.addTextChangedListener(createTextWatcher(layout_confirmPassword, "Please enter your confirm password"));
     }
+    //Google
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1000) {
+            try {
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                task.getResult(ApiException.class);
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                String Uid = account.getId();
+                Api_service.service.check_user_google(Uid).enqueue(new Callback<Boolean>() {
+                    @Override
+                    public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                        if (response.isSuccessful() && response.body() != null){
+                            boolean userExist = response.body();
+                            Log.e("Login", "onResponse: " + userExist + " " + account.getId());
+                            if (!userExist){
+                                Create_acc_gg(Uid, account.getDisplayName(), account.getEmail(), account.getPhotoUrl() !=null ? account.getPhotoUrl().toString() : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTq2k2sI1nZyFTtoaKSXxeVzmAwIPchF4tjwg&s");
+                                startActivity(new Intent(Register.this, MainActivity_user.class));
+                            }else {
+                                SharedPreferences sharedPreferences = getSharedPreferences("user_google", Activity.MODE_PRIVATE);
+                                sharedPreferences.edit().putString("uid", Uid).apply();
+                                Api_service.service.get_account().enqueue(new Callback<List<Account>>() {
+                                    @Override
+                                    public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                                        if (response.isSuccessful()) {
+                                            if (response.body() != null) {
+                                                for (Account acc : response.body()) {
+                                                    if (acc.getUid().equals(account.getId())) {
+                                                        SharedPreferences sharedPreferences = getSharedPreferences("user_data", Activity.MODE_PRIVATE);
+                                                        sharedPreferences.edit().putString("uid", acc.get_id()).apply();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
 
+                                    @Override
+                                    public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                                        Log.e("onFailure", throwable.getMessage());
+                                    }
+                                });
+
+                                startActivity(new Intent(Register.this, MainActivity_user.class));
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Boolean> call, Throwable throwable) {
+                        Log.e("Login", "onFailure: " + throwable.getMessage());
+                    }
+                });
+
+            } catch (Exception e) {
+
+                Toast.makeText(Register.this, "Google sign-in failed", Toast.LENGTH_SHORT).show();
+                Log.e("Login", "onActivityResult: " + e.getMessage());
+            }
+
+        }
+    }
+    private void Create_acc_gg(String Uid, String name, String email, String photo) {
+        Account account = new Account();
+        account.setUid(Uid);
+        account.setUsername(name);
+        account.setSdt("");
+        account.setEmail(email);
+        account.setPassword("");
+        account.setDiaChi("");
+        account.setNgaySinh("");
+        account.setGioiTinh("");
+        account.setQuocTich("");
+        account.setRole(1);
+        account.setAvt(photo);
+        account.setCccd("0");
+        Api_service.service.create_account(account).enqueue(new Callback<List<Account>>() {
+            @Override
+            public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                if (response.isSuccessful()) {
+                    Log.e("create acc gg", "success");
+                    SharedPreferences sharedPreferences = getSharedPreferences("user_data", Activity.MODE_PRIVATE);
+
+                    sharedPreferences.edit().putString("uid", response.body().get(0).getUid()).apply();
+                }else {
+                    Log.e("create acc gg", "false");
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                Log.e("error create acc gg", throwable.getMessage());
+            }
+        });
+    }
     private TextWatcher createTextWatcher(TextInputLayout layout, String errorMessage) {
         return new TextWatcher() {
             @Override

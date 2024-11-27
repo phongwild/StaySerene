@@ -63,23 +63,8 @@ public class Fragment_user extends Fragment {
             tv_username.setText(username);
             tv_email.setText(email);
             if (avatar != null) {
-                Picasso.get().load(avatar).error(R.drawable.icon_user02).into(iv_avt);
-            }else Picasso.get().load(R.drawable.icon_user02).into(iv_avt);
-        } else if (account != null) {
-            String name = account.getDisplayName();
-            String email = account.getEmail();
-            String avt = null;
-            if (account.getPhotoUrl() != null) {
-                avt = account.getPhotoUrl().toString();
-            } else {
-                avt = null;
-            }
-            tv_username.setText(name);
-            tv_email.setText(email);
-            if (avt != null) {
-                Picasso.get().load(avt).into(iv_avt);
-            }
-            Log.d("UserData", name + " " + email + " " + avt);
+                Picasso.get().load(avatar).into(iv_avt);
+            }else iv_avt.setImageResource(R.drawable.icon_user02);
         }
         btn_edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override

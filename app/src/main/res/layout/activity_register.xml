@@ -132,7 +132,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/btn_signU_Google"
+        android:id="@+id/btn_signUp_Google"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"

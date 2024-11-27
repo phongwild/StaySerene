@@ -98,7 +98,7 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging")
 
     //Facebook
-    //implementation ("com.facebook.android:facebook-android-sdk:[4,5)")
+    implementation ("com.facebook.android:facebook-login:latest.release")
     //Retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.11.0")
     //Gson
