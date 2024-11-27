@@ -49,6 +49,7 @@ import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.BottomSheet.Dialog_OTP;
 import phongtaph31865.poly.stayserene.MailConfig.MailConfig;
 import phongtaph31865.poly.stayserene.Model.Account;
+import phongtaph31865.poly.stayserene.ScanQr.Qr_Code_Scanner;
 import phongtaph31865.poly.stayserene.databinding.ActivityChangeIdCardBinding;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,6 +63,7 @@ public class Activity_change_id_card extends AppCompatActivity {
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
     private String currentPhotoPath;
     private String DEFAULT_CCCD = "";
+    private String DEFAULT_GENDER = "";
     private final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     private String OTP;
     @Override
@@ -219,7 +221,7 @@ public class Activity_change_id_card extends AppCompatActivity {
                         if (requestCode == CAMERA_REQUEST_CODE_1) {
                             binding.ivFrontIdCard.setImageBitmap(bitmap);
                             imgUriFront = Uri.fromFile(file);  // Lưu URI của ảnh
-                            recognizeTextFromImage(bitmap);
+                            ScanQR(imgUriFront);
                             binding.ivLensFrontIdCard.setVisibility(View.INVISIBLE);
                         } else if (requestCode == CAMERA_REQUEST_CODE_2) {
                             binding.ivBackIdCard.setImageBitmap(bitmap);
@@ -237,43 +239,28 @@ public class Activity_change_id_card extends AppCompatActivity {
             }
         }
     }
-    private void recognizeTextFromImage(Bitmap bitmap){
-        // Chuyển đổi bitmap thành InputImage
-        InputImage image = InputImage.fromBitmap(bitmap, 0);
+    private void ScanQR(Uri uri){
+        Qr_Code_Scanner.scanQRCodeFromUri(this, uri,new Qr_Code_Scanner.QRCodeScanCallback(){
 
-        // Tạo TextRecognizer
-        TextRecognizerOptions options = new TextRecognizerOptions.Builder().build();
-        TextRecognizer recognizer = TextRecognition.getClient(options);
-
-        // Xử lý ảnh và nhận dạng văn bản
-        recognizer.process(image).addOnSuccessListener(new OnSuccessListener<Text>() {
             @Override
-            public void onSuccess(Text text) {
-                String recognizedText = text.getText();
-                Log.d("RecognizedText", recognizedText);
-
-                String cccd = extractCCCD(recognizedText);
-                Log.d("CCCD", cccd);
-                DEFAULT_CCCD = cccd;
+            public void onQRCodeScanned(String qrCodeValue) {
+                Log.d("QRCodeScanned", qrCodeValue);
+                String[] data = qrCodeValue.split("\\|");
+                for (int i = 0; i < data.length; i++) {
+                    Log.e("QRCodeScanned", i + ": " + data[i]);
+                }
+                DEFAULT_CCCD = data[0];
+                String gender = data[4];
+                if (gender.equals("Nam")) DEFAULT_GENDER = "Male";
+                else DEFAULT_GENDER = "Female";
+                Log.e("QRCodeScanned", DEFAULT_GENDER);
             }
-        }).addOnFailureListener(new OnFailureListener() {
+
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("TextRecognition", "Error: " + e.getMessage());
+            public void onQRCodeScanFailed(String error) {
+                Log.e("QRCodeScanFailed", error);
             }
         });
-    }
-    private String extractCCCD(String recognizedText) {
-        String regex = "\\d{12}"; // Biểu thức chính quy tìm số CCCD 12 chữ số
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(recognizedText);
-
-        if (matcher.find()) {
-            return matcher.group();  // Trả về số CCCD tìm được
-        } else {
-            Toast.makeText(this, "Not found ID Card", Toast.LENGTH_SHORT).show();
-            return "0";
-        }
     }
 
     private void open_camera(int requestCode) {

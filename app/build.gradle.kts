@@ -115,6 +115,8 @@ dependencies {
     implementation ("com.hbb20:ccp:2.7.1")
     //nhận diện ảnh
     implementation ("androidx.exifinterface:exifinterface:1.3.7")
+    //Quét Qr
+    implementation ("com.google.mlkit:barcode-scanning:17.3.0")
     //zalopay
     implementation("com.squareup.okhttp3:okhttp:4.6.0")
     implementation("commons-codec:commons-codec:1.14")

@@ -72,6 +72,7 @@ import phongtaph31865.poly.stayserene.BottomSheet.Dialog_OTP;
 import phongtaph31865.poly.stayserene.MailConfig.MailConfig;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.R;
+import phongtaph31865.poly.stayserene.ScanQr.Qr_Code_Scanner;
 import phongtaph31865.poly.stayserene.library.cropper.CropImage;
 import phongtaph31865.poly.stayserene.library.cropper.CropImageView;
 import retrofit2.Call;
@@ -93,7 +94,7 @@ public class Add_phoneNumber extends AppCompatActivity {
     private String fullname, email, password;
     private static final int CAMERA_REQUEST_CODE_1 = 101;
     private static final int CAMERA_REQUEST_CODE_2 = 102;
-    private static final String DEFAULT_GENDER = "";
+    private static String DEFAULT_GENDER = "";
     private static final String DEFAULT_NATIONALITY = "";
     private static String DEFAULT_CCCD = "";
     private static final int DEFAULT_ROLE = 1;
@@ -215,44 +216,30 @@ public class Add_phoneNumber extends AppCompatActivity {
             MailConfig.sendOtpEmail(email, OTP);
         });
     }
-    private void recognizeTextFromImage(Bitmap bitmap){
-        // Chuyển đổi bitmap thành InputImage
-        InputImage image = InputImage.fromBitmap(bitmap, 0);
+    private void ScanQR(Uri uri){
+        Qr_Code_Scanner.scanQRCodeFromUri(this, uri,new Qr_Code_Scanner.QRCodeScanCallback(){
 
-        // Tạo TextRecognizer
-        TextRecognizerOptions options = new TextRecognizerOptions.Builder().build();
-        TextRecognizer recognizer = TextRecognition.getClient(options);
-
-        // Xử lý ảnh và nhận dạng văn bản
-        recognizer.process(image).addOnSuccessListener(new OnSuccessListener<Text>() {
             @Override
-            public void onSuccess(Text text) {
-                String recognizedText = text.getText();
-                Log.d("RecognizedText", recognizedText);
-
-                String cccd = extractCCCD(recognizedText);
-                Log.d("CCCD", cccd);
-                DEFAULT_CCCD = cccd;
+            public void onQRCodeScanned(String qrCodeValue) {
+                Log.d("QRCodeScanned", qrCodeValue);
+                String[] data = qrCodeValue.split("\\|");
+                for (int i = 0; i < data.length; i++) {
+                    Log.e("QRCodeScanned", (i + 1) + ": " + data[i]);
+                }
+                DEFAULT_CCCD = data[0];
+                String gender = data[4];
+                if (gender.equals("Nam")) DEFAULT_GENDER = "Male";
+                else DEFAULT_GENDER = "Female";
+                Log.e("QRCodeScanned", DEFAULT_GENDER);
             }
-        }).addOnFailureListener(new OnFailureListener() {
+
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("TextRecognition", "Error: " + e.getMessage());
+            public void onQRCodeScanFailed(String error) {
+                Log.e("QRCodeScanFailed", error);
             }
         });
     }
-    private String extractCCCD(String recognizedText) {
-        String regex = "\\d{12}"; // Biểu thức chính quy tìm số CCCD 12 chữ số
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(recognizedText);
 
-        if (matcher.find()) {
-            return matcher.group();  // Trả về số CCCD tìm được
-        } else {
-            Toast.makeText(this, "Not found ID Card", Toast.LENGTH_SHORT).show();
-            return "0";
-        }
-    }
     private void open_camera(int requestCode) {
         if (checkCameraPermission()) {
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -314,7 +301,7 @@ public class Add_phoneNumber extends AppCompatActivity {
                         if (requestCode == CAMERA_REQUEST_CODE_1) {
                             front_idCard_img.setImageBitmap(bitmap);
                             front_ImgUri = Uri.fromFile(file);  // Lưu URI của ảnh
-                            recognizeTextFromImage(bitmap);
+                            ScanQR(front_ImgUri);
                             iv_lens_front.setVisibility(View.INVISIBLE);
                         } else if (requestCode == CAMERA_REQUEST_CODE_2) {
                             back_idCard_img.setImageBitmap(bitmap);
@@ -331,13 +318,6 @@ public class Add_phoneNumber extends AppCompatActivity {
                 }
             }
         }
-    }
-
-    private void cropImage(Uri imageUri) {
-        CropImage.activity(imageUri)
-                .setGuidelines(CropImageView.Guidelines.ON)
-                .setAspectRatio(3, 2)
-                .start(this);
     }
 
     private File createImageFile() throws IOException {
@@ -357,16 +337,6 @@ public class Add_phoneNumber extends AppCompatActivity {
         currentPhotoPath = image.getAbsolutePath();
         Log.d("CreateImageFile", "Image path: " + currentPhotoPath);  // In ra đường dẫn để debug
         return image;
-    }
-
-    private Uri getImageUri(Context context, Bitmap bitmap) {
-        // Tạo một tên tệp tạm thời cho ảnh
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "temp_image", null);
-        if (path == null) {
-            Log.e(TAG, "Failed to save image to MediaStore.");
-            return null;  // Trả về null nếu không thể lưu ảnh
-        }
-        return Uri.parse(path);
     }
 
     private boolean checkCameraPermission() {
