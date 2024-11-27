@@ -70,7 +70,6 @@ public class Activity_order_room extends AppCompatActivity {
     private CardView btn_booking;
     private GoogleSignInOptions gso;
     private GoogleSignInClient gsc;
-    private int REQUEST_CODE_METHOD = 0;
     private String ID_ROOM, ID_TYPE_ROOM;
     private int TIME_LEFT = 0;
     private Timer timer;
@@ -107,10 +106,6 @@ public class Activity_order_room extends AppCompatActivity {
                 startActivityForResult(intent, 1);
             }
         });
-        btn_choose_payment.setOnClickListener(v -> {
-            showPaymentMethod();
-        });
-        txtPayment();
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -278,17 +273,11 @@ public class Activity_order_room extends AppCompatActivity {
                                     orderRoom.setIdPhong(room.get_id());
                                     orderRoom.setTotal(total);
                                     room.setTinhTrangPhong(1);
-                                    if (REQUEST_CODE_METHOD == 0) {
-                                        payAtCheckIn(orderRoom, room);
-                                    } else if (REQUEST_CODE_METHOD == 1) {
-                                        cardPayment(orderRoom, room, total);
-                                    }
-
+                                    cardPayment(orderRoom, room, total);
                                 } else {
                                     Log.e("Failure getRoomById", response.message());
                                 }
                             }
-
                             @Override
                             public void onFailure(Call<List<Room>> call, Throwable throwable) {
                                 Log.e("Failure getRoomById", throwable.getMessage());
@@ -299,7 +288,6 @@ public class Activity_order_room extends AppCompatActivity {
                     e.printStackTrace();
                     Toast.makeText(Activity_order_room.this, "Please choose time check in and time check out", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
     }
@@ -314,7 +302,6 @@ public class Activity_order_room extends AppCompatActivity {
         tv_fullName = findViewById(R.id.tv_full_name_order_room);
         tv_phone = findViewById(R.id.tv_phone_number_order_room);
         tv_total = findViewById(R.id.tv_total_order_room);
-        tv_paymethod = findViewById(R.id.tv_payment_method_order_room);
         tv_time_in = findViewById(R.id.tv_time_check_in_order_room);
         tv_time_out = findViewById(R.id.tv_time_check_out_order_room);
         tv_id_service = findViewById(R.id.tv_id_service);
@@ -323,18 +310,8 @@ public class Activity_order_room extends AppCompatActivity {
         btn_time_in = findViewById(R.id.btn_time_check_in_order_room);
         btn_time_out = findViewById(R.id.btn_time_check_out_order_room);
         ed_note = findViewById(R.id.ed_note_order_room);
-        btn_choose_payment = findViewById(R.id.img_choose_payment_method_order_room);
         btn_service = findViewById(R.id.img_choose_service_order_room);
         tv_service = findViewById(R.id.tv_service_order_room);
-    }
-
-    private void txtPayment() {
-        if (REQUEST_CODE_METHOD == 0) {
-            tv_paymethod.setText("Pay at check in");
-        } else if (REQUEST_CODE_METHOD == 1) {
-            tv_paymethod.setText("Card payment");
-        }
-
     }
     private void cardPayment(Order_Room orderRoom, Room room, float total) {
         orderRoom.setStatus(1);
@@ -436,74 +413,6 @@ public class Activity_order_room extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    private void payAtCheckIn(Order_Room orderRoom, Room room) {
-        orderRoom.setStatus(0);
-        Api_service.service.order_room(orderRoom).enqueue(new Callback<List<Room>>() {
-            @Override
-            public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                if (response.isSuccessful()) {
-                    Api_service.service.update_rooms(ID_ROOM, room).enqueue(new Callback<List<Room>>() {
-                        @Override
-                        public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                            if (response.isSuccessful()) {
-                                timer.cancel();
-                                PopupDialog.getInstance(Activity_order_room.this)
-                                        .statusDialogBuilder()
-                                        .createSuccessDialog()
-                                        .setHeading("Well Done")
-                                        .setDescription("Your booking is complete!")
-                                        .build(dialog1 -> startActivity(new Intent(Activity_order_room.this, MainActivity_user.class)))
-                                        .show();
-                            } else {
-                                PopupDialog.getInstance(Activity_order_room.this)
-                                        .statusDialogBuilder()
-                                        .createErrorDialog()
-                                        .setHeading("Uh-Oh")
-                                        .setDescription("Unexpected error occurred." +
-                                                " Try again later.")
-                                        .build(Dialog::dismiss)
-                                        .show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<List<Room>> call, Throwable throwable) {
-                            Log.e("Failure update room", throwable.getMessage());
-                        }
-                    });
-                } else {
-                    Log.e("Failure order room", response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Room>> call, Throwable throwable) {
-                Log.e("Failure order room", throwable.getMessage());
-            }
-        });
-    }
-    private void showPaymentMethod() {
-        BottomSheetDialog dialog = new BottomSheetDialog(Activity_order_room.this);
-        View view = getLayoutInflater().inflate(R.layout.bottom_sheet_payment_method, null);
-        dialog.setContentView(view);
-        dialog.show();
-        //Anh xa
-        LinearLayout btn_pay_at_check_in = view.findViewById(R.id.btn_pay_at_check_in);
-        LinearLayout btn_card_payment = view.findViewById(R.id.btn_card_payment);
-
-        btn_pay_at_check_in.setOnClickListener(v -> {
-            REQUEST_CODE_METHOD = 0;
-            tv_paymethod.setText("Pay at check in");
-            Log.e("REQUEST_CODE_METHOD", String.valueOf(REQUEST_CODE_METHOD));
-            dialog.dismiss();
-        });
-        btn_card_payment.setOnClickListener(v -> {
-            REQUEST_CODE_METHOD = 1;
-            tv_paymethod.setText("Card payment");
-            Log.e("REQUEST_CODE_METHOD", String.valueOf(REQUEST_CODE_METHOD));
-            dialog.dismiss();
-        });
     }
     private void countDownTimer() {
         if (timer != null) {
