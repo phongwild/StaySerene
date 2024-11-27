@@ -183,6 +183,10 @@ public class Add_phoneNumber extends AppCompatActivity {
                 Toast.makeText(this, "Please capture back image", Toast.LENGTH_SHORT).show();
                 return;
             }
+            if (DEFAULT_CCCD.equals("0")) {
+                Toast.makeText(this, "Invalid ID Card", Toast.LENGTH_SHORT).show();
+                return;
+            }
             if (!validateFields(phoneNumber, address, date)) return;
             sendOTP();
         });

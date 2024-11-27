@@ -63,8 +63,8 @@ import vn.zalopay.sdk.ZaloPaySDK;
 import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class Activity_order_room extends AppCompatActivity {
-    private ImageView btn_back, btn_choose_payment, btn_service;
-    private TextView tv_name_hotel, tv_type_room, tv_number_room, tv_floor, tv_desc, tv_fullName, tv_phone, tv_total, tv_time_in, tv_time_out, tv_paymethod, tv_id_service, tv_price_service, tv_service;
+    private ImageView btn_back, btn_service;
+    private TextView tv_name_hotel, tv_type_room, tv_number_room, tv_floor, tv_desc, tv_fullName, tv_phone, tv_total, tv_time_in, tv_time_out, tv_id_service, tv_price_service, tv_service;
     private EditText ed_note;
     private RelativeLayout btn_time_in, btn_time_out;
     private CardView btn_booking;
@@ -314,7 +314,7 @@ public class Activity_order_room extends AppCompatActivity {
         tv_service = findViewById(R.id.tv_service_order_room);
     }
     private void cardPayment(Order_Room orderRoom, Room room, float total) {
-        orderRoom.setStatus(1);
+        orderRoom.setStatus(0);
         CreateOrder orderApi = new CreateOrder();
         try {
             float totalPay = total * 0.1f;

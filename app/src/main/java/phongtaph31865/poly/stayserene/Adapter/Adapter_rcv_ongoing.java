@@ -73,7 +73,7 @@ public class Adapter_rcv_ongoing extends RecyclerView.Adapter<Adapter_rcv_ongoin
 
     private void loadStatus(ViewHolder holder, Order_Room orderRoom) {
         // Load status from the order
-        String statusText = (orderRoom.getStatus() == 0) ? "UnPaid" : "Paid";
+        String statusText = (orderRoom.getStatus() == 0) ? "Paid" : "Check in";
         holder.status.setText(statusText);
     }
 
