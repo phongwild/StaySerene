@@ -4,13 +4,17 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +31,8 @@ import org.imaginativeworld.oopsnointernet.dialogs.signal.NoInternetDialogSignal
 import java.util.ArrayList;
 import java.util.List;
 
+import phongtaph31865.poly.stayserene.Adapter.Adapter_rcv1_home;
+import phongtaph31865.poly.stayserene.Adapter.Adapter_rcv2_home;
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.Model.Hotel;
@@ -35,8 +41,6 @@ import phongtaph31865.poly.stayserene.NetworkUtils.NetworkUtils;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_detail_room;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_more_hotel;
-import phongtaph31865.poly.stayserene.Adapter.Adapter_rcv1_home;
-import phongtaph31865.poly.stayserene.Adapter.Adapter_rcv2_home;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,7 +67,7 @@ public class Fragment_home extends Fragment {
         //lấy vị trí người dùng
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(getActivity(), gso);
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
+        showNotifi();
         Api_service.service.get_account_byId(getUsernameFromSharedPreferences()).enqueue(new Callback<List<Account>>() {
             @Override
             public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
@@ -71,6 +75,24 @@ public class Fragment_home extends Fragment {
                     if (response.body() != null) {
                         for (Account acc : response.body()) {
                             saveUserIdToSharedPreferences(acc.get_id(), acc.getUsername(), acc.getSdt(), acc.getDiaChi(), acc.getEmail(), acc.getCccd(), acc.getGioiTinh(), acc.getNgaySinh(), acc.getAvt(), acc.getQuocTich());
+                            SharedPreferences preferences = requireActivity().getSharedPreferences("FCM_TOKEN", Activity.MODE_PRIVATE);
+                            String token = preferences.getString("token", null);
+                            acc.setToken(token);
+                            if (token != null) {
+                                Api_service.service.update_account(acc.get_id(), acc).enqueue(new Callback<List<Account>>() {
+                                    @Override
+                                    public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                                        if (response.isSuccessful()) {
+                                            Log.e("update token", token);
+                                        } else Log.e("update token", response.message());
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                                        Log.e("onFailure id user", "False: " + throwable.getMessage());
+                                    }
+                                });
+                            }
                             tv_location.setText(acc.getDiaChi());
                         }
                     }
@@ -101,14 +123,16 @@ public class Fragment_home extends Fragment {
         checkNetWorkUtils();
         return v;
     }
-    private void initView(View v){
+
+    private void initView(View v) {
         rcv1 = v.findViewById(R.id.rcv_home_1);
         rcv2 = v.findViewById(R.id.rcv_home_2);
         tv_more_ht = v.findViewById(R.id.tv_show_more_ht);
         tv_more_room = v.findViewById(R.id.tv_show_more_room);
         tv_location = v.findViewById(R.id.tv_location_home);
     }
-    private void checkNetWorkUtils(){
+
+    private void checkNetWorkUtils() {
         if (NetworkUtils.isNetworkConnected(getActivity())) {
             get_ds_ks();
             get_ds_phong();
@@ -195,9 +219,27 @@ public class Fragment_home extends Fragment {
         return sharedPreferences.getString("uid", null);
     }
 
-    private String getEmailFromSharedPreferences() {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_google", Activity.MODE_PRIVATE);
-        return sharedPreferences.getString("uid", null);
+    private void showNotifi() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (requireContext().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS
+                        }, 101
+                );
+            }
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 101) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Người dùng đã cấp quyền
+                Toast.makeText(requireContext(), "Notification is granted", Toast.LENGTH_SHORT).show();
+            } else {
+                // Người dùng từ chối quyền
+                Toast.makeText(requireContext(), "Notification is denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void saveUserIdToSharedPreferences(String Uid, String username, String sdt, String address, String email, String cccd, String gender, String birthday, String avatar, String quoctich) {

@@ -115,6 +115,7 @@ public class Activiti_list_messenger extends AppCompatActivity {
         messenger.setVaiTro("Khách hàng");
         messenger.setTrangThaiNv(1);
         messenger.setTrangThaiKh(1);
+        messenger.setUserTokenFCM(getFCMToken());
 
         Api_service apiService = Api_service.service;
         Call<Void> call = apiService.sendMessage(messenger);
@@ -135,7 +136,10 @@ public class Activiti_list_messenger extends AppCompatActivity {
         });
     }
 
-
+    private String getFCMToken() {
+        SharedPreferences sharedPreferences = getSharedPreferences("FCM_TOKEN", MODE_PRIVATE);
+        return sharedPreferences.getString("token", null);
+    }
 
     private void fetchMessages() {
         SharedPreferences sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);

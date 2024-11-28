@@ -9,10 +9,11 @@ public class Messenger {
     private String vaiTro;
     private int trangThaiKh;
     private int trangThaiNv;
+    private String userTokenFCM;
 
     // Constructor
     public Messenger(String _id, String idKhachSan, String uid, String thoiGianGui,
-                     String noiDungGui, String vaiTro, int trangThaiKh, int trangThaiNv) {
+                     String noiDungGui, String vaiTro, int trangThaiKh, int trangThaiNv, String userTokenFCM) {
         this._id = _id;
         this.IdKhachSan = idKhachSan;
         this.Uid = uid;
@@ -21,12 +22,22 @@ public class Messenger {
         this.vaiTro = vaiTro;
         this.trangThaiKh = trangThaiKh;
         this.trangThaiNv = trangThaiNv;
+        this.userTokenFCM = userTokenFCM;
     }
 
     public Messenger() {
     }
 
     // Getters and setters
+
+    public String getUserTokenFCM() {
+        return userTokenFCM;
+    }
+
+    public void setUserTokenFCM(String userTokenFCM) {
+        this.userTokenFCM = userTokenFCM;
+    }
+
     public String get_id() {
         return _id;
     }
