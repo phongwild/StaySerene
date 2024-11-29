@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,9 +33,56 @@ import retrofit2.Response;
 public class Adapter_detail_room extends RecyclerView.Adapter<Adapter_detail_room.ViewHolder> {
     private String Uid;
     private List<Room> rooms;
+    private List<Room> roomList;
 
     public Adapter_detail_room(List<Room> rooms) {
         this.rooms = rooms;
+        this.roomList = new ArrayList<>(rooms);
+    }
+    public void filterPrice(boolean isAscending) {
+        Collections.sort(rooms, new Comparator<Room>() {
+            @Override
+            public int compare(Room o1, Room o2) {
+                if (isAscending) {
+                    return Integer.compare(o1.getGiaPhong(), o2.getGiaPhong());
+                }else {
+                    return Integer.compare(o2.getGiaPhong(), o1.getGiaPhong());
+                }
+            }
+        });
+    }
+    public void filterHotel(String idHotel) {
+        Api_service.service.get_typeroom_byId_hotel(idHotel).enqueue(new Callback<List<TypeRoom>>() {
+            @Override
+            public void onResponse(Call<List<TypeRoom>> call, Response<List<TypeRoom>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Lấy danh sách các ID loại phòng từ API
+                    List<TypeRoom> typeRooms = response.body();
+                    List<String> idTypeList = new ArrayList<>();
+                    for (TypeRoom typeRoom : typeRooms) {
+                        idTypeList.add(typeRoom.get_id());
+                    }
+
+                    // Lọc danh sách phòng theo danh sách ID loại phòng
+                    rooms.clear();
+                    for (Room room : roomList) {
+                        if (idTypeList.contains(room.getIdLoaiPhong())) {
+                            rooms.add(room);
+                        }
+                    }
+
+                    // Thông báo dữ liệu đã thay đổi
+                    notifyDataSetChanged();
+                } else {
+                    Log.e("Detail Room", "Error: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TypeRoom>> call, Throwable throwable) {
+                Log.e("Detail Room", "Error: " + throwable.getMessage());
+            }
+        });
     }
 
     public String getUid() {

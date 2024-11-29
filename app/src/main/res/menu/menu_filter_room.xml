@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/filter_option_1"
+        android:title="Sort by Hotel" />
+    <item
+        android:id="@+id/filter_option_2"
+        android:title="Sort by price (Low to High)" />
+    <item
+        android:id="@+id/filter_option_3"
+        android:title="Sort by price (High to Low)" />
+</menu>

@@ -1,11 +1,16 @@
 package phongtaph31865.poly.stayserene.Screen_user.Activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -27,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.List;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
+import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.Room;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Adapter.Adapter_detail_room;
@@ -35,81 +41,88 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Activity_detail_room extends AppCompatActivity {
-    private ImageView btn_back;
+    private ImageView btn_back, btn_filter;
     private RecyclerView rcv;
-    Adapter_detail_room adapter;
-    private GoogleSignInOptions gso;
-    private GoogleSignInClient gsc;
+    private Adapter_detail_room adapter;
     private List<Room> rooms;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_detail_room);
-        btn_back = findViewById(R.id.btn_back_detail_room);
-        rcv = findViewById(R.id.rcv_detail_room);
-        GridLayoutManager manager = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
-        rcv.setLayoutManager(manager);
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        gsc = GoogleSignIn.getClient(this, gso);
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        String getUsername = getUsernameFromSharedPreferences();
-        String getUid_google = getUser_google();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Account");
-        if (getUsername != null) {
-            ref.orderByChild("uid").equalTo(getUsername).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                            String uid = snapshot1.getKey();
-                            String name = snapshot1.child("username").getValue(String.class);
-                            String email = snapshot1.child("email").getValue(String.class);
-                            String sdt = snapshot1.child("sdt").getValue(String.class);
-                            String address = snapshot1.child("diaChi").getValue(String.class);
-                            saveUserIdToSharedPreferences(uid, name, sdt, address, email);
-                            adapter.setUid(getUsername);
-                            Log.d("save", "user Realtime: " + getUsername);
-                        }
-                    }else {
-                        Log.d("save_1", "user null");
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }else if(getUid_google != null){
-            //Google
-            String name = account.getDisplayName();
-            String email = account.getEmail();
-            String sdt = "";
-            String address = "";
-            saveUserIdToSharedPreferences(getUid_google, name, sdt, address, email);
-            if(adapter != null){
-                adapter.setUid(getUid_google);
-            }
-        }else{
-            //Facebook
-        }
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                startActivity(new Intent(Activity_detail_room.this, MainActivity_user.class));
-                finish();
-            }
-        });
+        initView();
+        handleView();
         get_room();
     }
+    private void initView(){
+        btn_back = findViewById(R.id.btn_back_detail_room);
+        btn_filter = findViewById(R.id.btn_filter_detail_room);
+        rcv = findViewById(R.id.rcv_detail_room);
+    }
+    private void handleView(){
+        btn_back.setOnClickListener(v -> finish());
+        btn_filter.setOnClickListener(this::showPopupMenu);
+    }
+    private void showPopupMenu(View view){
+        PopupMenu popupMenu = new PopupMenu(Activity_detail_room.this, view);
+        popupMenu.getMenuInflater().inflate(R.menu.menu_filter_room, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.filter_option_1) {
+                options_hotel();
+            }else if(item.getItemId() == R.id.filter_option_2){
+                adapter.filterPrice(true);
+                adapter.notifyDataSetChanged();
+            }else if(item.getItemId() == R.id.filter_option_3){
+                adapter.filterPrice(false);
+                adapter.notifyDataSetChanged();
+            }
+            return true;
+        });
+        popupMenu.show();
+    }
+    private void options_hotel(){
+        Api_service.service.get_hotel().enqueue(new Callback<List<Hotel>>() {
+            @Override
+            public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    List<Hotel> hotels = response.body();
+                    showSubMenuHotel(hotels);
+                }else Log.e("Detail_room", response.message());
+            }
+
+            @Override
+            public void onFailure(Call<List<Hotel>> call, Throwable throwable) {
+                Log.e("Detail_room", "Lỗi: " + throwable.getMessage());
+            }
+        });
+    }
+    private void showSubMenuHotel(List<Hotel> hotels){
+        // Tạo PopupMenu
+        PopupMenu subMenu = new PopupMenu(this, btn_filter);
+
+        // Create menu
+        int itemID = 0;
+        Menu menu = subMenu.getMenu();
+        for (Hotel hotel : hotels) {
+            menu.add(Menu.NONE, itemID++, Menu.NONE, hotel.getTenKhachSan())
+                    .setOnMenuItemClickListener(item -> {
+                        String IdHotel = hotel.get_id();
+                        adapter.filterHotel(IdHotel);
+                        return true;
+                    });
+        }
+
+        subMenu.show();
+    }
     public void get_room(){
+        GridLayoutManager manager = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
+        rcv.setLayoutManager(manager);
         Api_service.service.get_rooms().enqueue(new Callback<List<Room>>() {
             @Override
             public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
                 if(response.isSuccessful()){
                     if(response.body() != null){
-                        //rooms.clear();
                         rooms = response.body();
                         adapter = new Adapter_detail_room(rooms);
                         rcv.setAdapter(adapter);
@@ -124,23 +137,5 @@ public class Activity_detail_room extends AppCompatActivity {
                 throwable.printStackTrace();
             }
         });
-    }
-    private String getUser_google(){
-        SharedPreferences sharedPreferences = this.getSharedPreferences("user_google", Activity.MODE_PRIVATE);
-        return sharedPreferences.getString("uid", null);
-    }
-    private String getUsernameFromSharedPreferences() {
-        SharedPreferences sharedPreferences = this.getSharedPreferences("user_data", Activity.MODE_PRIVATE);
-        return sharedPreferences.getString("uid", null);
-    }
-    private void saveUserIdToSharedPreferences(String Uid, String username, String sdt, String address, String email){
-        SharedPreferences sharedPreferences = this.getSharedPreferences("userdata", Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("uid", Uid);
-        editor.putString("username", username);
-        editor.putString("sdt", sdt);
-        editor.putString("address", address);
-        editor.putString("email", email);
-        editor.apply();
     }
 }
