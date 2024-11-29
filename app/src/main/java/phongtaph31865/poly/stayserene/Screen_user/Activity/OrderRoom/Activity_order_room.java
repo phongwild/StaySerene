@@ -272,6 +272,7 @@ public class Activity_order_room extends AppCompatActivity {
                                     orderRoom.setImg(room.getAnhPhong());
                                     orderRoom.setIdPhong(room.get_id());
                                     orderRoom.setTotal(total);
+                                    orderRoom.setUserTokenFCM(userTokenFCM());
                                     room.setTinhTrangPhong(1);
                                     cardPayment(orderRoom, room, total);
                                 } else {
@@ -616,5 +617,8 @@ public class Activity_order_room extends AppCompatActivity {
             }
         }
     }
-
+    private String userTokenFCM(){
+        SharedPreferences preferences = getSharedPreferences("FCM_TOKEN", MODE_PRIVATE);
+        return preferences.getString("token", null);
+    }
 }

@@ -1,7 +1,7 @@
 package phongtaph31865.poly.stayserene.Model;
 
 public class Order_Room {
-    private String _id, IdPhong, Uid, IdDichVu, orderTime, timeGet, timeCheckout, note, img;
+    private String _id, IdPhong, Uid, IdDichVu, orderTime, timeGet, timeCheckout, note, img, userTokenFCM;
     private float total;
     private int status;
 
@@ -20,6 +20,14 @@ public class Order_Room {
     }
 
     public Order_Room() {
+    }
+
+    public String getUserTokenFCM() {
+        return userTokenFCM;
+    }
+
+    public void setUserTokenFCM(String userTokenFCM) {
+        this.userTokenFCM = userTokenFCM;
     }
 
     public String get_id() {
