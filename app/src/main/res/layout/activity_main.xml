@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context=".Screen_user.Activity.MainActivity_user"
     android:background="#ffffff">
-    <androidx.viewpager2.widget.ViewPager2
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/pagerMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
