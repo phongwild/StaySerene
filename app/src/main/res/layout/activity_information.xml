@@ -135,6 +135,7 @@
                         android:layout_height="50dp"
                         android:background="@drawable/custom_input_info"
                         android:hint="Your nationality"
+                        android:enabled="false"
                         android:textColorHint="#4C4DDC"
                         android:inputType="text|textCapWords"
                         android:padding="10dp"

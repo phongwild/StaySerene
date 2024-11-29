@@ -46,6 +46,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_List_of_booked_rooms"
-        android:layout_marginHorizontal="15dp"
         android:id="@+id/rcv_List_of_booked_rooms"/>
 </RelativeLayout>
