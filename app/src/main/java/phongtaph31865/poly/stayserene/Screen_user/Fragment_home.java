@@ -41,6 +41,8 @@ import phongtaph31865.poly.stayserene.NetworkUtils.NetworkUtils;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_detail_room;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_more_hotel;
+import phongtaph31865.poly.stayserene.Adapter.Adapter_rcv1_home;
+import phongtaph31865.poly.stayserene.Adapter.Adapter_rcv2_home;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -123,16 +125,14 @@ public class Fragment_home extends Fragment {
         checkNetWorkUtils();
         return v;
     }
-
-    private void initView(View v) {
+    private void initView(View v){
         rcv1 = v.findViewById(R.id.rcv_home_1);
         rcv2 = v.findViewById(R.id.rcv_home_2);
         tv_more_ht = v.findViewById(R.id.tv_show_more_ht);
         tv_more_room = v.findViewById(R.id.tv_show_more_room);
         tv_location = v.findViewById(R.id.tv_location_home);
     }
-
-    private void checkNetWorkUtils() {
+    private void checkNetWorkUtils(){
         if (NetworkUtils.isNetworkConnected(getActivity())) {
             get_ds_ks();
             get_ds_phong();

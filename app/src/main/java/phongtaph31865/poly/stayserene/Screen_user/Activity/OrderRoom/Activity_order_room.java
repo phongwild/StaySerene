@@ -341,6 +341,7 @@ public class Activity_order_room extends AppCompatActivity {
                                                         .setHeading("Well Done")
                                                         .setDescription("Your booking is complete!")
                                                         .build(dialog1 -> {
+                                                            timer.cancel();
                                                             startActivity(new Intent(Activity_order_room.this, MainActivity_user.class));
                                                         });
                                                 popupDialog.getDialog().setOnDismissListener(dialog -> {

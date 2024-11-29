@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Adapter.Adapter_list_messenger;
+import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.Messenger;  // Import Messenger model
 import phongtaph31865.poly.stayserene.R;
 import retrofit2.Call;
@@ -29,7 +31,7 @@ import retrofit2.Response;
 public class Activiti_list_messenger extends AppCompatActivity {
 
     private TextView tvHotelName;
-    private String hotelId, hotelName;
+    private String hotelId;
     private ImageView btnBackListHotel, btnSendMessenger;
     private RecyclerView recyclerView;
     private Adapter_list_messenger adapter;
@@ -56,13 +58,30 @@ public class Activiti_list_messenger extends AppCompatActivity {
 
         Intent intent = getIntent();
         hotelId = intent.getStringExtra("IdKhachSan");
-        hotelName = intent.getStringExtra("TenKhachSan");
-
-        tvHotelName.setText(hotelName);
+        getHotelName(tvHotelName, hotelId);
         fetchMessages();
 
         btnSendMessenger.setOnClickListener(v -> sendMessage());
         startPolling();
+    }
+    private void getHotelName(TextView tvHotelName, String hotelId) {
+        Api_service.service.get_hotel_byId(hotelId).enqueue(new Callback<List<Hotel>>() {
+            @Override
+            public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
+                if (response.isSuccessful()) {
+                    List<Hotel> hotelList = response.body();
+                    if (hotelList != null && !hotelList.isEmpty()) {
+                        Hotel hotel = hotelList.get(0);
+                        tvHotelName.setText(hotel.getTenKhachSan());
+                    }
+                }else Log.d("TAG", "onResponse: " + response.message());
+            }
+
+            @Override
+            public void onFailure(Call<List<Hotel>> call, Throwable throwable) {
+                Log.d("TAG", "onFailure: " + throwable.getMessage());
+            }
+        });
     }
     private void startPolling() {
         refreshRunnable = new Runnable() {
