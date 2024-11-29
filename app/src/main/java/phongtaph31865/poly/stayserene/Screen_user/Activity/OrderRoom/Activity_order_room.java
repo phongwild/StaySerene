@@ -470,6 +470,15 @@ public class Activity_order_room extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        getRoomById();
+        timer.cancel();
+        finish();
+    }
+
     private String getUserGoogleFromSharedPreferences() {
         SharedPreferences sharedPreferences = this.getSharedPreferences("user_google", Activity.MODE_PRIVATE);
         return sharedPreferences.getString("uid", "");
