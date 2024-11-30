@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,10 +20,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Adapter.Adapter_list_messenger;
+import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Hotel;
-import phongtaph31865.poly.stayserene.Model.Messenger;  // Import Messenger model
+import phongtaph31865.poly.stayserene.Model.Messenger;
 import phongtaph31865.poly.stayserene.R;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,25 +31,22 @@ import retrofit2.Response;
 
 public class Activiti_list_messenger extends AppCompatActivity {
 
+    private static final long REFRESH_INTERVAL = 5000;
+    private final Handler handler = new Handler();
     private TextView tvHotelName;
     private String hotelId;
     private ImageView btnBackListHotel, btnSendMessenger;
     private RecyclerView recyclerView;
     private Adapter_list_messenger adapter;
-    private TextInputEditText edMessenger;
-    private Handler handler = new Handler();
+    private EditText edMessenger;
     private Runnable refreshRunnable;
-    private static final long REFRESH_INTERVAL = 5000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activiti_list_messenger);
 
-        tvHotelName = findViewById(R.id.tv_hotel_name);
-        btnBackListHotel = findViewById(R.id.btn_back_list_hotel);
-        recyclerView = findViewById(R.id.rcv_list_messenger);
-        btnSendMessenger = findViewById(R.id.btn_send_messenger);
-        edMessenger = findViewById(R.id.ed_messenger);
+        initView();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -64,6 +62,13 @@ public class Activiti_list_messenger extends AppCompatActivity {
         btnSendMessenger.setOnClickListener(v -> sendMessage());
         startPolling();
     }
+    private void initView(){
+        tvHotelName = findViewById(R.id.tv_hotel_name);
+        btnBackListHotel = findViewById(R.id.btn_back_list_hotel);
+        recyclerView = findViewById(R.id.rcv_list_messenger);
+        btnSendMessenger = findViewById(R.id.btn_send_messenger);
+        edMessenger = findViewById(R.id.ed_messenger);
+    }
     private void getHotelName(TextView tvHotelName, String hotelId) {
         Api_service.service.get_hotel_byId(hotelId).enqueue(new Callback<List<Hotel>>() {
             @Override
@@ -74,7 +79,7 @@ public class Activiti_list_messenger extends AppCompatActivity {
                         Hotel hotel = hotelList.get(0);
                         tvHotelName.setText(hotel.getTenKhachSan());
                     }
-                }else Log.d("TAG", "onResponse: " + response.message());
+                } else Log.d("TAG", "onResponse: " + response.message());
             }
 
             @Override
@@ -83,6 +88,7 @@ public class Activiti_list_messenger extends AppCompatActivity {
             }
         });
     }
+
     private void startPolling() {
         refreshRunnable = new Runnable() {
             @Override
@@ -103,6 +109,7 @@ public class Activiti_list_messenger extends AppCompatActivity {
         super.onDestroy();
         stopPolling();
     }
+
     private void sendMessage() {
         String messageContent = edMessenger.getText().toString().trim();
         if (messageContent.isEmpty()) {
