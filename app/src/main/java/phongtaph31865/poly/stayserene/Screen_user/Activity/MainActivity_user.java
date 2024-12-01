@@ -40,10 +40,20 @@ public class MainActivity_user extends AppCompatActivity {
         // Khởi tạo ViewPager và Fragment
         initViewPager();
 
+        if (getIntent().getExtras() != null && "booking".equals(getIntent().getStringExtra("fragment"))) {
+            OpenBooking();
+        }
+
         // Khởi tạo BottomNavigationView
         initBottomNavigationView();
     }
-
+    private void OpenBooking(){
+        Fragment_booking booking = new Fragment_booking();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.pagerMain, booking)
+                .commit();
+    }
     private void initViewPager() {
         ArrayList<Fragment> fragments = new ArrayList<>();
         fragments.add(new Fragment_home());

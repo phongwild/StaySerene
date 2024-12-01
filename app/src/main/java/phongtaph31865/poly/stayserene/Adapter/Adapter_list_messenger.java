@@ -8,23 +8,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
 import phongtaph31865.poly.stayserene.Model.Messenger;
 import phongtaph31865.poly.stayserene.R;
 
 public class Adapter_list_messenger extends RecyclerView.Adapter<Adapter_list_messenger.MessengerViewHolder> {
 
-    private Context context;
-    private List<Messenger> messengerList;
+    private final Context context;
+    private final List<Messenger> messengerList;
+    private List<Boolean> timeVisibleList;
+    private final SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    private final SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
 
     public Adapter_list_messenger(Context context, List<Messenger> messengerList) {
         this.context = context;
         this.messengerList = messengerList;
+        this.timeVisibleList = new ArrayList<>(Collections.nCopies(messengerList.size(), false)); // Khởi tạo trạng thái mặc định là false cho tất cả item
     }
 
     @Override
@@ -37,53 +46,62 @@ public class Adapter_list_messenger extends RecyclerView.Adapter<Adapter_list_me
     public void onBindViewHolder(MessengerViewHolder holder, int position) {
         Messenger messenger = messengerList.get(position);
 
+        // Đặt giao diện tin nhắn theo vai trò
         if (messenger.getVaiTro().equals("Khách hàng")) {
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.messageContainer.getLayoutParams();
-            params.gravity = Gravity.END;
-            params.leftMargin = 200;
-            holder.messageContainer.setLayoutParams(params);
-            holder.tvNoiDung.setGravity(Gravity.END);
-            holder.tvNoiDung.setTextColor(Color.parseColor("#FFFFFF"));
-
-            holder.messageContainer.setBackgroundResource(R.drawable.message_background_customer);
+            setMessageStyle(holder, Gravity.END, 200, 0, "#FFFFFF", R.drawable.message_background_customer, Gravity.END);
         } else if (messenger.getVaiTro().equals("Khách sạn")) {
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.messageContainer.getLayoutParams();
-            params.gravity = Gravity.START;
-            params.rightMargin = 200;
-            holder.messageContainer.setLayoutParams(params);
-            holder.tvNoiDung.setGravity(Gravity.START);
-            holder.tvNoiDung.setTextColor(Color.parseColor("#3498db"));
-
-            holder.messageContainer.setBackgroundResource(R.drawable.message_background_hotel);
+            setMessageStyle(holder, Gravity.START, 0, 200, "#3498db", R.drawable.message_background_hotel, Gravity.START);
         }
 
-        try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
-            Date date = inputFormat.parse(messenger.getThoiGianGui());
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            calendar.add(Calendar.HOUR_OF_DAY, 7);
-            Date newDate = calendar.getTime();
-
-            String formattedTime = outputFormat.format(newDate);
-            holder.tvThoiGianGui.setText(formattedTime);
-        } catch (Exception e) {
-            e.printStackTrace();
-            holder.tvThoiGianGui.setText("Invalid Date");
-        }
-
+        // Định dạng thời gian gửi
+        String formattedTime = formatTime(messenger.getThoiGianGui());
+        holder.tvThoiGianGui.setText(formattedTime != null ? formattedTime : "Invalid Date");
+        // Cập nhật visibility của thời gian dựa trên trạng thái trong timeVisibleList
+        holder.tvThoiGianGui.setVisibility(timeVisibleList.get(position) ? View.VISIBLE : View.GONE);
+        // Đặt nội dung tin nhắn
         holder.tvNoiDung.setText(messenger.getNoiDungGui());
-
+        holder.itemView.setOnClickListener(v -> {
+            // Lật lại trạng thái của timeVisible tại vị trí item
+            timeVisibleList.set(position, !timeVisibleList.get(position));
+            notifyItemChanged(position);
+        });
     }
-
-
-
 
     @Override
     public int getItemCount() {
         return messengerList.size();
+    }
+
+    /**
+     * Định dạng thời gian từ chuỗi JSON sang chuỗi hiển thị.
+     */
+    private String formatTime(String thoiGianGui) {
+        try {
+            Date date = inputFormat.parse(thoiGianGui);
+
+            // Cộng thêm 7 giờ (nếu cần thiết)
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.HOUR_OF_DAY, 7);
+            return outputFormat.format(calendar.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Đặt kiểu hiển thị tin nhắn dựa trên vai trò.
+     */
+    private void setMessageStyle(MessengerViewHolder holder, int gravity, int leftMargin, int rightMargin, String textColor, int backgroundResource, int textGravity) {
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.messageContainer.getLayoutParams();
+        params.gravity = gravity;
+        params.leftMargin = leftMargin;
+        params.rightMargin = rightMargin;
+        holder.messageContainer.setLayoutParams(params);
+        holder.tvNoiDung.setGravity(textGravity);
+        holder.tvNoiDung.setTextColor(Color.parseColor(textColor));
+        holder.messageContainer.setBackgroundResource(backgroundResource);
     }
 
     public static class MessengerViewHolder extends RecyclerView.ViewHolder {
@@ -95,8 +113,6 @@ public class Adapter_list_messenger extends RecyclerView.Adapter<Adapter_list_me
             tvThoiGianGui = itemView.findViewById(R.id.tvThoiGianGui);
             tvNoiDung = itemView.findViewById(R.id.tvNoiDung);
             messageContainer = itemView.findViewById(R.id.messageContainer);
-
         }
     }
-
 }
