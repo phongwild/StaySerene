@@ -120,7 +120,6 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-messaging")
-//    implementation ("com.google.firebase:firebase-admin:9.4.0")
 
     //Facebook
     implementation("com.facebook.android:facebook-login:latest.release")
@@ -150,8 +149,6 @@ dependencies {
     implementation("com.sun.mail:android-activation:1.6.0")
     //pinview
     implementation("io.github.chaosleung:pinview:1.4.4")
-    //Calendar
-//    implementation ("com.prolificinteractive:material-calendarview:1.4.3")
-
+    
 
 }
