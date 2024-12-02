@@ -11,10 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,8 +57,6 @@ public class Fragment_home extends Fragment {
     private TextView tv_more_ht, tv_more_room, tv_location;
     private Adapter_rcv1_home adapter_1;
     private Adapter_rcv2_home adapter_2;
-    private GoogleSignInOptions gso;
-    private GoogleSignInClient gsc;
     private List<Room> rooms = new ArrayList<Room>();
     private List<Hotel> hotels = new ArrayList<Hotel>();
 
@@ -66,10 +68,19 @@ public class Fragment_home extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        //lấy vị trí người dùng
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        gsc = GoogleSignIn.getClient(getActivity(), gso);
+
         showNotifi();
+
+        saveUser();
+
+        initView(v);
+
+        setClick();
+
+        checkNetWorkUtils();
+        return v;
+    }
+    private void saveUser(){
         Api_service.service.get_account_byId(getUsernameFromSharedPreferences()).enqueue(new Callback<List<Account>>() {
             @Override
             public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
@@ -106,25 +117,8 @@ public class Fragment_home extends Fragment {
                 Log.e("onFailure id user", "False: " + throwable.getMessage());
             }
         });
-
-        initView(v);
-
-        tv_more_ht.setOnClickListener(v1 -> {
-            startActivity(new Intent(getActivity(), Activity_more_hotel.class));
-        });
-        tv_more_room.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), Activity_detail_room.class));
-            }
-        });
-        LinearLayoutManager llm1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        LinearLayoutManager llm2 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        rcv1.setLayoutManager(llm1);
-        rcv2.setLayoutManager(llm2);
-        checkNetWorkUtils();
-        return v;
     }
+
     private void initView(View v){
         rcv1 = v.findViewById(R.id.rcv_home_1);
         rcv2 = v.findViewById(R.id.rcv_home_2);
@@ -132,6 +126,13 @@ public class Fragment_home extends Fragment {
         tv_more_room = v.findViewById(R.id.tv_show_more_room);
         tv_location = v.findViewById(R.id.tv_location_home);
     }
+
+    private void setClick(){
+        tv_more_ht.setOnClickListener(v -> startActivity(new Intent(getActivity(), Activity_more_hotel.class)));
+        tv_more_room.setOnClickListener(v -> startActivity(new Intent(getActivity(), Activity_detail_room.class)));
+
+    }
+
     private void checkNetWorkUtils(){
         if (NetworkUtils.isNetworkConnected(getActivity())) {
             get_ds_ks();
@@ -168,6 +169,8 @@ public class Fragment_home extends Fragment {
     }
 
     public void get_ds_ks() {
+        LinearLayoutManager llm1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        rcv1.setLayoutManager(llm1);
         Api_service.service.get_hotel().enqueue(new Callback<List<Hotel>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -192,6 +195,8 @@ public class Fragment_home extends Fragment {
     }
 
     public void get_ds_phong() {
+        LinearLayoutManager llm2 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        rcv2.setLayoutManager(llm2);
         Api_service.service.get_rooms().enqueue(new Callback<List<Room>>() {
             @Override
             public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
@@ -228,6 +233,7 @@ public class Fragment_home extends Fragment {
             }
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

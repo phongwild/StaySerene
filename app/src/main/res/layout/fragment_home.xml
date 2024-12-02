@@ -64,15 +64,6 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:paddingRight="16dp">
-
-                    <ImageView
-                        android:id="@+id/btn_notification"
-                        android:labelFor="@+id/btn_notification"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/ic_notifi" />
                 </RelativeLayout>
             </LinearLayout>
 

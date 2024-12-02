@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -62,7 +63,25 @@ public class Adapter_list_messenger extends RecyclerView.Adapter<Adapter_list_me
         holder.tvNoiDung.setText(messenger.getNoiDungGui());
         holder.itemView.setOnClickListener(v -> {
             // Lật lại trạng thái của timeVisible tại vị trí item
-            timeVisibleList.set(position, !timeVisibleList.get(position));
+            boolean isVisible = !timeVisibleList.get(position);
+            timeVisibleList.set(position, isVisible);
+            if (isVisible) {
+                holder.tvThoiGianGui.setAlpha(0f);
+                holder.tvThoiGianGui.setTranslationY(-50);
+                holder.tvThoiGianGui.animate()
+                        .alpha(1f)
+                        .translationY(0)
+                        .setDuration(300)
+                        .setInterpolator(new OvershootInterpolator())
+                        .start();
+            } else {
+                holder.tvThoiGianGui.animate()
+                        .alpha(0f)
+                        .translationY(-50)
+                        .setDuration(300)
+                        .setInterpolator(new OvershootInterpolator())
+                        .start();
+            }
             notifyItemChanged(position);
         });
     }
