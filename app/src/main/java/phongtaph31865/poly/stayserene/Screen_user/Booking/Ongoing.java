@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +33,7 @@ public class Ongoing extends Fragment {
     private SwipeRefreshLayout refreshLayout;
     private ProgressBar progressBar;
     private List<Order_Room> order_rooms;
+    private TextView tv_ongoing;
 
     public Ongoing() {
     }
@@ -49,7 +51,7 @@ public class Ongoing extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         refreshLayout = view.findViewById(R.id.swipe_refresh_ongoing);
         progressBar = view.findViewById(R.id.progressBar_ongoing);
-
+        tv_ongoing = view.findViewById(R.id.tv_ongoing);
         // Thiết lập hành động cho SwipeRefreshLayout
         refreshLayout.setOnRefreshListener(this::get_orderroom_by_status01);
 
@@ -68,6 +70,11 @@ public class Ongoing extends Fragment {
                     // Luôn khởi tạo lại adapter mỗi lần có dữ liệu mới
                     adapter = new Adapter_rcv_ongoing(order_rooms);
                     recyclerView.setAdapter(adapter);
+                    if (order_rooms.isEmpty()) {
+                        tv_ongoing.setVisibility(View.VISIBLE);
+                    } else {
+                        tv_ongoing.setVisibility(View.GONE);
+                    }
                 }
                 refreshLayout.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);

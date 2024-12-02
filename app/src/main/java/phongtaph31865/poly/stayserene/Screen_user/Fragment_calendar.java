@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -35,46 +36,52 @@ import retrofit2.Response;
 public class Fragment_calendar extends Fragment {
     private CalendarView calendarView;
     private RecyclerView rcv;
-    private TextView btn_see_all;
+    private TextView btn_see_all, tv_schedule;
     private List<Order_Room> order_rooms = new ArrayList<>();
     private Adapter_schedule adapter;
     private SwipeRefreshLayout refreshLayout;
+    private ProgressBar progressBar;
 
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
-        calendarView = view.findViewById(R.id.calendar_frm);
-        rcv = view.findViewById(R.id.rcv_calendar);
-        btn_see_all = view.findViewById(R.id.btn_see_all_calendar);
-        refreshLayout = view.findViewById(R.id.refresh_calendar);
-        btn_see_all.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), Activity_List_of_booked_rooms.class));
-        });
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                get_order_by_id_user();
-            }
-        });
 
-        rcv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        initView(view);
+
+        btn_see_all.setOnClickListener(v ->  startActivity(new Intent(getActivity(), Activity_List_of_booked_rooms.class)));
+
+        refreshLayout.setOnRefreshListener(this::get_order_by_id_user);
+
         get_order_by_id_user();
 
         return view;
     }
-
+    private void initView(View view){
+        calendarView = view.findViewById(R.id.calendar_frm);
+        rcv = view.findViewById(R.id.rcv_calendar);
+        btn_see_all = view.findViewById(R.id.btn_see_all_calendar);
+        refreshLayout = view.findViewById(R.id.refresh_calendar);
+        tv_schedule = view.findViewById(R.id.tv_schedule);
+        progressBar = view.findViewById(R.id.progressBar_schedule);
+    }
     // Fetch order list based on user ID
     public void get_order_by_id_user() {
+        progressBar.setVisibility(View.VISIBLE);
+        rcv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         Api_service.service.get_orderroom_status01(checkUid()).enqueue(new Callback<List<Order_Room>>() {
             @Override
             public void onResponse(Call<List<Order_Room>> call, Response<List<Order_Room>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     order_rooms = response.body();
                     adapter = new Adapter_schedule(order_rooms);
                     rcv.setAdapter(adapter);
-
+                    if (order_rooms.isEmpty()) {
+                        tv_schedule.setVisibility(View.VISIBLE);
+                    } else {
+                        tv_schedule.setVisibility(View.GONE);
+                    }
                     adapter.setOnItemClickListener(new Adapter_schedule.OnItemClickListener() {
                         @Override
                         public void onItemClick(int position, Order_Room order_room) {
@@ -82,6 +89,7 @@ public class Fragment_calendar extends Fragment {
                         }
                     });
 
+                    progressBar.setVisibility(View.GONE);
                     refreshLayout.setRefreshing(false);
                 } else {
                     Log.e("Response order by id", "onResponse: " + response.message());

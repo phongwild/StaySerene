@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class Complete extends Fragment {
     private Adapter_rcv_complete adapter;
     List<Order_Room> order_rooms;
     private SwipeRefreshLayout refreshLayout;
+    private TextView tv_complete;
     private ProgressBar progressBar;
 
     public Complete() {
@@ -49,6 +51,7 @@ public class Complete extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         refreshLayout = view.findViewById(R.id.swipe_refresh_complete);
         progressBar = view.findViewById(R.id.progressBar_complete);
+        tv_complete = view.findViewById(R.id.tv_complete);
         refreshLayout.setOnRefreshListener(this::get_orderroom_by_status2);
         get_orderroom_by_status2();
     }
@@ -63,6 +66,11 @@ public class Complete extends Fragment {
                         adapter = new Adapter_rcv_complete(order_rooms);
                         adapter.setUid(getCurrentUserId());
                         recyclerView.setAdapter(adapter);
+                        if (order_rooms.isEmpty()) {
+                            tv_complete.setVisibility(View.VISIBLE);
+                        } else {
+                            tv_complete.setVisibility(View.GONE);
+                        }
                     }
                 }
                 refreshLayout.setRefreshing(false);

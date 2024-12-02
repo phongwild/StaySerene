@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class Cancel extends Fragment {
     private Adapter_rcv_cancel adapter;
     List<Order_Room> order_rooms;
     private ProgressBar progressBar;
+    private TextView tv_cancel;
     private SwipeRefreshLayout refreshLayout;
 
     public Cancel() {
@@ -51,6 +53,7 @@ public class Cancel extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         refreshLayout = view.findViewById(R.id.swipe_refresh_cancel);
         progressBar = view.findViewById(R.id.progressBar_cancel);
+        tv_cancel = view.findViewById(R.id.tv_cancel);
         refreshLayout.setOnRefreshListener(this::get_orderroom_by_status3);
         get_orderroom_by_status3();
     }
@@ -64,6 +67,11 @@ public class Cancel extends Fragment {
                         order_rooms = response.body();
                         adapter = new Adapter_rcv_cancel(order_rooms);
                         recyclerView.setAdapter(adapter);
+                        if (order_rooms.isEmpty()) {
+                            tv_cancel.setVisibility(View.VISIBLE);
+                        } else {
+                            tv_cancel.setVisibility(View.GONE);
+                        }
                     }
                 }
                 refreshLayout.setRefreshing(false);
