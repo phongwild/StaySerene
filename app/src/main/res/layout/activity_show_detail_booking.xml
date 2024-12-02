@@ -80,17 +80,16 @@
                         android:layout_height="wrap_content"
                         android:text="Hotel name"
                         android:textColor="#838383"
-                        android:textSize="16sp"/>
+                        android:textSize="14sp"/>
                     <TextView
                         android:id="@+id/tv_hotelName_detail_booking"
                         android:layout_width="0dp"
                         android:layout_weight="2"
                         android:gravity="end"
                         android:layout_height="wrap_content"
-                        android:text="Sofitel Legend Metropole"
                         android:textColor="#000000"
                         android:textStyle="bold"
-                        android:textSize="16sp"/>
+                        android:textSize="15sp"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -105,17 +104,16 @@
                         android:layout_height="wrap_content"
                         android:text="Type room"
                         android:textColor="#838383"
-                        android:textSize="16sp"/>
+                        android:textSize="14sp"/>
                     <TextView
                         android:id="@+id/tv_name_type_room_detail_booking"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="end"
                         android:layout_height="wrap_content"
-                        android:text="Phòng Đơn Tiêu Chuẩn"
                         android:textColor="#000000"
                         android:textStyle="bold"
-                        android:textSize="16sp"/>
+                        android:textSize="15sp"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -130,17 +128,16 @@
                         android:layout_height="wrap_content"
                         android:text="Room"
                         android:textColor="#838383"
-                        android:textSize="16sp"/>
+                        android:textSize="14sp"/>
                     <TextView
                         android:id="@+id/tv_number_room_detail_booking"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="end"
                         android:layout_height="wrap_content"
-                        android:text="1111"
                         android:textColor="#000000"
                         android:textStyle="bold"
-                        android:textSize="16sp"/>
+                        android:textSize="15sp"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -155,17 +152,16 @@
                         android:layout_height="wrap_content"
                         android:text="Floor"
                         android:textColor="#838383"
-                        android:textSize="16sp"/>
+                        android:textSize="14sp"/>
                     <TextView
                         android:id="@+id/tv_floor_detail_booking"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="end"
                         android:layout_height="wrap_content"
-                        android:text="12"
                         android:textColor="#000000"
                         android:textStyle="bold"
-                        android:textSize="16sp"/>
+                        android:textSize="15sp"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -180,17 +176,16 @@
                         android:layout_height="wrap_content"
                         android:text="Description"
                         android:textColor="#838383"
-                        android:textSize="16sp"/>
+                        android:textSize="14sp"/>
                     <TextView
                         android:id="@+id/tv_desc_detail_booking"
                         android:layout_width="0dp"
                         android:layout_weight="2"
                         android:gravity="end"
                         android:layout_height="wrap_content"
-                        android:text="Lorem ipsum dolor sit amet"
                         android:textColor="#000000"
                         android:textStyle="bold"
-                        android:textSize="16sp"/>
+                        android:textSize="15sp"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -211,17 +206,16 @@
                         android:layout_height="wrap_content"
                         android:text="Address"
                         android:textColor="#838383"
-                        android:textSize="16sp"/>
+                        android:textSize="14sp"/>
                     <TextView
                         android:id="@+id/tv_address_detail_booking"
                         android:layout_width="0dp"
                         android:layout_weight="2"
                         android:gravity="end"
                         android:layout_height="wrap_content"
-                        android:text="Ha noi"
                         android:textColor="#000000"
                         android:textStyle="bold"
-                        android:textSize="16sp"/>
+                        android:textSize="15sp"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -236,17 +230,16 @@
                         android:layout_height="wrap_content"
                         android:text="Phone hotel"
                         android:textColor="#838383"
-                        android:textSize="16sp"/>
+                        android:textSize="14sp"/>
                     <TextView
                         android:id="@+id/tv_hotel_phone_detail_booking"
                         android:layout_width="0dp"
                         android:layout_weight="2"
                         android:gravity="end"
                         android:layout_height="wrap_content"
-                        android:text="Lorem ipsum dolor sit amet"
                         android:textColor="#000000"
                         android:textStyle="bold"
-                        android:textSize="16sp"/>
+                        android:textSize="15sp"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -261,17 +254,16 @@
                         android:layout_height="wrap_content"
                         android:text="Email hotel"
                         android:textColor="#838383"
-                        android:textSize="16sp"/>
+                        android:textSize="14sp"/>
                     <TextView
                         android:id="@+id/tv_email_detail_booking"
                         android:layout_width="0dp"
                         android:layout_weight="2"
                         android:gravity="end"
                         android:layout_height="wrap_content"
-                        android:text="vinpearl@example.com"
                         android:textColor="#000000"
                         android:textStyle="bold"
-                        android:textSize="16sp"/>
+                        android:textSize="15sp"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -286,17 +278,16 @@
                         android:layout_height="wrap_content"
                         android:text="Description"
                         android:textColor="#838383"
-                        android:textSize="16sp"/>
+                        android:textSize="14sp"/>
                     <TextView
                         android:id="@+id/tv_desc_hotel_detail_booking"
                         android:layout_width="0dp"
                         android:layout_weight="2"
                         android:gravity="end"
                         android:layout_height="wrap_content"
-                        android:text="Lorem ipsum dolor sit amet"
                         android:textColor="#000000"
                         android:textStyle="bold"
-                        android:textSize="16sp"/>
+                        android:textSize="15sp"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -317,14 +308,13 @@
                         android:layout_height="wrap_content"
                         android:text="Full name"
                         android:textColor="#838383"
-                        android:textSize="16sp"/>
+                        android:textSize="14sp"/>
                     <TextView
                         android:id="@+id/tv_full_name_detail_booking"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="end"
                         android:layout_height="wrap_content"
-                        android:text="Tran Anh Phong"
                         android:textColor="#4C4DDC"
                         android:textStyle="bold"
                         android:textSize="16sp"/>
@@ -334,7 +324,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginBottom="15sp">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -342,17 +332,16 @@
                         android:layout_height="wrap_content"
                         android:text="Phone number"
                         android:textColor="#838383"
-                        android:textSize="16sp"/>
+                        android:textSize="14sp"/>
                     <TextView
                         android:id="@+id/tv_phone_number_detail_booking"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="end"
                         android:layout_height="wrap_content"
-                        android:text="0987654321"
                         android:textColor="#4C4DDC"
                         android:textStyle="bold"
-                        android:textSize="16sp"/>
+                        android:textSize="15sp"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -373,17 +362,16 @@
                         android:layout_height="wrap_content"
                         android:text="Time check in"
                         android:textColor="#838383"
-                        android:textSize="16sp"/>
+                        android:textSize="14sp"/>
                     <TextView
                         android:id="@+id/tv_time_checkin_detail_booking"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="end"
                         android:layout_height="wrap_content"
-                        android:text="19/10/2024"
                         android:textColor="#000000"
                         android:textStyle="bold"
-                        android:textSize="16sp"/>
+                        android:textSize="15sp"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -398,17 +386,16 @@
                         android:layout_height="wrap_content"
                         android:text="Time check out"
                         android:textColor="#838383"
-                        android:textSize="16sp"/>
+                        android:textSize="14sp"/>
                     <TextView
                         android:id="@+id/tv_time_checkout_detail_booking"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="end"
                         android:layout_height="wrap_content"
-                        android:text="20/10/2024"
                         android:textColor="#000000"
                         android:textStyle="bold"
-                        android:textSize="16sp"/>
+                        android:textSize="15sp"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -422,13 +409,13 @@
                         android:layout_height="wrap_content"
                         android:text="Note"
                         android:textColor="#838383"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:layout_marginBottom="5dp"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/tv_note_order_room"
-                        android:textSize="16sp"
+                        android:textSize="15sp"
                         android:textColor="#000000"/>
                 </LinearLayout>
             </LinearLayout>
@@ -453,17 +440,16 @@
                 android:layout_height="wrap_content"
                 android:text="Total"
                 android:textColor="#838383"
-                android:textSize="18sp"/>
+                android:textSize="16sp"/>
             <TextView
                 android:id="@+id/tv_total_detail_booking"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="end"
                 android:layout_height="wrap_content"
-                android:text="200000"
                 android:textColor="#4C4DDC"
                 android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textSize="18sp"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

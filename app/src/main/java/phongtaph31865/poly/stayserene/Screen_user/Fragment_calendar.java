@@ -107,7 +107,7 @@ public class Fragment_calendar extends Fragment {
 
     // Update Calendar view with booking dates
     private void updateCalendarView(Order_Room order_room) {
-        SimpleDateFormat originalFormat = new SimpleDateFormat("HH:mm:ss - dd/MM/yyyy");
+        SimpleDateFormat originalFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         try {
             Date timeCheckIn = originalFormat.parse(order_room.getTimeGet());
