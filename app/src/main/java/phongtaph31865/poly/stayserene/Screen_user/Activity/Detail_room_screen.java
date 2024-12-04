@@ -31,7 +31,6 @@ import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.TypeRoom;
 import phongtaph31865.poly.stayserene.R;
-import phongtaph31865.poly.stayserene.Screen_user.Activity.OrderRoom.Activity_detail_type_rooms;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.OrderRoom.Activity_order_room;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,12 +40,20 @@ public class Detail_room_screen extends AppCompatActivity {
     private ImageView img, btn_back;
     private LinearLayout btn_booking;
     private TextView tv_name, tv_price, tv_description, tv_location, tv_type, tv_floor, tv_status;
-    @SuppressLint("MissingInflatedId")
+    private Intent bookingIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_detail_screen);
+
+        initView();
+        handleClick();
+        setupRoomDetails();
+    }
+
+    private void initView() {
         img = findViewById(R.id.img_room_detail);
         tv_name = findViewById(R.id.tv_room_name_detail);
         tv_price = findViewById(R.id.tv_room_price_detail);
@@ -57,103 +64,113 @@ public class Detail_room_screen extends AppCompatActivity {
         tv_floor = findViewById(R.id.tv_room_floor_detail);
         tv_status = findViewById(R.id.tv_room_status_detail);
         btn_booking = findViewById(R.id.btn_room_booking_detail);
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    }
+
+    private void handleClick() {
+        btn_back.setOnClickListener(v -> finish());
+    }
+
+    private void setupRoomDetails() {
         Intent intent = getIntent();
         String uid = intent.getStringExtra("uid");
-        if(uid != null) Log.e("save", uid);
-        else Log.e("save", "null");
-        String img = intent.getStringExtra("img");
-        String IdRoom = intent.getStringExtra("IdRoom");
-        String IdTypeRoom = intent.getStringExtra("IdTypeRoom");
-        int price = intent.getIntExtra("price",0);
+        String imgUrl = intent.getStringExtra("img");
+        String idRoom = intent.getStringExtra("IdRoom");
+        String idTypeRoom = intent.getStringExtra("IdTypeRoom");
+        int price = intent.getIntExtra("price", 0);
         String description = intent.getStringExtra("desc");
         int floor = intent.getIntExtra("floor", 0);
         int status = intent.getIntExtra("status", 0);
         int soPhong = intent.getIntExtra("numberroom", 0);
+
+        // Log thông tin nếu cần debug
+        Log.e("Room UID", uid != null ? uid : "null");
+
+        // Thiết lập dữ liệu giao diện
+        setRoomInfo(imgUrl, soPhong, price, description, floor, status);
+
+        // Tạo intent cho trang đặt phòng
+        bookingIntent = new Intent(Detail_room_screen.this, Activity_order_room.class);
+        bookingIntent.putExtra("id_room", idRoom);
+        bookingIntent.putExtra("img", imgUrl);
+
+        // Lấy thông tin loại phòng
+        fetchTypeRoomInfo(idTypeRoom);
+        setupBookingAction(idTypeRoom);
+    }
+
+    private void setRoomInfo(String imgUrl, int soPhong, int price, String description, int floor, int status) {
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+
         tv_name.setText(String.valueOf(soPhong));
-        Picasso.get().load(img).into(this.img);
+        Picasso.get().load(imgUrl).into(img);
         tv_price.setText(formatter.format(price));
         tv_description.setText(description);
         tv_floor.setText(String.valueOf(floor));
-        if(status == 0){
-            tv_status.setText("Open");
-        }else if(status == 1){
-            tv_status.setText("Close");
-        }
-        Intent intent1 = new Intent(Detail_room_screen.this, Activity_order_room.class);
-        getTypeRoom(IdTypeRoom, intent1);
-        btn_booking.setOnClickListener(new View.OnClickListener() {
+        tv_status.setText(status == 0 ? "Open" : "Close");
+    }
+
+    private void fetchTypeRoomInfo(String idTypeRoom) {
+        Api_service.service.get_typeroom_byId(idTypeRoom).enqueue(new Callback<List<TypeRoom>>() {
             @Override
-            public void onClick(View v) {
-                PopupDialog.getInstance(Detail_room_screen.this).standardDialogBuilder().createStandardDialog()
-                        .setHeading("Booking")
-                        .setDescription("Would you prefer this type of room?" + "A room will be selected randomly from this room type")
-                        .setCancelable(false)
-                        .setPositiveButtonText("Yes")
-                        .setNegativeButtonText("No")
-                        .setPositiveButtonTextColor(R.color.white)
-                        .setIcon(R.drawable.ic_booking)
-                        .build(new StandardDialogActionListener() {
-                            @Override
-                            public void onPositiveButtonClicked(Dialog dialog) {
-                                intent1.putExtra("id_type_room", IdTypeRoom);
-                                intent1.putExtra("id_room", IdRoom);
-                                intent1.putExtra("img", img);
-                                dialog.dismiss();
-                                startActivity(intent1);
-                            }
+            public void onResponse(@NonNull Call<List<TypeRoom>> call, @NonNull Response<List<TypeRoom>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    TypeRoom typeRoom = response.body().get(0); // Lấy loại phòng đầu tiên
+                    tv_type.setText(typeRoom.getTenLoaiPhong());
+                    bookingIntent.putExtra("total", typeRoom.getGiaLoaiPhong());
+                    fetchHotelLocation(typeRoom.getIdKhachSan());
+                } else {
+                    Log.e("Response error", "Failed to fetch type room info");
+                }
+            }
 
-                            @Override
-                            public void onNegativeButtonClicked(Dialog dialog) {
-                                dialog.dismiss();
-                            }
-                        }).show();
-
+            @Override
+            public void onFailure(@NonNull Call<List<TypeRoom>> call, @NonNull Throwable throwable) {
+                Log.e("Fetch TypeRoom Error", throwable.getMessage());
             }
         });
     }
-    private void getTypeRoom(String id, Intent intent1){
-        Api_service.service.get_typeroom_byId(id).enqueue(new Callback<List<TypeRoom>>() {
+
+    private void fetchHotelLocation(String hotelId) {
+        Api_service.service.get_hotel_byId(hotelId).enqueue(new Callback<List<Hotel>>() {
             @Override
-            public void onResponse(Call<List<TypeRoom>> call, Response<List<TypeRoom>> response) {
-                if (response.isSuccessful()){
-                    for (TypeRoom typeRoom : response.body()){
-                        tv_type.setText(typeRoom.getTenLoaiPhong());
-                        String idHT = typeRoom.getIdKhachSan();
-                        intent1.putExtra("total", typeRoom.getGiaLoaiPhong());
-                        getLocation(idHT);
-                    }
-                }else Log.e("Response error", "Response is not successful");
+            public void onResponse(@NonNull Call<List<Hotel>> call, @NonNull Response<List<Hotel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Hotel hotel = response.body().get(0); // Lấy khách sạn đầu tiên
+                    tv_location.setText(hotel.getDiaChi());
+                } else {
+                    Log.e("Response error", "Failed to fetch hotel location");
+                }
             }
 
             @Override
-            public void onFailure(Call<List<TypeRoom>> call, Throwable throwable) {
-                Log.e("Failure getTypeRoom", throwable.getMessage());
+            public void onFailure(@NonNull Call<List<Hotel>> call, @NonNull Throwable throwable) {
+                Log.e("Fetch Hotel Error", throwable.getMessage());
             }
         });
     }
-    private void getLocation(String id){
-        Api_service.service.get_hotel_byId(id).enqueue(new Callback<List<Hotel>>() {
-            @Override
-            public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
-                if (response.isSuccessful()){
-                    for (Hotel hotel : response.body()){
-                        tv_location.setText(hotel.getDiaChi());
+
+    private void setupBookingAction(String idTypeRoom) {
+        btn_booking.setOnClickListener(v -> PopupDialog.getInstance(Detail_room_screen.this).standardDialogBuilder()
+                .createStandardDialog()
+                .setHeading("Booking")
+                .setDescription(String.format("Would you prefer this type of room? A room will be selected randomly from this room type"))
+                .setCancelable(false)
+                .setPositiveButtonText("Yes")
+                .setNegativeButtonText("No")
+                .setPositiveButtonTextColor(R.color.white)
+                .setIcon(R.drawable.ic_booking)
+                .build(new StandardDialogActionListener() {
+                    @Override
+                    public void onPositiveButtonClicked(Dialog dialog) {
+                        bookingIntent.putExtra("id_type_room", idTypeRoom);
+                        dialog.dismiss();
+                        startActivity(bookingIntent);
                     }
 
-                }else Log.e("Response error", response.message());
-            }
-
-            @Override
-            public void onFailure(Call<List<Hotel>> call, Throwable throwable) {
-                Log.e("Failure getLocation", throwable.getMessage());
-            }
-        });
+                    @Override
+                    public void onNegativeButtonClicked(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                }).show());
     }
 }

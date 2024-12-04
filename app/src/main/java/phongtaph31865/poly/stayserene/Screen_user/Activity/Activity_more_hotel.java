@@ -2,6 +2,7 @@ package phongtaph31865.poly.stayserene.Screen_user.Activity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,7 @@ public class Activity_more_hotel extends AppCompatActivity {
         getHotel();
     }
     private void getHotel(){
+        binding.progressBarMoreHotel.setVisibility(View.VISIBLE);
         Api_service.service.get_hotel().enqueue(new Callback<List<Hotel>>() {
             @Override
             public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
@@ -47,6 +49,7 @@ public class Activity_more_hotel extends AppCompatActivity {
                 }else{
                     Log.e("Error", "False: khong lay duoc du lieu");
                 }
+                binding.progressBarMoreHotel.setVisibility(View.GONE);
             }
 
             @Override

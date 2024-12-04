@@ -5,9 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,12 +18,13 @@ import java.util.List;
 import java.util.Locale;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
-import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.Model.Order_Room;
 import phongtaph31865.poly.stayserene.Model.Room;
 import phongtaph31865.poly.stayserene.Model.TypeRoom;
+import phongtaph31865.poly.stayserene.Model.Hotel;
 import phongtaph31865.poly.stayserene.R;
 import phongtaph31865.poly.stayserene.Screen_user.Activity.OrderRoom.Activity_show_detail_booking;
+import phongtaph31865.poly.stayserene.databinding.ItemScheduleBinding;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,42 +37,45 @@ public class Adapter_schedule extends RecyclerView.Adapter<Adapter_schedule.View
     public Adapter_schedule(List<Order_Room> orderRooms) {
         this.orderRooms = orderRooms;
     }
+
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_schedule, parent, false);
-        return new ViewHolder(view);
+        // Sử dụng ViewBinding
+        ItemScheduleBinding binding = ItemScheduleBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Order_Room orderRoom = orderRooms.get(position);
-        SimpleDateFormat originalFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy"); // Note the spaces around the hyphen
-
-        // Định dạng mới chỉ để lấy dd/MM/yyyy
+        SimpleDateFormat originalFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
         try {
             Date timeCheckIn = originalFormat.parse(orderRoom.getTimeGet());
             Date timeCheckOut = originalFormat.parse(orderRoom.getTimeCheckout());
             String dateCheckIn = dateFormat.format(timeCheckIn);
             String dateCheckOut = dateFormat.format(timeCheckOut);
-            holder.start_date.setText(dateCheckIn);
-            holder.end_date.setText(dateCheckOut);
+            holder.binding.itemStartDateSchedule.setText(dateCheckIn);
+            holder.binding.itemEndDateSchedule.setText(dateCheckOut);
         } catch (Exception e) {
             Log.e("Error", e.getMessage());
         }
 
-        holder.price.setText(formatter.format(orderRoom.getTotal()));
+        holder.binding.itemPriceSchedule.setText(formatter.format(orderRoom.getTotal()));
+
         // Set up Intent with orderRoom data
         Intent intent = createIntentWithExtras(holder, orderRoom);
 
         // Load hotel details based on room ID
         loadHotelDetails(orderRoom.getIdPhong(), holder, intent);
 
-        holder.btn_item.setOnClickListener(v -> v.getContext().startActivity(intent));
+        holder.binding.btnItemSchedule.setOnClickListener(v -> v.getContext().startActivity(intent));
         holder.itemView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
                 onItemClickListener.onItemClick(position, orderRoom);
@@ -99,7 +100,7 @@ public class Adapter_schedule extends RecyclerView.Adapter<Adapter_schedule.View
             public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
                     Room room = response.body().get(0);
-                    Picasso.get().load(room.getAnhPhong()).fit().centerCrop().into(holder.img);
+                    Picasso.get().load(room.getAnhPhong()).fit().centerCrop().into(holder.binding.itemImgSchedule);
                     loadTypeRoomDetails(room.getIdLoaiPhong(), holder, intent);
                 } else {
                     Log.e("Room Fetch", "Failed to fetch room details: " + response.message());
@@ -138,7 +139,7 @@ public class Adapter_schedule extends RecyclerView.Adapter<Adapter_schedule.View
             public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
                     Hotel hotel = response.body().get(0);
-                    holder.name.setText(hotel.getTenKhachSan());
+                    holder.binding.itemNameSchedule.setText(hotel.getTenKhachSan());
                     intent.putExtra("name_hotel", hotel.getTenKhachSan());
                 } else {
                     Log.e("Hotel Fetch", "Failed to fetch hotel details: " + response.message());
@@ -162,18 +163,11 @@ public class Adapter_schedule extends RecyclerView.Adapter<Adapter_schedule.View
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView img;
-        TextView name, start_date, end_date, price;
-        RelativeLayout btn_item;
+        private final ItemScheduleBinding binding;
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            img = itemView.findViewById(R.id.item_img_schedule);
-            name = itemView.findViewById(R.id.item_name_schedule);
-            start_date = itemView.findViewById(R.id.item_start_date_schedule);
-            end_date = itemView.findViewById(R.id.item_end_date_schedule);
-            price = itemView.findViewById(R.id.item_price_schedule);
-            btn_item = itemView.findViewById(R.id.btn_item_schedule);
+        public ViewHolder(ItemScheduleBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }

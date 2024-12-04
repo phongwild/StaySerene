@@ -135,7 +135,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#101010"
-                        android:text="1"
                         android:textSize="16sp"
                         android:textStyle="bold"/>
                 </LinearLayout>
@@ -144,8 +143,8 @@
                     android:id="@+id/tv_location_detail_type_room"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Australia"
                     android:drawableLeft="@drawable/ic_location"
+                    android:layout_marginTop="10dp"
                     android:drawablePadding="6dp"
                     android:gravity="center"
                     android:textSize="12sp"
@@ -161,7 +160,6 @@
                     android:id="@+id/tv_price_detail_type_room"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="$200.7"
                     android:textSize="16sp"
                     android:textColor="#4c4ddc"
                     android:textStyle="bold" />
@@ -222,7 +220,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:text="Open"
                     android:textColor="#101010"
                     android:textSize="14sp" />
             </LinearLayout>

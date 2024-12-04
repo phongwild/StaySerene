@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -44,6 +45,7 @@ public class Activity_detail_room extends AppCompatActivity {
     private ImageView btn_back, btn_filter;
     private RecyclerView rcv;
     private Adapter_detail_room adapter;
+    private ProgressBar progressBar;
     private List<Room> rooms;
     @SuppressLint("MissingInflatedId")
     @Override
@@ -59,6 +61,7 @@ public class Activity_detail_room extends AppCompatActivity {
         btn_back = findViewById(R.id.btn_back_detail_room);
         btn_filter = findViewById(R.id.btn_filter_detail_room);
         rcv = findViewById(R.id.rcv_detail_room);
+        progressBar = findViewById(R.id.progressBar_detail_room);
     }
     private void handleView(){
         btn_back.setOnClickListener(v -> finish());
@@ -116,6 +119,7 @@ public class Activity_detail_room extends AppCompatActivity {
         subMenu.show();
     }
     public void get_room(){
+        progressBar.setVisibility(View.VISIBLE);
         GridLayoutManager manager = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
         rcv.setLayoutManager(manager);
         Api_service.service.get_rooms().enqueue(new Callback<List<Room>>() {
@@ -126,9 +130,11 @@ public class Activity_detail_room extends AppCompatActivity {
                         rooms = response.body();
                         adapter = new Adapter_detail_room(rooms);
                         rcv.setAdapter(adapter);
+                        adapter.filterPrice(true);
                         adapter.notifyDataSetChanged();
                     }
                 }else Log.e("Detail_room", "Lỗi");
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override

@@ -103,8 +103,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    //Picasso
+    //Load image
     implementation("com.squareup.picasso:picasso:2.8")
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+
     //Circle image
     implementation("de.hdodenhof:circleimageview:3.1.0")
     //Firebase

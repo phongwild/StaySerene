@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -27,7 +28,8 @@ public class Activity_list_type_room extends AppCompatActivity {
     private ImageView btn_back;
     private RecyclerView rcv;
     private TextView title;
-    Adapter_type_rooms adapter;
+    private Adapter_type_rooms adapter;
+    private ProgressBar progressBar;
     private List<TypeRoom> typeRoomList;
     @SuppressLint("MissingInflatedId")
     @Override
@@ -35,26 +37,30 @@ public class Activity_list_type_room extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_list_type_room);
+
+        initView();
+
+        handleClick();
+
+        get_ds_loaiPhong();
+    }
+    private void initView(){
         rcv = findViewById(R.id.rcv_list_type_rooms);
         btn_back = findViewById(R.id.btn_back_type_rooms);
         title = findViewById(R.id.tv_title_list_type_rooms);
+        progressBar = findViewById(R.id.progressBar_rcv_list_type_rooms);
         Intent intent = getIntent();
         title.setText(intent.getStringExtra("name"));
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                startActivity(new Intent(Activity_list_type_room.this, MainActivity_user.class));
-                finish();
-            }
-        });
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        rcv.setLayoutManager(llm);
-        get_ds_loaiPhong();
+    }
+    private void handleClick(){
+        btn_back.setOnClickListener(v -> finish());
     }
     public void get_ds_loaiPhong() {
         Intent intent = getIntent();
         String _id = intent.getStringExtra("id");
-        Log.e("List_type_rooms", "id: " + _id);
+        progressBar.setVisibility(View.VISIBLE);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        rcv.setLayoutManager(llm);
         Api_service.service.get_typeroom_byId_hotel(_id).enqueue(new Callback<List<TypeRoom>>() {
             @Override
             public void onResponse(Call<List<TypeRoom>> call, Response<List<TypeRoom>> response) {
@@ -67,6 +73,7 @@ public class Activity_list_type_room extends AppCompatActivity {
                 }else {
                     Log.e("List_type_rooms", "False: " + response.message());
                 }
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
