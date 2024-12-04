@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.saadahmedev.popupdialog.PopupDialog;
 import com.saadahmedev.popupdialog.listener.StandardDialogActionListener;
 import com.squareup.picasso.Picasso;
@@ -101,7 +102,7 @@ public class Adapter_rcv_ongoing extends RecyclerView.Adapter<Adapter_rcv_ongoin
 
     private void loadRoomImage(ViewHolder holder, Room room) {
         if (room.getAnhPhong() != null) {
-            Picasso.get().load(room.getAnhPhong()).fit().centerCrop().into(holder.img);
+            Glide.with(holder.itemView.getContext()).load(room.getAnhPhong()).into(holder.img);
         }
     }
 

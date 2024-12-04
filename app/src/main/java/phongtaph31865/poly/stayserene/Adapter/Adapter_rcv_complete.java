@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.time.LocalDateTime;
@@ -114,7 +115,8 @@ public class Adapter_rcv_complete extends RecyclerView.Adapter<Adapter_rcv_compl
 
     private void updateRoomImage(ViewHolder holder, Room room) {
         if (room.getAnhPhong() != null) {
-            Picasso.get().load(room.getAnhPhong()).fit().centerCrop().into(holder.img);        }
+            Glide.with(holder.itemView.getContext()).load(room.getAnhPhong()).into(holder.img);
+        }
     }
 
     private void loadTypeRoomDetails(ViewHolder holder, Room room) {
