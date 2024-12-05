@@ -1,28 +1,20 @@
 package phongtaph31865.poly.stayserene.Login_Register;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -31,20 +23,17 @@ import java.util.List;
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.R;
-import phongtaph31865.poly.stayserene.Screen_user.Activity.MainActivity_user;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-@SuppressLint("MissingInflatedId")
 public class Register extends AppCompatActivity {
     private String fullName, email, password, confirmPassword;
     private TextInputLayout layout_fullName, layout_email, layout_password, layout_confirmPassword;
     private TextInputEditText ed_fullName, ed_email, ed_password, ed_confirmPassword;
-    private LinearLayout btn_gg;
-    private GoogleSignInOptions gso;
-    private GoogleSignInClient gsc;
-    private final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    private ProgressBar progressBar;
+    private LinearLayout btnSignUp;
+    private final String emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +41,10 @@ public class Register extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
 
-        // Initialize views
+        // Khởi tạo các view
         initializeViews();
 
-        // Set listeners
+        // Đặt các sự kiện lắng nghe
         setListeners();
     }
 
@@ -68,21 +57,15 @@ public class Register extends AppCompatActivity {
         ed_email = findViewById(R.id.ed_email_register);
         ed_password = findViewById(R.id.ed_password_register);
         ed_confirmPassword = findViewById(R.id.ed_confirmPassword_register);
-        btn_gg = findViewById(R.id.btn_signUp_Google);
-        TextView btnregisterlogin = findViewById(R.id.btn_register_login);
-        LinearLayout btnsingup = findViewById(R.id.btn_SignUp);
+        progressBar = findViewById(R.id.progressBar_register);
+        TextView btnRegisterLogin = findViewById(R.id.btn_register_login);
+        btnSignUp = findViewById(R.id.btn_SignUp);
 
-        // Button to go back to login screen
-        btnregisterlogin.setOnClickListener(v -> finish());
-        //Google
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        gsc = GoogleSignIn.getClient(this, gso);
-        btn_gg.setOnClickListener(v -> {
-            Intent signInIntent = gsc.getSignInIntent();
-            startActivityForResult(signInIntent, 1000);
-        });
-        // Signup button
-        btnsingup.setOnClickListener(v -> handleSignUp());
+        // Nút quay lại màn hình đăng nhập
+        btnRegisterLogin.setOnClickListener(v -> finish());
+
+        // Nút đăng ký
+        btnSignUp.setOnClickListener(v -> handleSignUp());
     }
 
     private void setListeners() {
@@ -91,100 +74,99 @@ public class Register extends AppCompatActivity {
         ed_password.addTextChangedListener(createTextWatcher(layout_password, "Please enter your password"));
         ed_confirmPassword.addTextChangedListener(createTextWatcher(layout_confirmPassword, "Please enter your confirm password"));
     }
-    //Google
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1000) {
-            try {
-                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                task.getResult(ApiException.class);
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                String Uid = account.getId();
-                Api_service.service.check_user_google(Uid).enqueue(new Callback<Boolean>() {
-                    @Override
-                    public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                        if (response.isSuccessful() && response.body() != null){
-                            boolean userExist = response.body();
-                            Log.e("Login", "onResponse: " + userExist + " " + account.getId());
-                            if (!userExist){
-                                Create_acc_gg(Uid, account.getDisplayName(), account.getEmail(), account.getPhotoUrl() !=null ? account.getPhotoUrl().toString() : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTq2k2sI1nZyFTtoaKSXxeVzmAwIPchF4tjwg&s");
-                                startActivity(new Intent(Register.this, MainActivity_user.class));
-                            }else {
-                                SharedPreferences sharedPreferences = getSharedPreferences("user_google", Activity.MODE_PRIVATE);
-                                sharedPreferences.edit().putString("uid", Uid).apply();
-                                Api_service.service.get_account().enqueue(new Callback<List<Account>>() {
-                                    @Override
-                                    public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
-                                        if (response.isSuccessful()) {
-                                            if (response.body() != null) {
-                                                for (Account acc : response.body()) {
-                                                    if (acc.getUid().equals(account.getId())) {
-                                                        SharedPreferences sharedPreferences = getSharedPreferences("user_data", Activity.MODE_PRIVATE);
-                                                        sharedPreferences.edit().putString("uid", acc.get_id()).apply();
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
 
-                                    @Override
-                                    public void onFailure(Call<List<Account>> call, Throwable throwable) {
-                                        Log.e("onFailure", throwable.getMessage());
-                                    }
-                                });
+    private void handleSignUp() {
+        fullName = ed_fullName.getText().toString().trim();
+        email = ed_email.getText().toString().trim();
+        password = ed_password.getText().toString().trim();
+        confirmPassword = ed_confirmPassword.getText().toString().trim();
 
-                                startActivity(new Intent(Register.this, MainActivity_user.class));
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Boolean> call, Throwable throwable) {
-                        Log.e("Login", "onFailure: " + throwable.getMessage());
-                    }
-                });
-
-            } catch (Exception e) {
-
-                Toast.makeText(Register.this, "Google sign-in failed", Toast.LENGTH_SHORT).show();
-                Log.e("Login", "onActivityResult: " + e.getMessage());
-            }
-
+        if (validateInputs()) {
+            progressBar.setVisibility(View.VISIBLE); // Hiển thị ProgressBar
+            checkEmailExists();
         }
     }
-    private void Create_acc_gg(String Uid, String name, String email, String photo) {
-        Account account = new Account();
-        account.setUid(Uid);
-        account.setUsername(name);
-        account.setSdt("");
-        account.setEmail(email);
-        account.setPassword("");
-        account.setDiaChi("");
-        account.setNgaySinh("");
-        account.setGioiTinh("");
-        account.setQuocTich("");
-        account.setRole(1);
-        account.setAvt(photo);
-        account.setCccd("0");
-        Api_service.service.create_account(account).enqueue(new Callback<List<Account>>() {
+
+    private boolean validateInputs() {
+        clearAllErrors(); // Xóa lỗi trước khi validate
+
+        if (fullName.isEmpty()) {
+            showError(layout_fullName, "Please enter your full name");
+            return false;
+        }
+        if (email.isEmpty()) {
+            showError(layout_email, "Please enter your email");
+            return false;
+        }
+        if (!email.matches(emailPattern)) {
+            showError(layout_email, "Email invalid");
+            return false;
+        }
+        if (password.isEmpty()) {
+            showError(layout_password, "Please enter your password");
+            return false;
+        }
+        if (password.length() < 6) {
+            showError(layout_password, "Password must be at least 6 characters");
+            return false;
+        }
+        if (confirmPassword.isEmpty()) {
+            showError(layout_confirmPassword, "Please enter your confirm password");
+            return false;
+        }
+        if (!password.equals(confirmPassword)) {
+            showError(layout_confirmPassword, "Password does not match");
+            return false;
+        }
+        return true;
+    }
+
+    private void checkEmailExists() {
+        Api_service.service.get_account().enqueue(new Callback<List<Account>>() {
             @Override
             public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
-                if (response.isSuccessful()) {
-                    Log.e("create acc gg", "success");
-                    SharedPreferences sharedPreferences = getSharedPreferences("user_data", Activity.MODE_PRIVATE);
-
-                    sharedPreferences.edit().putString("uid", response.body().get(0).getUid()).apply();
-                }else {
-                    Log.e("create acc gg", "false");
+                progressBar.setVisibility(View.GONE); // Ẩn ProgressBar khi API hoàn tất
+                if (response.isSuccessful() && response.body() != null) {
+                    for (Account account : response.body()) {
+                        if (account.getEmail().equals(email)) {
+                            showError(layout_email, "Email already exists");
+                            return;
+                        }
+                    }
+                    proceedToPhoneNumber(); // Email không tồn tại, tiếp tục
+                } else {
+                    proceedToPhoneNumber(); // Nếu không có dữ liệu hoặc lỗi, vẫn tiếp tục
                 }
             }
+
             @Override
             public void onFailure(Call<List<Account>> call, Throwable throwable) {
-                Log.e("error create acc gg", throwable.getMessage());
+                progressBar.setVisibility(View.GONE); // Ẩn ProgressBar khi thất bại
+                Log.e("CheckEmail", "Error checking email: " + throwable.getMessage());
+                Toast.makeText(Register.this, "Failed to check email. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+    private void proceedToPhoneNumber() {
+        Intent intent = new Intent(Register.this, Add_phoneNumber.class);
+        intent.putExtra("fullName", fullName);
+        intent.putExtra("email", email);
+        intent.putExtra("password", password);
+        startActivity(intent);
+    }
+
+    private void showError(TextInputLayout layout, String message) {
+        layout.setError(message);
+    }
+
+    private void clearAllErrors() {
+        layout_fullName.setError(null);
+        layout_email.setError(null);
+        layout_password.setError(null);
+        layout_confirmPassword.setError(null);
+    }
+
     private TextWatcher createTextWatcher(TextInputLayout layout, String errorMessage) {
         return new TextWatcher() {
             @Override
@@ -202,81 +184,5 @@ public class Register extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) { }
         };
-    }
-
-    private void handleSignUp() {
-        fullName = ed_fullName.getText().toString().trim();
-        email = ed_email.getText().toString().trim();
-        password = ed_password.getText().toString().trim();
-        confirmPassword = ed_confirmPassword.getText().toString().trim();
-
-        if (validateInputs()) {
-            checkEmailExists();
-        }
-    }
-
-    private boolean validateInputs() {
-        if (fullName.isEmpty()) {
-            layout_fullName.setError("Please enter your full name");
-            return false;
-        }
-        if (email.isEmpty()) {
-            layout_email.setError("Please enter your email");
-            return false;
-        }
-        if (!email.matches(emailPattern)) {
-            layout_email.setError("Email invalid");
-            return false;
-        }
-        if (password.isEmpty()) {
-            layout_password.setError("Please enter your password");
-            return false;
-        }
-        if (password.length() < 6) {
-            layout_password.setError("Password must be at least 6 characters");
-            return false;
-        }
-        if (confirmPassword.isEmpty()) {
-            layout_confirmPassword.setError("Please enter your confirm password");
-            return false;
-        }
-        if (!password.equals(confirmPassword)) {
-            layout_confirmPassword.setError("Password does not match");
-            return false;
-        }
-        return true;
-    }
-
-    private void checkEmailExists() {
-        Api_service.service.get_account().enqueue(new Callback<List<Account>>() {
-            @Override
-            public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
-                if (response.isSuccessful()) {
-                    List<Account> accounts = response.body();
-                    for (Account account : accounts) {
-                        if (account.getEmail().equals(email)) {
-                            layout_email.setError("Email already exists");
-                            return;
-                        }
-                    }
-                    proceedToPhoneNumber();
-                }else {
-                    proceedToPhoneNumber();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Account>> call, Throwable throwable) {
-                Log.e("Linked database false", throwable.toString());
-            }
-        });
-    }
-
-    private void proceedToPhoneNumber() {
-        Intent intent = new Intent(Register.this, Add_phoneNumber.class);
-        intent.putExtra("fullName", fullName);
-        intent.putExtra("email", email);
-        intent.putExtra("password", password);
-        startActivity(intent);
     }
 }

@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.Dialog;
@@ -32,17 +33,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.saadahmedev.popupdialog.PopupDialog;
 
 import java.util.List;
@@ -63,22 +58,32 @@ public class Loginscreen extends AppCompatActivity {
     private TextView btn_SignUp, btn_forgotPass;
     private TextInputLayout layout_email, layout_pass;
     private TextInputEditText edt_email, edt_pass;
-    float v = 0;
+    private ProgressBar progressBar;
     private FirebaseAuth mAuth;
     private LinearLayout btn_login_google, btn_login_fb;
     private GoogleSignInOptions gso;
     private GoogleSignInClient gsc;
-    private FirebaseAuth auth;
-    String email, password;
+    private String email, password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_loginscreen);
+
+        // Kiểm tra quyền location
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION);
         }
+
+        // Khởi tạo views
+        initializeViews();
+
+        // Đặt các sự kiện lắng nghe
+        setListeners();
+    }
+
+    private void initializeViews() {
         btn_Login = findViewById(R.id.btn_Login);
         btn_SignUp = findViewById(R.id.btn_register_login);
         btn_forgotPass = findViewById(R.id.btn_forgot_pass);
@@ -88,132 +93,128 @@ public class Loginscreen extends AppCompatActivity {
         edt_pass = findViewById(R.id.ed_password_login);
         btn_login_google = findViewById(R.id.btn_login_with_google);
         btn_login_fb = findViewById(R.id.btn_login_with_facebook);
-        edt_email.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        progressBar = findViewById(R.id.progressBar_login); // Thêm ProgressBar vào layout
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 0) {
-                    layout_email.setError("Please enter your email");
-                } else {
-                    layout_email.setErrorEnabled(false);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        edt_pass.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 0) {
-                    layout_pass.setError("Please enter your password");
-                } else {
-                    layout_pass.setErrorEnabled(false);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        btn_SignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Loginscreen.this, Register.class));
-            }
-        });
         mAuth = FirebaseAuth.getInstance();
-        //Đăng nhập bằng google
+
+        // Đăng nhập bằng Google
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
-        btn_login_google.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent signInIntent = gsc.getSignInIntent();
-                startActivityForResult(signInIntent, 1000);
-            }
-        });
-        //Đăng nhập bằng facebook
-        btn_login_fb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        btn_forgotPass.setOnClickListener(v -> {
-            startActivity(new Intent(Loginscreen.this, Activity_type_phone_number.class));
-        });
-        btn_Login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                email = edt_email.getText().toString().trim();
-                password = edt_pass.getText().toString().trim();
-                if (email.isEmpty() || password.isEmpty()) {
-                    if (email.isEmpty()) {
-                        layout_email.setError("Please enter your email");
-                    } else {
-                        layout_email.setErrorEnabled(false);
-                    }
-                    if (password.isEmpty()) {
-                        layout_pass.setError("Please enter your password");
-                    } else {
-                        layout_pass.setErrorEnabled(false);
-                    }
-                } else {
-                    Account account = new Account();
-                    account.setEmail(email);
-                    account.setPassword(password);
-                    Api_service.service.login(account).enqueue(new Callback<List<Account>>() {
-                        @Override
-                        public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
-                            if (response.isSuccessful()) {
-                                Intent intent = new Intent(Loginscreen.this, MainActivity_user.class);
-                                List<Account> accountList = response.body();
-                                if (accountList.get(0).getRole() == 1) {
-                                    SharedPreferences sharedPreferences = getSharedPreferences("user_data", Activity.MODE_PRIVATE);
-                                    sharedPreferences.edit().putString("uid", accountList.get(0).get_id()).apply();
-                                    saveLoginStatus(true, accountList.get(0).getEmail(), accountList.get(0).getPassword(), accountList.get(0).getRole());
-                                    intent.putExtra("Username", accountList.get(0).get_id());
-                                    Toast.makeText(Loginscreen.this, "Login success", Toast.LENGTH_SHORT).show();
-                                    startActivity(intent);
-                                }
-
-                            } else {
-                                PopupDialog.getInstance(Loginscreen.this)
-                                        .statusDialogBuilder()
-                                        .createErrorDialog()
-                                        .setHeading("Uh-Oh")
-                                        .setDescription("Wrong email or password!" + " Please try again")
-                                        .setActionButtonText("Try again")
-                                        .build(Dialog::dismiss)
-                                        .show();
-                            }
-
-                        }
-
-                        @Override
-                        public void onFailure(Call<List<Account>> call, Throwable throwable) {
-                            Log.e("Login", "onFailure: " + throwable.getMessage());
-                        }
-                    });
-                }
-            }
-        });
     }
 
-    //Google
+    private void setListeners() {
+        edt_email.addTextChangedListener(createTextWatcher(layout_email, "Please enter your email"));
+        edt_pass.addTextChangedListener(createTextWatcher(layout_pass, "Please enter your password"));
+
+        btn_SignUp.setOnClickListener(v -> startActivity(new Intent(Loginscreen.this, Register.class)));
+
+        // Đăng nhập bằng Google
+        btn_login_google.setOnClickListener(v -> {
+            Intent signInIntent = gsc.getSignInIntent();
+            startActivityForResult(signInIntent, 1000);
+        });
+
+        // Đăng nhập bằng Facebook (chưa thực hiện)
+        btn_login_fb.setOnClickListener(v -> {});
+
+        // Quên mật khẩu
+        btn_forgotPass.setOnClickListener(v -> startActivity(new Intent(Loginscreen.this, Activity_type_phone_number.class)));
+
+        // Đăng nhập
+        btn_Login.setOnClickListener(v -> loginUser());
+    }
+
+    private void loginUser() {
+        email = edt_email.getText().toString().trim();
+        password = edt_pass.getText().toString().trim();
+
+        if (email.isEmpty() || password.isEmpty()) {
+            if (email.isEmpty()) layout_email.setError("Please enter your email");
+            else layout_email.setErrorEnabled(false);
+            if (password.isEmpty()) layout_pass.setError("Please enter your password");
+            else layout_pass.setErrorEnabled(false);
+        } else {
+            showProgressBar(); // Hiển thị ProgressBar khi bắt đầu đăng nhập
+            Account account = new Account();
+            account.setEmail(email);
+            account.setPassword(password);
+            Api_service.service.login(account).enqueue(new Callback<List<Account>>() {
+                @Override
+                public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                    hideProgressBar(); // Ẩn ProgressBar khi có kết quả
+                    if (response.isSuccessful()) {
+                        List<Account> accountList = response.body();
+                        if (accountList != null && accountList.size() > 0 && accountList.get(0).getRole() == 1) {
+                            SharedPreferences sharedPreferences = getSharedPreferences("user_data", Activity.MODE_PRIVATE);
+                            sharedPreferences.edit().putString("uid", accountList.get(0).get_id()).apply();
+                            saveLoginStatus(true, accountList.get(0).getEmail(), accountList.get(0).getPassword(), accountList.get(0).getRole());
+                            Intent intent = new Intent(Loginscreen.this, MainActivity_user.class);
+                            intent.putExtra("Username", accountList.get(0).get_id());
+                            Toast.makeText(Loginscreen.this, "Login success", Toast.LENGTH_SHORT).show();
+                            hideProgressBar();
+                            startActivity(intent);
+                        }
+                    } else {
+                        showLoginErrorDialog();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                    hideProgressBar(); // Ẩn ProgressBar khi thất bại
+                    Log.e("Login", "onFailure: " + throwable.getMessage());
+                }
+            });
+        }
+    }
+
+    private void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE); // Hiển thị ProgressBar
+    }
+
+    private void hideProgressBar() {
+        progressBar.setVisibility(View.GONE); // Ẩn ProgressBar
+    }
+
+    private void showLoginErrorDialog() {
+        PopupDialog.getInstance(Loginscreen.this)
+                .statusDialogBuilder()
+                .createErrorDialog()
+                .setHeading("Uh-Oh")
+                .setDescription("Wrong email or password! Please try again")
+                .setActionButtonText("Try again")
+                .build(Dialog::dismiss)
+                .show();
+    }
+
+    private TextWatcher createTextWatcher(TextInputLayout layout, String errorMessage) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == 0) layout.setError(errorMessage);
+                else layout.setErrorEnabled(false);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        };
+    }
+
+    // Lưu trạng thái đăng nhập
+    private void saveLoginStatus(boolean isLoggedIN, String email, String password, int role) {
+        SharedPreferences sharedPreferences = getSharedPreferences("loginStatus", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isLoggedIn", isLoggedIN);
+        editor.putString("email", email);
+        editor.putString("password", password);
+        editor.putString("role", String.valueOf(role));
+        editor.apply();
+    }
+
+    // Google sign-in
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -226,36 +227,14 @@ public class Loginscreen extends AppCompatActivity {
                 Api_service.service.check_user_google(Uid).enqueue(new Callback<Boolean>() {
                     @Override
                     public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                        if (response.isSuccessful() && response.body() != null){
+                        if (response.isSuccessful() && response.body() != null) {
                             boolean userExist = response.body();
-                            Log.e("Login", "onResponse: " + userExist + " " + account.getId());
-                            if (!userExist){
-                                Create_acc_gg(Uid, account.getDisplayName(), account.getEmail(), account.getPhotoUrl() !=null ? account.getPhotoUrl().toString() : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTq2k2sI1nZyFTtoaKSXxeVzmAwIPchF4tjwg&s");
+                            if (!userExist) {
+                                Create_acc_gg(Uid, account.getDisplayName(), account.getEmail(), account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTq2k2sI1nZyFTtoaKSXxeVzmAwIPchF4tjwg&s");
                                 startActivity(new Intent(Loginscreen.this, MainActivity_user.class));
-                            }else {
+                            } else {
                                 SharedPreferences sharedPreferences = getSharedPreferences("user_google", Activity.MODE_PRIVATE);
                                 sharedPreferences.edit().putString("uid", Uid).apply();
-                                    Api_service.service.get_account().enqueue(new Callback<List<Account>>() {
-                                        @Override
-                                        public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
-                                            if (response.isSuccessful()) {
-                                                if (response.body() != null) {
-                                                    for (Account acc : response.body()) {
-                                                        if (acc.getUid().equals(account.getId())) {
-                                                            SharedPreferences sharedPreferences = getSharedPreferences("user_data", Activity.MODE_PRIVATE);
-                                                            sharedPreferences.edit().putString("uid", acc.get_id()).apply();
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<List<Account>> call, Throwable throwable) {
-                                            Log.e("onFailure", throwable.getMessage());
-                                        }
-                                    });
-
                                 startActivity(new Intent(Loginscreen.this, MainActivity_user.class));
                             }
                         }
@@ -266,129 +245,34 @@ public class Loginscreen extends AppCompatActivity {
                         Log.e("Login", "onFailure: " + throwable.getMessage());
                     }
                 });
-
             } catch (Exception e) {
-
                 Toast.makeText(Loginscreen.this, "Google sign-in failed", Toast.LENGTH_SHORT).show();
-                Log.e("Login", "onActivityResult: " + e.getMessage());
             }
-
         }
     }
-    private void saveLoginStatus(boolean isLoggedIN, String email, String password, int role) {
-        SharedPreferences sharedPreferences = getSharedPreferences("loginStatus", Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("isLoggedIn", isLoggedIN);
-        editor.putString("email", email);
-        editor.putString("password", password);
-        editor.putString("role", String.valueOf(role));
-        editor.apply();
-    }
+
+    // Tạo tài khoản Google
     private void Create_acc_gg(String Uid, String name, String email, String photo) {
         Account account = new Account();
         account.setUid(Uid);
         account.setUsername(name);
-        account.setSdt("");
         account.setEmail(email);
         account.setPassword("");
-        account.setDiaChi("");
-        account.setNgaySinh("");
-        account.setGioiTinh("");
-        account.setQuocTich("");
-        account.setRole(1);
         account.setAvt(photo);
-        account.setCccd("0");
+        account.setRole(1);
         Api_service.service.create_account(account).enqueue(new Callback<List<Account>>() {
             @Override
             public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
                 if (response.isSuccessful()) {
-                    Log.e("create acc gg", "success");
                     SharedPreferences sharedPreferences = getSharedPreferences("user_data", Activity.MODE_PRIVATE);
-
                     sharedPreferences.edit().putString("uid", response.body().get(0).getUid()).apply();
-                }else {
-                    Log.e("create acc gg", "false");
                 }
             }
+
             @Override
             public void onFailure(Call<List<Account>> call, Throwable throwable) {
                 Log.e("error create acc gg", throwable.getMessage());
             }
         });
-    }
-    private void checkLoginStatus() {
-        SharedPreferences sharedPreferences = getSharedPreferences("loginStatus", Activity.MODE_PRIVATE);
-        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-        String roleString = sharedPreferences.getString("role", "");
-
-        int userRole = -1; // Đặt giá trị mặc định là -1
-
-        if (!roleString.isEmpty()) {
-            try {
-                userRole = Integer.parseInt(roleString);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                // Xử lý khi chuỗi không thể chuyển đổi thành số nguyên
-            }
-        }
-        SharedPreferences googlePref = getSharedPreferences("user_google", Activity.MODE_PRIVATE);
-        String googleUid = googlePref.getString("uid", "");
-        if (!googleUid.isEmpty()) {
-            Api_service.service.get_account().enqueue(new Callback<List<Account>>() {
-                @Override
-                public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
-                    if (response.isSuccessful()) {
-                        if (response.body() != null) {
-                            for (Account acc : response.body()) {
-                                if (acc.getUid().equals(googleUid)) {
-                                    SharedPreferences sharedPreferences = getSharedPreferences("user_data", Activity.MODE_PRIVATE);
-                                    sharedPreferences.edit().putString("uid", acc.get_id()).apply();
-
-                                }
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<Account>> call, Throwable throwable) {
-                    Log.e("onFailure", throwable.getMessage());
-                }
-            });
-            isLoggedIn = true;
-            userRole = 1;
-        }
-        if (isLoggedIn) {
-            switch (userRole) {
-                case 0:
-//                    startActivity(new Intent(Loginscreen.this, MainActivity_admin.class));
-                    Toast.makeText(Loginscreen.this, "Welcome Admin", Toast.LENGTH_SHORT).show();
-                    break;
-                case 1:
-                    startActivity(new Intent(Loginscreen.this, MainActivity_user.class));
-                    Toast.makeText(Loginscreen.this, "Welcome back", Toast.LENGTH_SHORT).show();
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        checkLoginStatus();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CODE_LOCATION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("Location", "Permission granted");
-            } else {
-                Log.d("Location", "Permission denied");
-            }
-        }
     }
 }
