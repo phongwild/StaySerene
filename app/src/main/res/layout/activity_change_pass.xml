@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
+    android:theme="@style/themeuser"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".Screen_user.Activity.Activity_changePass">
