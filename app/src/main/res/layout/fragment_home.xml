@@ -157,8 +157,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="10dp"/>
+                <TextView
+                    android:id="@+id/tv_see_more_room"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/rcv_home_2"
+                    android:gravity="center"
+                    android:text="See more"
+                    android:textColor="#939393"
+                    android:layout_marginBottom="5dp"
+                    android:visibility="invisible"
+                    android:textSize="14sp" />
             </RelativeLayout>
-
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

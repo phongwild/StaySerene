@@ -42,12 +42,13 @@ import retrofit2.Response;
 
 public class Fragment_home extends Fragment {
     private RecyclerView rcv1, rcv2;
-    private TextView tvMoreHotel, tvMoreRoom, tvLocation;
+    private TextView tvMoreHotel, tvMoreRoom, tvLocation, tv_see_more_room;
     private Adapter_rcv1_home adapter1;
     private Adapter_rcv2_home adapter2;
     private List<Room> rooms = new ArrayList<>();
     private List<Hotel> hotels = new ArrayList<>();
     private ProgressBar progressBar1, progressBar2;
+
 
     public Fragment_home() {
     }
@@ -80,6 +81,7 @@ public class Fragment_home extends Fragment {
         tvMoreHotel = view.findViewById(R.id.tv_show_more_ht);
         tvMoreRoom = view.findViewById(R.id.tv_show_more_room);
         tvLocation = view.findViewById(R.id.tv_location_home);
+        tv_see_more_room = view.findViewById(R.id.tv_see_more_room);
         progressBar1 = view.findViewById(R.id.progressBar_rcv1_home);
         progressBar2 = view.findViewById(R.id.progressBar_rcv2_home);
 
@@ -154,6 +156,7 @@ public class Fragment_home extends Fragment {
     private void setClickListeners() {
         tvMoreHotel.setOnClickListener(v -> startActivity(new Intent(getActivity(), Activity_more_hotel.class)));
         tvMoreRoom.setOnClickListener(v -> startActivity(new Intent(getActivity(), Activity_detail_room.class)));
+        tv_see_more_room.setOnClickListener(v -> loadMoreItemRooms());
     }
 
     private void checkNetworkConnection() {
@@ -199,11 +202,11 @@ public class Fragment_home extends Fragment {
                     adapter2 = new Adapter_rcv2_home(rooms);
                     rcv2.setAdapter(adapter2);
                     adapter2.filterPrice(true);
-                    adapter2.notifyDataSetChanged();
                 } else {
                     Log.e("loadRoomData", "Không lấy được danh sách phòng");
                 }
                 progressBar2.setVisibility(View.GONE);
+                tv_see_more_room.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -214,6 +217,9 @@ public class Fragment_home extends Fragment {
         });
     }
 
+    private void loadMoreItemRooms() {
+        adapter2.loadMoreItems();
+    }
     private void showNoInternetDialog() {
         NoInternetDialogSignal.Builder builder = new NoInternetDialogSignal.Builder(getActivity(), getLifecycle());
         DialogPropertiesSignal properties = builder.getDialogProperties();

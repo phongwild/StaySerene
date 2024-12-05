@@ -34,13 +34,27 @@ public class Adapter_rcv2_home extends RecyclerView.Adapter<Adapter_rcv2_home.Vi
     private List<Room> rooms;
     private Map<String, TypeRoom> typeRoomMap = new HashMap<>();
     private int visibleItemCount = 10; // Số lượng bản ghi hiển thị ban đầu
-
-
-
+    private boolean isLoading = false; // Biến kiểm soát trạng thái đang tải
 
     public Adapter_rcv2_home(List<Room> rooms) {
         this.rooms = rooms;
         loadTypeRoomData();
+    }
+
+    public void loadMoreItems() {
+        if (isLoading) return; // Nếu đang tải thì không làm gì
+        isLoading = true;
+
+        // Tăng số lượng item hiển thị
+        int totalItems = rooms.size();
+        int nextLimit = Math.min(visibleItemCount + 10, totalItems); // Load thêm 10 items
+
+        if (visibleItemCount < nextLimit) {
+            visibleItemCount = nextLimit;  // Cập nhật lại số lượng items hiển thị
+            notifyDataSetChanged(); // Cập nhật lại giao diện
+        }
+
+        isLoading = false;  // Xong việc tải
     }
 
     // Tải dữ liệu loại phòng và lưu trữ vào Map
@@ -78,7 +92,6 @@ public class Adapter_rcv2_home extends RecyclerView.Adapter<Adapter_rcv2_home.Vi
         notifyDataSetChanged(); // Cập nhật lại giao diện sau khi sắp xếp
     }
 
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -96,8 +109,7 @@ public class Adapter_rcv2_home extends RecyclerView.Adapter<Adapter_rcv2_home.Vi
 
     @Override
     public int getItemCount() {
-//        return rooms != null ? rooms.size() : 0;
-        return Math.min(visibleItemCount, rooms != null ? rooms.size() : 0);
+        return Math.min(visibleItemCount, rooms.size()); // Số lượng item cần hiển thị, tối đa là visibleItemCount
     }
 
     // Hiển thị chi tiết phòng
