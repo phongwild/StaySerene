@@ -275,4 +275,47 @@ public class Loginscreen extends AppCompatActivity {
             }
         });
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkLoginStatus();
+    }
+
+    private void checkLoginStatus() {
+        SharedPreferences sharedPreferences = getSharedPreferences("loginStatus", Activity.MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false); // Kiểm tra trạng thái đăng nhập
+
+        // Kiểm tra nếu người dùng đã đăng nhập trước đó
+        if (isLoggedIn) {
+            // Nếu đã đăng nhập, chuyển đến màn hình chính
+            String roleString = sharedPreferences.getString("role", "");
+            int userRole = -1; // Giá trị mặc định là -1
+
+            if (!roleString.isEmpty()) {
+                try {
+                    userRole = Integer.parseInt(roleString); // Chuyển đổi role thành số nguyên
+                } catch (NumberFormatException e) {
+                    e.printStackTrace(); // Xử lý khi chuỗi không thể chuyển thành số nguyên
+                }
+            }
+
+            // Kiểm tra vai trò người dùng và chuyển đến màn hình phù hợp
+            switch (userRole) {
+                case 0:
+                    // Nếu là admin, chuyển đến màn hình quản trị (chưa xây dựng)
+                    // startActivity(new Intent(Loginscreen.this, MainActivity_admin.class));
+                    Toast.makeText(Loginscreen.this, "Welcome Admin", Toast.LENGTH_SHORT).show();
+                    break;
+                case 1:
+                    // Nếu là user, chuyển đến màn hình chính người dùng
+                    startActivity(new Intent(Loginscreen.this, MainActivity_user.class));
+                    Toast.makeText(Loginscreen.this, "Welcome back", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
+            finish(); // Dừng lại ở màn hình đăng nhập nếu đã đăng nhập
+        }
+    }
+
 }

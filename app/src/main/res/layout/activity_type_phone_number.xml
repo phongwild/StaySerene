@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Login_Register.ForgotPass.Activity_otp_authen">
+    tools:context=".Login_Register.ForgotPass.Activity_type_phone_number">
 
     <LinearLayout
         android:layout_width="match_parent"
