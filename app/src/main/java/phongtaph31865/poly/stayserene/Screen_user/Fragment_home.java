@@ -1,6 +1,5 @@
 package phongtaph31865.poly.stayserene.Screen_user;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,7 +19,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.imaginativeworld.oopsnointernet.callbacks.ConnectionCallback;
 import org.imaginativeworld.oopsnointernet.dialogs.signal.DialogPropertiesSignal;
 import org.imaginativeworld.oopsnointernet.dialogs.signal.NoInternetDialogSignal;
 
@@ -51,7 +49,8 @@ public class Fragment_home extends Fragment {
     private List<Hotel> hotels = new ArrayList<>();
     private ProgressBar progressBar1, progressBar2;
 
-    public Fragment_home() {}
+    public Fragment_home() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -160,6 +159,7 @@ public class Fragment_home extends Fragment {
     private void checkNetworkConnection() {
         if (NetworkUtils.isNetworkConnected(getActivity())) {
             loadHotelData(() -> loadRoomData());
+
         } else {
             showNoInternetDialog();
         }

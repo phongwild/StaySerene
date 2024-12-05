@@ -90,7 +90,6 @@ public class Add_phoneNumber extends AppCompatActivity {
     private CardView btn_front_idCard, btn_back_idCard;
     private ImageView img, btn_back, front_idCard_img, back_idCard_img, iv_lens_front, iv_lens_back;
     private Uri ImgUri, front_ImgUri, back_ImgUri;
-    private FirebaseAuth mAuth;
     private String fullname, email, password;
     private static final int CAMERA_REQUEST_CODE_1 = 101;
     private static final int CAMERA_REQUEST_CODE_2 = 102;
@@ -111,7 +110,7 @@ public class Add_phoneNumber extends AppCompatActivity {
         setContentView(R.layout.activity_add_phone_number);
 
         initUI();
-        initFirebaseAuth();
+
         retrieveIntentData();
 
         setButtonListeners();
@@ -140,9 +139,6 @@ public class Add_phoneNumber extends AppCompatActivity {
         iv_lens_back = findViewById(R.id.iv_lens_back_cccd);
     }
 
-    private void initFirebaseAuth() {
-        mAuth = FirebaseAuth.getInstance();
-    }
 
     private void retrieveIntentData() {
         Intent intent = getIntent();
@@ -189,7 +185,7 @@ public class Add_phoneNumber extends AppCompatActivity {
                 return;
             }
             if (!validateFields(phoneNumber, address, date)) return;
-            sendOTP();
+            createAccount();
         });
 
         btn_front_idCard.setOnClickListener(v -> {
@@ -200,7 +196,7 @@ public class Add_phoneNumber extends AppCompatActivity {
         });
     }
 
-    private void sendOTP() {
+    private void sendOTP(String phoneNumber, String address, String date) {
         OTP = MailConfig.generateOTP(4);
         MailConfig.sendOtpEmail(email, OTP);
         Dialog_OTP dialogOtp = Dialog_OTP.newInstance(email, OTP);
@@ -208,13 +204,16 @@ public class Add_phoneNumber extends AppCompatActivity {
         dialogOtp.setOtpSubmitCallback(new Dialog_OTP.OtpSubmitCallback() {
             @Override
             public void onOtpSubmit(String otp) {
-                createAccount();
+                uploadImages(phoneNumber, address, date);
             }
         });
         dialogOtp.setOtpResendCallback(email -> {
             OTP = MailConfig.generateOTP(4);
             MailConfig.sendOtpEmail(email, OTP);
         });
+    }
+    public interface CheckExistCallback {
+        void onResult(boolean exists);
     }
     private void ScanQR(Uri uri){
         Qr_Code_Scanner.scanQRCodeFromUri(this, uri,new Qr_Code_Scanner.QRCodeScanCallback(){
@@ -236,6 +235,7 @@ public class Add_phoneNumber extends AppCompatActivity {
             @Override
             public void onQRCodeScanFailed(String error) {
                 Log.e("QRCodeScanFailed", error);
+                Toast.makeText(Add_phoneNumber.this, "Not found ID Card", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -414,38 +414,46 @@ public class Add_phoneNumber extends AppCompatActivity {
         String address = edt_address.getText().toString();
         String date = edt_date.getText().toString();
         if (!validateFields(phoneNumber, address, date)) return;
-        if (!checkExistID()) return;
-        uploadImages(phoneNumber, address, date);
+        checkExistID(exists -> {
+            if (exists) {
+                PopupDialog.getInstance(Add_phoneNumber.this)
+                        .statusDialogBuilder()
+                        .createWarningDialog()
+                        .setHeading("ID Card")
+                        .setDescription("Your ID Card is already exist")
+                        .build(Dialog::dismiss)
+                        .show();
+                return;
+            }
+            sendOTP(phoneNumber, address, date);
+        });
     }
-    private boolean checkExistID(){
-        final boolean[] checkCccd = {false};
+    private void checkExistID(CheckExistCallback callback) {
+        Toast.makeText(this, "Checking ID...", Toast.LENGTH_SHORT).show();
+        progressBar.setVisibility(View.VISIBLE);
         Api_service.service.get_account().enqueue(new Callback<List<Account>>() {
             @Override
             public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
-                if (response.isSuccessful()) {
-                    List<Account> accounts = response.body();
-                    for (Account account : accounts) {
+                if (response.isSuccessful() && response.body() != null) {
+                    for (Account account : response.body()) {
                         if (account.getCccd().equals(DEFAULT_CCCD)) {
-                            PopupDialog.getInstance(Add_phoneNumber.this)
-                                    .statusDialogBuilder()
-                                    .createWarningDialog()
-                                    .setHeading("ID Card")
-                                    .setDescription("Your ID Card is already exist")
-                                    .build(Dialog::dismiss)
-                                    .show();
-                            checkCccd[0] = true;
-                            break;
+                            Log.d(TAG, "ID already exists: " + DEFAULT_CCCD);
+                            callback.onResult(true); // ID tồn tại
+                            progressBar.setVisibility(View.INVISIBLE);
+                            return;
                         }
                     }
-                }else Log.e("cccd", response.message());
+                }
+                callback.onResult(false); // ID không tồn tại
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
-            public void onFailure(Call<List<Account>> call, Throwable throwable) {
-                Log.e("cccd", "onFailure: " + throwable.getMessage());
+            public void onFailure(Call<List<Account>> call, Throwable t) {
+                Log.e(TAG, "Error checking ID: " + t.getMessage());
+                callback.onResult(false); // Lỗi, coi như ID không tồn tại
             }
         });
-        return checkCccd[0];
     }
     private boolean validateFields(String phoneNumber, String address, String date) {
         boolean isValid = true;
@@ -578,16 +586,5 @@ public class Add_phoneNumber extends AppCompatActivity {
             return MimeTypeMap.getSingleton().getExtensionFromMimeType(type);
         }
         return null; // Trường hợp không thể xác định loại MIME
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (mAuth.getCurrentUser() != null) reload();
-    }
-
-    private void reload() {
-        // Reload the activity, if needed.
     }
 }

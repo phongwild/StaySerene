@@ -33,6 +33,10 @@ public class Adapter_rcv2_home extends RecyclerView.Adapter<Adapter_rcv2_home.Vi
 
     private List<Room> rooms;
     private Map<String, TypeRoom> typeRoomMap = new HashMap<>();
+    private int visibleItemCount = 10; // Số lượng bản ghi hiển thị ban đầu
+
+
+
 
     public Adapter_rcv2_home(List<Room> rooms) {
         this.rooms = rooms;
@@ -74,6 +78,7 @@ public class Adapter_rcv2_home extends RecyclerView.Adapter<Adapter_rcv2_home.Vi
         notifyDataSetChanged(); // Cập nhật lại giao diện sau khi sắp xếp
     }
 
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -91,7 +96,8 @@ public class Adapter_rcv2_home extends RecyclerView.Adapter<Adapter_rcv2_home.Vi
 
     @Override
     public int getItemCount() {
-        return rooms != null ? rooms.size() : 0;
+//        return rooms != null ? rooms.size() : 0;
+        return Math.min(visibleItemCount, rooms != null ? rooms.size() : 0);
     }
 
     // Hiển thị chi tiết phòng
