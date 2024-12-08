@@ -235,6 +235,7 @@ public class Activity_order_room extends AppCompatActivity {
         btn_booking.setOnClickListener(v -> {
             checkIdCard(isIdCard -> {
                 if (isIdCard) {
+
                     Toast.makeText(Activity_order_room.this, "You should add an ID card before booking a room.", Toast.LENGTH_SHORT).show();
                     return;
                 }
