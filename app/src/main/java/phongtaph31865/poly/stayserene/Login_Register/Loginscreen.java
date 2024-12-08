@@ -135,35 +135,7 @@ public class Loginscreen extends AppCompatActivity {
             else layout_pass.setErrorEnabled(false);
         } else {
             showProgressBar(); // Hiển thị ProgressBar khi bắt đầu đăng nhập
-            Account account = new Account();
-            account.setEmail(email);
-            account.setPassword(password);
-            Api_service.service.login(account).enqueue(new Callback<List<Account>>() {
-                @Override
-                public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
-                    hideProgressBar(); // Ẩn ProgressBar khi có kết quả
-                    if (response.isSuccessful()) {
-                        List<Account> accountList = response.body();
-                        if (accountList != null && accountList.size() > 0 && accountList.get(0).getRole() == 1) {
-                            SharedPreferences sharedPreferences = getSharedPreferences("user_data", Activity.MODE_PRIVATE);
-                            sharedPreferences.edit().putString("uid", accountList.get(0).get_id()).apply();
-                            saveLoginStatus(true, accountList.get(0).getEmail(), accountList.get(0).getPassword(), accountList.get(0).getRole());
-                            Intent intent = new Intent(Loginscreen.this, MainActivity_user.class);
-                            intent.putExtra("Username", accountList.get(0).get_id());
-                            Toast.makeText(Loginscreen.this, "Login success", Toast.LENGTH_SHORT).show();
-                            startActivity(intent);
-                        }
-                    } else {
-                        showLoginErrorDialog();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<Account>> call, Throwable throwable) {
-                    hideProgressBar(); // Ẩn ProgressBar khi thất bại
-                    Log.e("Login", "onFailure: " + throwable.getMessage());
-                }
-            });
+            login(email, password);
         }
     }
 
@@ -230,11 +202,9 @@ public class Loginscreen extends AppCompatActivity {
                             boolean userExist = response.body();
                             if (!userExist) {
                                 Create_acc_gg(Uid, account.getDisplayName(), account.getEmail(), account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTq2k2sI1nZyFTtoaKSXxeVzmAwIPchF4tjwg&s");
-                                startActivity(new Intent(Loginscreen.this, MainActivity_user.class));
+                                Log.d("Login"," Uid: " + Uid + " Email: " + account.getEmail());
                             } else {
-                                SharedPreferences sharedPreferences = getSharedPreferences("user_google", Activity.MODE_PRIVATE);
-                                sharedPreferences.edit().putString("uid", Uid).apply();
-                                startActivity(new Intent(Loginscreen.this, MainActivity_user.class));
+                                login(account.getEmail(), "");
                             }
                         }
                     }
@@ -246,25 +216,68 @@ public class Loginscreen extends AppCompatActivity {
                 });
             } catch (Exception e) {
                 Toast.makeText(Loginscreen.this, "Google sign-in failed", Toast.LENGTH_SHORT).show();
+                Log.e("Login", "onActivityResult: " + e.getMessage());
             }
         }
     }
+    private void login(String email, String password){
+        Account account = new Account();
+        account.setEmail(email);
+        account.setPassword(password);
+        Api_service.service.login(account).enqueue(new Callback<List<Account>>() {
+            @Override
+            public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                hideProgressBar(); // Ẩn ProgressBar khi có kết quả
+                if (response.isSuccessful()) {
+                    List<Account> accountList = response.body();
+                    if (accountList != null && accountList.size() > 0 && accountList.get(0).getRole() == 1) {
+                        // Lưu thông tin tài khoản vào SharedPreferences
+                        SharedPreferences sharedPreferences = getSharedPreferences("user_data", Activity.MODE_PRIVATE);
+                        sharedPreferences.edit().putString("uid", accountList.get(0).get_id()).apply();
+                        // Lưu trạng thái đăng nhập
+                        saveLoginStatus(true, accountList.get(0).getEmail(), accountList.get(0).getPassword(), accountList.get(0).getRole());
+                        // Chuyển đến màn hình chính
+                        Intent intent = new Intent(Loginscreen.this, MainActivity_user.class);
+                        intent.putExtra("Username", accountList.get(0).get_id());
+                        Toast.makeText(Loginscreen.this, "Login success", Toast.LENGTH_SHORT).show();
+                        startActivity(intent);
+                    }
+                } else {
+                    showLoginErrorDialog();
+                }
+            }
 
+            @Override
+            public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                hideProgressBar(); // Ẩn ProgressBar khi thất bại
+                Log.e("Login", "onFailure: " + throwable.getMessage());
+            }
+        });
+    }
     // Tạo tài khoản Google
     private void Create_acc_gg(String Uid, String name, String email, String photo) {
         Account account = new Account();
         account.setUid(Uid);
         account.setUsername(name);
+        account.setSdt("");
         account.setEmail(email);
         account.setPassword("");
-        account.setAvt(photo);
+        account.setDiaChi("");
+        account.setNgaySinh("");
+        account.setGioiTinh("");
+        account.setQuocTich("");
         account.setRole(1);
+        account.setAvt(photo);
+        account.setImgcccdtruoc("");  // Mặt trước CCCD
+        account.setImgcccdsau("");    // Mặt sau CCCD
+        account.setCccd("");
         Api_service.service.create_account(account).enqueue(new Callback<List<Account>>() {
             @Override
             public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
-                if (response.isSuccessful()) {
-                    SharedPreferences sharedPreferences = getSharedPreferences("user_data", Activity.MODE_PRIVATE);
-                    sharedPreferences.edit().putString("uid", response.body().get(0).getUid()).apply();
+                if (response.isSuccessful() && response.body() != null) {
+                    for (Account acc : response.body()) {
+                        login(acc.getEmail(), "");
+                    }
                 }
             }
 
@@ -302,7 +315,7 @@ public class Loginscreen extends AppCompatActivity {
             switch (userRole) {
                 case 0:
                     // Nếu là admin, chuyển đến màn hình quản trị (chưa xây dựng)
-                    // startActivity(new Intent(Loginscreen.this, MainActivity_admin.class));
+                    startActivity(new Intent(Loginscreen.this, MainActivity_user.class));
                     Toast.makeText(Loginscreen.this, "Welcome Admin", Toast.LENGTH_SHORT).show();
                     break;
                 case 1:

@@ -12,11 +12,10 @@ import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
+
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -26,10 +25,6 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.saadahmedev.popupdialog.PopupDialog;
 
 import org.json.JSONObject;
@@ -68,8 +63,6 @@ public class Activity_order_room extends AppCompatActivity {
     private EditText ed_note;
     private RelativeLayout btn_time_in, btn_time_out;
     private CardView btn_booking;
-    private GoogleSignInOptions gso;
-    private GoogleSignInClient gsc;
     private String ID_ROOM, ID_TYPE_ROOM;
     private int TIME_LEFT = 0;
     private Timer timer;
@@ -80,52 +73,62 @@ public class Activity_order_room extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_order_room);
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        gsc = GoogleSignIn.getClient(Activity_order_room.this, gso);
         //Anh xa
         initView();
+
+        //Đếm ngược 10p đặt phòng
         countDownTimer();
-        //Code logic
+
         StrictMode.ThreadPolicy policy = new
                 StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         ZaloPaySDK.init(2553, Environment.SANDBOX);
 
-        //Order room
+        //Xử lí click
+        handleClick();
+
+    }
+
+    private void initView() {
+        btn_back = findViewById(R.id.btn_back_order_room);
+        tv_name_hotel = findViewById(R.id.tv_hotelName_order_room);
+        tv_type_room = findViewById(R.id.tv_name_type_room_order_room);
+        tv_number_room = findViewById(R.id.tv_number_room_order_room);
+        tv_floor = findViewById(R.id.tv_floor_order_room);
+        tv_desc = findViewById(R.id.tv_desc_order_room);
+        tv_fullName = findViewById(R.id.tv_full_name_order_room);
+        tv_phone = findViewById(R.id.tv_phone_number_order_room);
+        tv_total = findViewById(R.id.tv_total_order_room);
+        tv_time_in = findViewById(R.id.tv_time_check_in_order_room);
+        tv_time_out = findViewById(R.id.tv_time_check_out_order_room);
+        tv_id_service = findViewById(R.id.tv_id_service);
+        tv_price_service = findViewById(R.id.tv_price_service);
+        btn_booking = findViewById(R.id.btn_booking_order_room);
+        btn_time_in = findViewById(R.id.btn_time_check_in_order_room);
+        btn_time_out = findViewById(R.id.btn_time_check_out_order_room);
+        ed_note = findViewById(R.id.ed_note_order_room);
+        btn_service = findViewById(R.id.img_choose_service_order_room);
+        tv_service = findViewById(R.id.tv_service_order_room);
+
         Intent intent = getIntent();
         ID_TYPE_ROOM = intent.getStringExtra("id_type_room");
         ID_ROOM = intent.getStringExtra("id_room");
         tv_service.setText("No service required");
         tv_id_service.setText("6707ed79df6d7c9585d8eb99");
         tv_price_service.setText("0");
-
-        btn_service.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Activity_order_room.this, Activity_list_service.class);
-                startActivityForResult(intent, 1);
-            }
+    }
+    private void handleClick(){
+        btn_service.setOnClickListener(v -> {
+            Intent intent1 = new Intent(Activity_order_room.this, Activity_list_service.class);
+            startActivityForResult(intent1, 1);
         });
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getRoomById();
-                timer.cancel();
-                finish();
-            }
+        btn_back.setOnClickListener(v -> {
+            getRoomById();
+            timer.cancel();
+            finish();
         });
-        btn_time_in.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                choose_TimeIN(ID_ROOM);
-            }
-        });
-        btn_time_out.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                choose_TimeOUT(ID_ROOM);
-            }
-        });
+        btn_time_in.setOnClickListener(v -> choose_TimeIN(ID_ROOM));
+        btn_time_out.setOnClickListener(v -> choose_TimeOUT(ID_ROOM));
         tv_price_service.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -229,9 +232,12 @@ public class Activity_order_room extends AppCompatActivity {
                 }
             });
         }
-        btn_booking.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btn_booking.setOnClickListener(v -> {
+            checkIdCard(isIdCard -> {
+                if (isIdCard) {
+                    Toast.makeText(Activity_order_room.this, "You should add an ID card before booking a room.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String timeIn = tv_time_in.getText().toString();
                 String timeOut = tv_time_out.getText().toString();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -289,30 +295,8 @@ public class Activity_order_room extends AppCompatActivity {
                     e.printStackTrace();
                     Toast.makeText(Activity_order_room.this, "Please choose time check in and time check out", Toast.LENGTH_SHORT).show();
                 }
-            }
+            });
         });
-    }
-
-    private void initView() {
-        btn_back = findViewById(R.id.btn_back_order_room);
-        tv_name_hotel = findViewById(R.id.tv_hotelName_order_room);
-        tv_type_room = findViewById(R.id.tv_name_type_room_order_room);
-        tv_number_room = findViewById(R.id.tv_number_room_order_room);
-        tv_floor = findViewById(R.id.tv_floor_order_room);
-        tv_desc = findViewById(R.id.tv_desc_order_room);
-        tv_fullName = findViewById(R.id.tv_full_name_order_room);
-        tv_phone = findViewById(R.id.tv_phone_number_order_room);
-        tv_total = findViewById(R.id.tv_total_order_room);
-        tv_time_in = findViewById(R.id.tv_time_check_in_order_room);
-        tv_time_out = findViewById(R.id.tv_time_check_out_order_room);
-        tv_id_service = findViewById(R.id.tv_id_service);
-        tv_price_service = findViewById(R.id.tv_price_service);
-        btn_booking = findViewById(R.id.btn_booking_order_room);
-        btn_time_in = findViewById(R.id.btn_time_check_in_order_room);
-        btn_time_out = findViewById(R.id.btn_time_check_out_order_room);
-        ed_note = findViewById(R.id.ed_note_order_room);
-        btn_service = findViewById(R.id.img_choose_service_order_room);
-        tv_service = findViewById(R.id.tv_service_order_room);
     }
     private void cardPayment(Order_Room orderRoom, Room room, float total) {
         orderRoom.setStatus(0);
@@ -470,6 +454,33 @@ public class Activity_order_room extends AppCompatActivity {
                 Log.e("Failure update room", throwable.getMessage());
             }
         });
+    }
+    private void checkIdCard(final CheckIdCardCallback callback) {
+        Api_service.service.get_account_byId(getUsernameFromSharedPreferences()).enqueue(new Callback<List<Account>>() {
+            @Override
+            public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                boolean isIdCard = false;
+                if (response.isSuccessful() && response.body() != null) {
+                    for (Account account : response.body()) {
+                        if (account.getCccd().isEmpty()) {
+                            isIdCard = true;
+                            break;
+                        }
+                    }
+                }
+                callback.onResult(isIdCard);
+            }
+
+            @Override
+            public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                Log.e("Failure get account", throwable.getMessage());
+                callback.onResult(false);
+            }
+        });
+    }
+
+    public interface CheckIdCardCallback {
+        void onResult(boolean isIdCard);
     }
 
     @Override
