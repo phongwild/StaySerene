@@ -1,6 +1,9 @@
 package phongtaph31865.poly.stayserene.Screen_user.Messenger;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,8 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,8 +43,7 @@ public class Activiti_list_messenger extends AppCompatActivity {
     private RecyclerView recyclerView;
     private Adapter_list_messenger adapter;
     private EditText edMessenger;
-    private Runnable refreshRunnable;
-
+    private BroadcastReceiver newMessageReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,9 +59,20 @@ public class Activiti_list_messenger extends AppCompatActivity {
 
         fetchHotelName();
         fetchMessages();
-        startPolling();
-    }
 
+        getNewMessage();
+
+    }
+    private void getNewMessage() {
+        newMessageReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                fetchMessages();
+            }
+        };
+        IntentFilter filter = new IntentFilter("NEW_MESSAGE");
+        LocalBroadcastManager.getInstance(this).registerReceiver(newMessageReceiver, filter);
+    }
     private void initView() {
         tvHotelName = findViewById(R.id.tv_hotel_name);
         btnBackListHotel = findViewById(R.id.btn_back_list_hotel);
@@ -94,7 +110,7 @@ public class Activiti_list_messenger extends AppCompatActivity {
         });
     }
 
-    private void fetchMessages() {
+    public void fetchMessages() {
         if (userId.isEmpty() || hotelId == null || hotelId.isEmpty()) return;
 
         Api_service.service.getMessengersForHotel(hotelId, userId).enqueue(new Callback<List<Messenger>>() {
@@ -162,21 +178,9 @@ public class Activiti_list_messenger extends AppCompatActivity {
         });
     }
 
-    private void startPolling() {
-        refreshRunnable = () -> {
-            fetchMessages(); // Lấy tin nhắn mới
-            handler.postDelayed(refreshRunnable, REFRESH_INTERVAL);
-        };
-        handler.post(refreshRunnable);
-    }
-
-    private void stopPolling() {
-        handler.removeCallbacks(refreshRunnable);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stopPolling();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(newMessageReceiver);
     }
 }

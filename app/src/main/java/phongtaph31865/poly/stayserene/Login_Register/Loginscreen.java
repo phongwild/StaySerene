@@ -151,7 +151,6 @@ public class Loginscreen extends AppCompatActivity {
                             Intent intent = new Intent(Loginscreen.this, MainActivity_user.class);
                             intent.putExtra("Username", accountList.get(0).get_id());
                             Toast.makeText(Loginscreen.this, "Login success", Toast.LENGTH_SHORT).show();
-                            hideProgressBar();
                             startActivity(intent);
                         }
                     } else {
