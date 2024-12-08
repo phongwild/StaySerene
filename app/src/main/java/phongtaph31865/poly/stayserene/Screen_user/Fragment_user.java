@@ -16,6 +16,8 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.saadahmedev.popupdialog.PopupDialog;
 import com.saadahmedev.popupdialog.listener.StandardDialogActionListener;
@@ -116,8 +118,14 @@ public class Fragment_user extends Fragment {
         // Xóa toàn bộ SharedPreferences không cần thiết
         clearSharedPreferences("userdata", "loginStatus", "user_data", "user_google");
 
+        //Đăng xuất firebase
         FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(getActivity(), Loginscreen.class));
+
+        //Đăng xuất google
+        GoogleSignIn.getClient(getActivity(), GoogleSignInOptions.DEFAULT_SIGN_IN).signOut()
+                .addOnCompleteListener(getActivity(), task -> {
+                    startActivity(new Intent(getActivity(), Loginscreen.class));
+                });
     }
 
     // Hàm hỗ trợ xóa SharedPreferences
