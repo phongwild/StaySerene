@@ -123,8 +123,6 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-messaging")
 
-    //Facebook
-    implementation("com.facebook.android:facebook-login:latest.release")
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     //Gson
@@ -151,6 +149,4 @@ dependencies {
     implementation("com.sun.mail:android-activation:1.6.0")
     //pinview
     implementation("io.github.chaosleung:pinview:1.4.4")
-    
-
 }

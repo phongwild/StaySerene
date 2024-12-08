@@ -8,6 +8,7 @@ import android.os.Build;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -52,6 +53,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     if (response.isSuccessful() && response.body() != null) {
                         Hotel hotel = response.body().get(0);
                         String name = hotel.getTenKhachSan();
+                        sendMessageBroadcast();
                         showMessageNotification(name, body, idHotel);
                     } else Log.d("TAG", "onResponse: " + response.message());
                 }
@@ -70,7 +72,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
     }
-
+    /**
+     * Gửi Broadcast đến Activiti_list_messenger để gọi fetchMessages().
+     */
+    private void sendMessageBroadcast() {
+        Intent intent = new Intent("NEW_MESSAGE");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
     /**
      * Hiển thị thông báo tin nhắn.
      */
