@@ -7,7 +7,8 @@
     android:theme="@style/themeuser"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Screen_user.Activity.Activity_changePass">
+    android:background="#FFFFFF"
+    tools:context=".Screen_user.Activity.Setting.Activity_changePass">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -4,6 +4,7 @@
     android:layout_height="100dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="#FFFFFF"
     app:cardUseCompatPadding="true">
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,8 +19,7 @@
                 android:id="@+id/item_iv_type_rooms"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/img_beach" />
+                android:scaleType="centerCrop"/>
         </androidx.cardview.widget.CardView>
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +31,6 @@
                 android:id="@+id/item_tv_name_type_rooms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Adada d"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="#101010"/>
@@ -39,7 +38,6 @@
                 android:id="@+id/item_tv_desc_type_rooms"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
                 android:textSize="12sp"
                 android:layout_marginTop="5dp"
                 android:textStyle="normal"

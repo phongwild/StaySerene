@@ -2,12 +2,10 @@ package phongtaph31865.poly.stayserene.Screen_user.Activity.Setting;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_changePass;
 import phongtaph31865.poly.stayserene.databinding.ActivitySettingBinding;
 
 public class Setting extends AppCompatActivity {

@@ -79,7 +79,7 @@
             android:name=".Screen_user.Activity.Setting.Activity_change_id_card"
             android:exported="false" />
         <activity
-            android:name=".Screen_user.Activity.Activity_changePass"
+            android:name=".Screen_user.Activity.Setting.Activity_changePass"
             android:exported="false" />
         <activity
             android:name=".Screen_user.Activity.OrderRoom.Activity_show_detail_booking"

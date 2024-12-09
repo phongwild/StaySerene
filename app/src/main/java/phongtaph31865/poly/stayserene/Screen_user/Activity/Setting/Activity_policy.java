@@ -6,16 +6,11 @@ import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.saadahmedev.popupdialog.PopupDialog;
 import com.saadahmedev.popupdialog.listener.StandardDialogActionListener;
 
-import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_changePass;
 import phongtaph31865.poly.stayserene.databinding.ActivityPolicyBinding;
-import phongtaph31865.poly.stayserene.R;
 
 public class Activity_policy extends AppCompatActivity {
     private ActivityPolicyBinding binding;

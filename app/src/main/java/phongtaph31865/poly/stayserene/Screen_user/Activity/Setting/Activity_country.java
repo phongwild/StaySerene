@@ -187,7 +187,7 @@ public class Activity_country extends AppCompatActivity {
                     .build(new StandardDialogActionListener() {
                         @Override
                         public void onPositiveButtonClicked(Dialog dialog) {
-                            updateCountry(country);
+                            getDataUser(country);
                             dialog.dismiss();
                         }
 
@@ -203,9 +203,23 @@ public class Activity_country extends AppCompatActivity {
         binding.btnBackChangeCountry.setOnClickListener(v -> finish());
     }
 
+    private void getDataUser(Country country){
+        Api_service.service.get_account_byId(getID()).enqueue(new Callback<List<Account>>() {
+            @Override
+            public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Account account = response.body().get(0);
+                    updateCountry(account, country);
+                }
+            }
 
-    private void updateCountry(Country country) {
-        Account account = new Account();
+            @Override
+            public void onFailure(Call<List<Account>> call, Throwable throwable) {
+                Log.e("onFailure", throwable.getMessage());
+            }
+        });
+    }
+    private void updateCountry(Account account, Country country) {
         account.setQuocTich(country.getName());
         Api_service.service.update_account(getID(), account).enqueue(new Callback<List<Account>>() {
             @Override

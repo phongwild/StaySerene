@@ -46,4 +46,11 @@
         android:layout_below="@+id/toolbar_detail_room"
         android:layout_marginHorizontal="15dp"
         android:id="@+id/rcv_service"/>
+    <ProgressBar
+        android:id="@+id/progressBar_list_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminateTint="#4C4DDC"
+        android:visibility="invisible" />
 </RelativeLayout>

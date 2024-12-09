@@ -1,8 +1,7 @@
-package phongtaph31865.poly.stayserene.Screen_user.Activity;
+package phongtaph31865.poly.stayserene.Screen_user.Activity.Setting;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,20 +10,14 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.saadahmedev.popupdialog.PopupDialog;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.BottomSheet.Dialog_OTP;
-import phongtaph31865.poly.stayserene.Login_Register.Add_phoneNumber;
-import phongtaph31865.poly.stayserene.Login_Register.Loginscreen;
 import phongtaph31865.poly.stayserene.MailConfig.MailConfig;
 import phongtaph31865.poly.stayserene.Model.ChangePassRequest;
 import phongtaph31865.poly.stayserene.databinding.ActivityChangePassBinding;
-import phongtaph31865.poly.stayserene.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

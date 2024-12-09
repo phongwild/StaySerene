@@ -30,6 +30,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
@@ -95,8 +97,15 @@ public class Activity_detail_room extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Hotel>> call, Throwable throwable) {
-                Log.e("Detail_room", "Lỗi: " + throwable.getMessage());
+            public void onFailure(Call<List<Hotel>> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                if (t instanceof SocketTimeoutException) {
+                    showToast("Weak network, please try again later.");
+                } else if (t instanceof UnknownHostException) {
+                    showToast("No network connection available.");
+                } else {
+                    Log.e("Detail_room", "Lỗi: " + t.getMessage());
+                }
             }
         });
     }
@@ -118,7 +127,7 @@ public class Activity_detail_room extends AppCompatActivity {
 
         subMenu.show();
     }
-    public void get_room(){
+    private void get_room(){
         progressBar.setVisibility(View.VISIBLE);
         GridLayoutManager manager = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
         rcv.setLayoutManager(manager);
@@ -138,10 +147,20 @@ public class Activity_detail_room extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Room>> call, Throwable throwable) {
-                Log.e("Detail_room", "Lỗi: " + throwable.getMessage());
-                throwable.printStackTrace();
+            public void onFailure(Call<List<Room>> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                if (t instanceof SocketTimeoutException) {
+                    showToast("Weak network, please try again later.");
+                } else if (t instanceof UnknownHostException) {
+                    showToast("No network connection available.");
+                } else {
+                    Log.e("Detail_room", "Lỗi: " + t.getMessage());
+                }
             }
+
         });
+    }
+    private void showToast(String message) {
+        Toast.makeText(Activity_detail_room.this, message, Toast.LENGTH_SHORT).show();
     }
 }

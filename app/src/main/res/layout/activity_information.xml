@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:fitsSystemWindows="true"
     tools:context=".Screen_user.Activity.Setting.Information">
 
@@ -254,7 +255,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:background="@drawable/custom_input_info"
-                        android:hint="abcxyz@gmail.com"
                         android:inputType="textEmailAddress"
                         android:textColorHint="#4C4DDC"
                         android:padding="10dp"
@@ -284,7 +284,7 @@
                         android:layout_height="50dp"
                         android:textColorHint="#4C4DDC"
                         android:background="@drawable/custom_input_info"
-                        android:hint="19/10/2004"
+                        android:hint="Your phone number"
                         android:inputType="number"
                         android:padding="10dp"
                         android:textColor="#4c4ddc"
@@ -316,6 +316,7 @@
                         android:background="@drawable/custom_input_info"
                         android:inputType="number"
                         android:padding="10dp"
+                        android:hint="Upload ID card"
                         android:textColor="#4c4ddc"
                         android:textSize="15sp" />
                 </LinearLayout>

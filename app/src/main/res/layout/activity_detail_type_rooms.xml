@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="#FFFFFF"
     tools:context=".Screen_user.Activity.Activity_list_type_room">
 
     <LinearLayout
@@ -79,7 +80,8 @@
                 app:cardCornerRadius="8dp">
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="#FFFFFF">
                     <TextView
                         android:id="@+id/free_wifi"
                         android:layout_width="wrap_content"
@@ -100,7 +102,8 @@
                 app:cardCornerRadius="8dp">
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="#FFFFFF">
                     <TextView
                         android:id="@+id/free_breakfast"
                         android:layout_width="wrap_content"

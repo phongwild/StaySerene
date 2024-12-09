@@ -10,6 +10,7 @@
         android:id="@+id/item_btn_showDetail_rcv2"
         android:layout_width="match_parent"
         android:layout_height="110dp"
+        android:background="#FFFFFF"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="8dp">
@@ -22,8 +23,7 @@
                 android:id="@+id/item_img_service"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/img_beach" />
+                android:scaleType="centerCrop"/>
         </androidx.cardview.widget.CardView>
 
         <RelativeLayout
@@ -56,7 +56,6 @@
                             android:id="@+id/item_tv_ten_service"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="The Aston Vill Hotel"
                             android:textColor="#101010"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -69,7 +68,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:paddingTop="4dp"
-                    android:text="ice Springs NT 0870, AustraliaAlice Springs NT 0870, Australia"
                     android:textColor="#939393"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -84,7 +82,6 @@
                     android:id="@+id/item_tv_gia_service"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="200.7"
                     android:textColor="#4C4DDC"
                     android:textSize="14sp"
                     android:textStyle="bold" />

@@ -6,13 +6,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.saadahmedev.popupdialog.PopupDialog;
@@ -22,11 +18,8 @@ import java.util.List;
 import phongtaph31865.poly.stayserene.Api_service.Api_service;
 import phongtaph31865.poly.stayserene.Login_Register.Loginscreen;
 import phongtaph31865.poly.stayserene.Model.Account;
-import phongtaph31865.poly.stayserene.Model.ChangePassRequest;
 import phongtaph31865.poly.stayserene.Model.RecoveyPassRequest;
-import phongtaph31865.poly.stayserene.Screen_user.Activity.Activity_changePass;
 import phongtaph31865.poly.stayserene.databinding.ActivityUpdatePassBinding;
-import phongtaph31865.poly.stayserene.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
