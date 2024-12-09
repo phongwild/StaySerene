@@ -195,6 +195,7 @@ public class Loginscreen extends AppCompatActivity {
                 task.getResult(ApiException.class);
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 String Uid = account.getId();
+                showProgressBar();
                 Api_service.service.check_user_google(Uid).enqueue(new Callback<Boolean>() {
                     @Override
                     public void onResponse(Call<Boolean> call, Response<Boolean> response) {
@@ -239,6 +240,7 @@ public class Loginscreen extends AppCompatActivity {
                         // Chuyển đến màn hình chính
                         Intent intent = new Intent(Loginscreen.this, MainActivity_user.class);
                         intent.putExtra("Username", accountList.get(0).get_id());
+                        hideProgressBar();
                         Toast.makeText(Loginscreen.this, "Login success", Toast.LENGTH_SHORT).show();
                         startActivity(intent);
                     }
@@ -287,11 +289,6 @@ public class Loginscreen extends AppCompatActivity {
             }
         });
     }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        checkLoginStatus();
-    }
 
     private void checkLoginStatus() {
         SharedPreferences sharedPreferences = getSharedPreferences("loginStatus", Activity.MODE_PRIVATE);
@@ -329,5 +326,9 @@ public class Loginscreen extends AppCompatActivity {
             finish(); // Dừng lại ở màn hình đăng nhập nếu đã đăng nhập
         }
     }
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkLoginStatus();
+    }
 }
