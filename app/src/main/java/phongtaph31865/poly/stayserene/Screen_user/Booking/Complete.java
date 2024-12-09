@@ -81,6 +81,7 @@ public class Complete extends Fragment {
             public void onFailure(Call<List<Order_Room>> call, Throwable throwable) {
                 Log.e("Error get order room by status", throwable.getMessage());
                 refreshLayout.setRefreshing(false);
+                progressBar.setVisibility(View.GONE);
             }
         });
     }

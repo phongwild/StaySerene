@@ -84,6 +84,7 @@ public class Ongoing extends Fragment {
             public void onFailure(Call<List<Order_Room>> call, Throwable throwable) {
                 Log.e("Error get order room by status", throwable.getMessage());
                 // Tắt trạng thái loading của SwipeRefreshLayout
+                progressBar.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
             }
         });

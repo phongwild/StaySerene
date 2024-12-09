@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
 import phongtaph31865.poly.stayserene.Model.Account;
 import phongtaph31865.poly.stayserene.Model.ChangePassRequest;
 import phongtaph31865.poly.stayserene.Model.Hotel;
@@ -38,9 +40,15 @@ public interface Api_service {
     //Thêm + xem khách sạn: http://localhost:3000/api/hotel
     //String BASE_URL = "http://192.168.10.103:3000/api/";
     String BASE_URL = "https://stayserene.vercel.app/api/";
+    OkHttpClient client = new OkHttpClient.Builder()
+            .connectTimeout(15, TimeUnit.SECONDS) // Thời gian kết nối tối đa
+            .readTimeout(20, TimeUnit.SECONDS)    // Thời gian chờ đọc dữ liệu
+            .writeTimeout(20, TimeUnit.SECONDS)   // Thời gian chờ ghi dữ liệu
+            .build();
     Gson gson = new GsonBuilder().create();
     Api_service service = new Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(Api_service.class);
