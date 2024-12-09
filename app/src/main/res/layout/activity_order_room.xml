@@ -85,7 +85,6 @@
                             android:layout_weight="2"
                             android:gravity="end"
                             android:layout_height="wrap_content"
-                            android:text="Sofitel Legend Metropole"
                             android:textColor="#000000"
                             android:textStyle="bold"
                             android:textSize="16sp"/>
@@ -110,7 +109,6 @@
                             android:layout_weight="1"
                             android:gravity="end"
                             android:layout_height="wrap_content"
-                            android:text="Phòng Đơn Tiêu Chuẩn"
                             android:textColor="#000000"
                             android:textStyle="bold"
                             android:textSize="16sp"/>
@@ -135,7 +133,6 @@
                             android:layout_weight="1"
                             android:gravity="end"
                             android:layout_height="wrap_content"
-                            android:text="1111"
                             android:textColor="#000000"
                             android:textStyle="bold"
                             android:textSize="16sp"/>
@@ -160,7 +157,6 @@
                             android:layout_weight="1"
                             android:gravity="end"
                             android:layout_height="wrap_content"
-                            android:text="12"
                             android:textColor="#000000"
                             android:textStyle="bold"
                             android:textSize="16sp"/>
@@ -185,7 +181,6 @@
                             android:layout_weight="2"
                             android:gravity="end"
                             android:layout_height="wrap_content"
-                            android:text="Lorem ipsum dolor sit amet"
                             android:textColor="#000000"
                             android:textStyle="bold"
                             android:textSize="16sp"/>
@@ -216,7 +211,6 @@
                             android:layout_weight="1"
                             android:gravity="end"
                             android:layout_height="wrap_content"
-                            android:text="Tran Anh Phong"
                             android:textColor="#4C4DDC"
                             android:textStyle="bold"
                             android:textSize="16sp"/>
@@ -251,7 +245,6 @@
                             android:layout_weight="1"
                             android:gravity="end"
                             android:layout_height="wrap_content"
-                            android:text="0987654321"
                             android:textColor="#4C4DDC"
                             android:textStyle="bold"
                             android:textSize="16sp"/>

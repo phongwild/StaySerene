@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class Adapter_list_hotel_messenger extends RecyclerView.Adapter<Adapter_l
         Hotel hotel = hotelList.get(position);
 
         holder.hotelName.setText(hotel.getTenKhachSan());
-        Picasso.get().load(hotel.getAnhKhachSan()).into(holder.hotelImage);
+        Glide.with(holder.itemView.getContext()).load(hotel.getAnhKhachSan()).into(holder.hotelImage);
 
         holder.itemView.setOnClickListener(v -> {
             String hotelId = hotel.get_id();

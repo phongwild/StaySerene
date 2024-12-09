@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
@@ -100,7 +101,7 @@ public class Adapter_schedule extends RecyclerView.Adapter<Adapter_schedule.View
             public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
                     Room room = response.body().get(0);
-                    Picasso.get().load(room.getAnhPhong()).fit().centerCrop().into(holder.binding.itemImgSchedule);
+                    Glide.with(holder.itemView.getContext()).load(room.getAnhPhong()).into(holder.binding.itemImgSchedule);
                     loadTypeRoomDetails(room.getIdLoaiPhong(), holder, intent);
                 } else {
                     Log.e("Room Fetch", "Failed to fetch room details: " + response.message());

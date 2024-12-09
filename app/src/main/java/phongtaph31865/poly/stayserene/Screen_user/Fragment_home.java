@@ -111,9 +111,12 @@ public class Fragment_home extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     for (Account acc : response.body()) {
                         saveUserToPreferences(acc);
-
-                        // Cập nhật token nếu có
-                        updateTokenIfAvailable(acc);
+                        if (acc.getToken().equals(getToken())){
+                            Log.e("saveUser", "Token không thay đổi");
+                        }else {
+                            // Cập nhật token nếu thay đổi
+                            updateTokenIfAvailable(acc);
+                        }
 
                         // Cập nhật giao diện
                         tvLocation.setText(acc.getDiaChi());
@@ -131,10 +134,8 @@ public class Fragment_home extends Fragment {
     }
 
     private void updateTokenIfAvailable(Account acc) {
-        SharedPreferences preferences = requireActivity().getSharedPreferences("FCM_TOKEN", Activity.MODE_PRIVATE);
-        String token = preferences.getString("token", null);
-        if (token != null) {
-            acc.setToken(token);
+        if (getToken() != null) {
+            acc.setToken(getToken());
             Api_service.service.update_account(acc.get_id(), acc).enqueue(new Callback<List<Account>>() {
                 @Override
                 public void onResponse(Call<List<Account>> call, Response<List<Account>> response) {
@@ -216,7 +217,10 @@ public class Fragment_home extends Fragment {
             }
         });
     }
-
+    private String getToken(){
+        SharedPreferences preferences = requireActivity().getSharedPreferences("FCM_TOKEN", Activity.MODE_PRIVATE);
+        return preferences.getString("token", null);
+    }
     private void loadMoreItemRooms() {
         adapter2.loadMoreItems();
     }

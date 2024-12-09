@@ -12,7 +12,6 @@ import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -164,24 +163,6 @@ public class Activity_order_room extends AppCompatActivity {
             tv_fullName.setText(getUserGoogleFromSharedPreferences());
         }
         if (ID_TYPE_ROOM != null) {
-            Api_service.service.get_rooms_byId_typeRoom(ID_TYPE_ROOM).enqueue(new Callback<List<Room>>() {
-                @Override
-                public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                    if (response.isSuccessful()) {
-                        List<Room> rooms = response.body();
-                        Room room = rooms.get(0);
-                        tv_number_room.setText(String.valueOf(room.getSoPhong()));
-                        tv_floor.setText(String.valueOf(room.getSoTang()));
-                        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-                        tv_total.setText(formatter.format(room.getGiaPhong()));
-                    } else Log.e("Failure get room", response.message());
-                }
-
-                @Override
-                public void onFailure(Call<List<Room>> call, Throwable throwable) {
-                    Log.e("Failure get room", throwable.getMessage());
-                }
-            });
             Api_service.service.get_typeroom_byId(ID_TYPE_ROOM).enqueue(new Callback<List<TypeRoom>>() {
                 @Override
                 public void onResponse(Call<List<TypeRoom>> call, Response<List<TypeRoom>> response) {
@@ -223,6 +204,8 @@ public class Activity_order_room extends AppCompatActivity {
                         Room room = rooms.get(0);
                         tv_number_room.setText(String.valueOf(room.getSoPhong()));
                         tv_floor.setText(String.valueOf(room.getSoTang()));
+                        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                        tv_total.setText(formatter.format(room.getGiaPhong()));
                     }
                 }
 

@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -22,6 +23,9 @@ public class Welcome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_welcome);
+        // Đặt chế độ sáng cho ứng dụng
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(task -> {
                    if (!task.isSuccessful()) {
@@ -41,4 +45,5 @@ public class Welcome extends AppCompatActivity {
             }
         },3000);
     }
+
 }
