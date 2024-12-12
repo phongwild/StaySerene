@@ -229,6 +229,8 @@ public class Activity_order_room extends AppCompatActivity {
                     Date dateOut = dateFormat.parse(timeOut.split(" ")[1]);
                     LocalDateTime now = LocalDateTime.now();
                     String date = now.getHour() + ":" + now.getMinute() + ":" + now.getSecond() + " " + now.getDayOfMonth() + "/" + now.getMonthValue() + "/" + now.getYear();
+                    String formatDate = String.format("%02d:%02d:%02d %02d/%02d/%04d",
+                            now.getHour(), now.getMinute(), now.getSecond(), now.getDayOfMonth(), now.getMonthValue(), now.getYear());
                     Date dateOrder = dateFormat.parse(date.split(" ")[1]);
 
                     if (dateIn.before(dateOrder)){
@@ -240,7 +242,7 @@ public class Activity_order_room extends AppCompatActivity {
                         double roundedNumDays = (double) diffInMillis / (1000 * 60 * 60 * 24);
                         int numDays = (int) Math.ceil(roundedNumDays);
                         Order_Room orderRoom = new Order_Room();
-                        orderRoom.setOrderTime(date);
+                        orderRoom.setOrderTime(formatDate);
                         orderRoom.setNote(ed_note.getText().toString());
                         orderRoom.setTimeGet(tv_time_in.getText().toString());
                         orderRoom.setTimeCheckout(tv_time_out.getText().toString());
